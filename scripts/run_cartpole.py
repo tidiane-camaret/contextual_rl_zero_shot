@@ -19,7 +19,7 @@ run = wandb.init(
     sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
     )
 
-#env = gym.make("CartPole-v1") # original environment
+#env = gym.make("CartPole-v1") # original environment 
 
 
 #env = CartPoleEnv(length=0.5, oracle=False)
