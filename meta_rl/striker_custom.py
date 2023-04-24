@@ -186,6 +186,7 @@ class OriginalStrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                 self.get_body_com("goal"),
             ]
         )
+
 """
 # striker environment from MuJoCo
 class CustomStrikerEnv(StrikerEnv):
