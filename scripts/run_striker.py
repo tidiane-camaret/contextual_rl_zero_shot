@@ -20,7 +20,7 @@ NUM_OF_PARAMS = 2
 NUM_OF_ENVS = 5
 TOTAL_TIMESTEPS = 1_000_000
 NUM_EVALS = 100
-oracle = False
+oracle = True
 
 run = wandb.init(
     project="meta_rl",
