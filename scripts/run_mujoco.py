@@ -74,7 +74,7 @@ model.learn(total_timesteps=TOTAL_TIMESTEPS,
 
 model.save("results/policies/" + task_name)
 """
-model = PPO.load("results/policies/" + task_name)
+model = PPO.load("results/policies/" + "striker_working" )# + task_name)
 
 # evaluate the policy on an unseen scale value
 
