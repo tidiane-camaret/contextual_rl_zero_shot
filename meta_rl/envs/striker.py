@@ -51,12 +51,12 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.viewer.cam.distance = 4.0
 
     def reset_model(self):
-        """
+
         # TODO : see if this is necessary
         self.model.body_mass[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_mass
         self.model.body_inertia[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_inertia
         self.model.geom_friction[4, 0] = (self.scale[1] - 0.2) * 0.8 + 0.2
-        """
+
         self._min_strike_dist = np.inf
         self._striked = False
         self._strike_pos = None

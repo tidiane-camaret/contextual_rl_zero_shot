@@ -17,9 +17,9 @@ from meta_rl.striker_custom import OriginalStrikerEnv as StrikerEnv
 
 task_name = "striker"
 NUM_OF_PARAMS = 2
-NUM_OF_ENVS = 5
+NUM_OF_ENVS = 10
 TOTAL_TIMESTEPS = 1_000_000
-NUM_EVALS = 100
+NUM_EVALS = 1000
 oracle = True
 
 run = wandb.init(
