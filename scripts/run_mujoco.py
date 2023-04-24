@@ -16,7 +16,7 @@ from meta_rl.striker_custom import OriginalStrikerEnv as StrikerEnv
 
 task_name = "striker"
 NUM_OF_PARAMS = 2
-NUM_OF_ENVS = 5
+NUM_OF_ENVS = 50
 TOTAL_TIMESTEPS = 1_000_000
 oracle = True
 
@@ -72,9 +72,9 @@ model.learn(total_timesteps=TOTAL_TIMESTEPS,
             callback=WandbCallback(),
             )
 
-model.save(task_name)
+model.save("results/policies/" + task_name)
 """
-model = PPO.load(task_name)
+model = PPO.load("results/policies/" + task_name)
 
 # evaluate the policy on an unseen scale value
 
