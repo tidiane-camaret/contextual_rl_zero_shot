@@ -11,13 +11,13 @@ from sb3_contrib import TRPO
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
-from meta_rl.striker_custom import CustomStrikerEnv as StrikerEnv
+from meta_rl.striker_custom import OriginalStrikerEnv as StrikerEnv
 
 
 task_name = "striker"
 NUM_OF_PARAMS = 2
-NUM_OF_ENVS = 20
-TOTAL_TIMESTEPS = 10_000
+NUM_OF_ENVS = 5
+TOTAL_TIMESTEPS = 1_000_000
 oracle = True
 
 run = wandb.init(
@@ -35,14 +35,23 @@ run = wandb.init(
 
 # generate the training environment
 
-scale_list = np.random.randint(0, 5, (NUM_OF_ENVS, NUM_OF_PARAMS, ))*0.1
-
+#scale_list = np.random.randint(0, 5, (NUM_OF_ENVS, NUM_OF_PARAMS, ))*0.1
+# same shape, but filled with ones
+scale_list = np.ones((NUM_OF_ENVS, NUM_OF_PARAMS, ))*0.5
+"""
 train_env = vec_env.DummyVecEnv([
     lambda: monitor.Monitor(
     RecordEpisodeStatistics(StrikerEnv(scale=scale, oracle=oracle)),
     )
  for scale in scale_list])  
+"""
+train_env = vec_env.DummyVecEnv([
+    lambda: monitor.Monitor(
+    RecordEpisodeStatistics(gym.make('Striker-v2')),
+    )
+    for scale in scale_list])
 
+train_env = gym.make('Striker-v2')
 
 # learn the policy
 """
@@ -53,32 +62,29 @@ policy = MlpPolicy(
     hidden_sizes=hidden_sizes,
 )
 """
-model = PPO(policy="MlpPolicy", 
-             env = train_env,
-             verbose=1, 
-             batch_size = 100000,
-             n_steps=200,
-             gae_lambda = 1,
-             tensorboard_log="results/tensorboard/"+task_name+"/")
+model = PPO('MlpPolicy', 
+            env=train_env,
+            verbose=1,
+            tensorboard_log="results/tensorboard/"+task_name+"/")
 
-
+"""
 model.learn(total_timesteps=TOTAL_TIMESTEPS,
             callback=WandbCallback(),
             )
 
 model.save(task_name)
-
-#model = TRPO.load("striker")
+"""
+model = PPO.load(task_name)
 
 # evaluate the policy on an unseen scale value
 
-eval_env = train_env
-
+eval_env = gym.make('Striker-v2')  #StrikerEnv(scale = [0.5,0.5], oracle=oracle)
+"""
 mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=1000)
 
 print(f"mean_reward:{mean_reward:.2f} +/- {std_reward}")
 wandb.log({"mean_reward": mean_reward, "std_reward": std_reward})
-
+"""
 # close wandb
 run.finish()
 
@@ -87,9 +93,10 @@ run.finish()
 obs = eval_env.reset()
 print("obs:", obs.shape, )
 
-for _ in range(500):
-    action, _states = model.predict(obs, deterministic=True)
-    obs, reward, done, info = eval_env.step(action)
-    eval_env.render()
-    if done:
-      obs = eval_env.reset()
+for _ in range(20):
+    obs = eval_env.reset()
+    for _ in range(100):
+        action, _states = model.predict(obs)
+        obs, reward, done, info = eval_env.step(action)
+        eval_env.render()
+
