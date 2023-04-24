@@ -8,12 +8,12 @@ import wandb
 from wandb.integration.sb3 import WandbCallback
 
 task_name = "striker"
-
+"""
 run = wandb.init(
     project="meta_rl",
     monitor_gym=True, # auto-upload the videos of agents playing the game
     sync_tensorboard=True, )
-
+"""
 
 env = monitor.Monitor(
     RecordEpisodeStatistics(
