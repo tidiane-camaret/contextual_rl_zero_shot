@@ -6,24 +6,40 @@
 
 # modules to load when using nemo cluster
 module load devel/python/3.9.7
+module load devel/conda
+module load mpi/openmpi/4.1-gnu-9.2
 
+# CREATE A NEW ENVIRONMENT
+# ws_allocate conda 1
 
-pip install -r dev/automl/meta_rl/requirements.txt
+# pip install -r dev/automl/meta_rl/requirements.txt
 
-conda init bash
-conda activate tid_env
+# conda config --prepend envs_dirs $( ws_find conda )/conda/envs
+# conda config --prepend pkgs_dirs $( ws_find conda )/conda/pkgs
+# conda config --show envs_dirs
+# conda config --show pkgs_dirs
+
+# conda create -n meta_rl_env
+# conda activate meta_rl_env
 
 # packages for mujoco 
-conda install -c conda-forge glew
-conda install -c conda-forge mesalib
-conda install -c menpo glfw3
+# conda install -c conda-forge glew
+# conda install -c conda-forge mesalib
+# conda install -c menpo glfw3
 export CPATH=$CONDA_PREFIX/include
+
+# OR USE AN EXISTING ENVIRONMENT
+
+source miniconda3/etc/profile.d/conda.sh
+conda activate tid_env
+
 
 time mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
 
 
 # submit the job on nemo : msub -l nodes=1:ppn=20 nemo_jobs/run_striker.moab
-# express : msub -q express -l nodes=1:ppn=1 nemo_jobs/run_striker.moab
+# express : msub -q express -l nodes=4:ppn=10,walltime=15:00 nemo_jobs/run_striker.moab
+# gpu : msub -q gpu -l nodes=4:ppn=10:gpus=2,walltime=40:00 nemo_jobs/run_striker.moab
 
 
 # to check the job status : checkjob + jobid

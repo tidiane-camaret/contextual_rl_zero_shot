@@ -1,0 +1,1146 @@
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_vx=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for this output (/usr/share/lmod/lmod/init/bash)
+Shell debugging restarted
++ unset __lmod_vx
++ module load devel/python/3.9.7
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ module load devel/conda
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Lmod has detected the following error: Cannot load module "tools/conda/latest"
+because these module(s) are loaded:
+   devel/python
+
+While processing the following module(s):
+    Module fullname     Module Filename
+    ---------------     ---------------
+    tools/conda/latest  /opt/bwhpc/modulefiles/development/common/tools/conda/latest.lua
+
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 1
++ module load mpi/openmpi/4.1-gnu-9.2
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ export CPATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/include
++ CPATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/include
++ source miniconda3/etc/profile.d/conda.sh
+++ export CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ '[' -z x ']'
++ conda activate tid_env
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate tid_env
++ '[' -n '' ']'
++ local ask_conda
+++ PS1=
+++ __conda_exe shell.posix activate tid_env
+++ /home/fr/fr_fr/fr_tn110/miniconda3/bin/conda shell.posix activate tid_env
++ ask_conda='. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh"
+. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh"
+PS1='\''(tid_env) '\''
+export PATH='\''/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric'\''
+export CONDA_PREFIX='\''/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''tid_env'\''
+export CONDA_PROMPT_MODIFIER='\''(tid_env) '\''
+export CONDA_PREFIX_1='\''/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest'\''
+export CONDA_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/python'\'''
++ eval '. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh"
+. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh"
+PS1='\''(tid_env) '\''
+export PATH='\''/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric'\''
+export CONDA_PREFIX='\''/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''tid_env'\''
+export CONDA_PROMPT_MODIFIER='\''(tid_env) '\''
+export CONDA_PREFIX_1='\''/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest'\''
+export CONDA_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/python'\'''
+++ . /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh
++++ '[' 1 = 1 ']'
++++ unset OCL_ICD_FILENAMES_RESET
++++ unset OCL_ICD_FILENAMES
+++ . /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh
++++ '[' '' '!=' 1 ']'
+++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/mpi.jar
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/mpi.jar:\?||'
++++ export CLASSPATH=
++++ CLASSPATH=
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric:\?||'
++++ export LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
++++ LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:\?||'
++++ export LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:
++++ LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/share/man
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/share/man:\?||'
++++ export MANPATH=/opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::
++++ MANPATH=/opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::
+++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric:\?||'
++++ export LIBRARY_PATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
++++ LIBRARY_PATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric:||'
++++ export PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
++++ PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++++ which fi_info
++++ FIP=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q 'compilers_and_libraries.*mpi'
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q /mpi/
+++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
+++++ rev
+++++ cut -f1 '-d '
+++++ rev
+++++ sed 's|/libfabric/bin/fi_info||'
++++ export I_MPI_ROOT=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ I_MPI_ROOT=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric/prov:/usr/lib64/libfabric
++++ grep -q /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
++++ [[ /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info != '' ]]
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q 'compilers_and_libraries.*mpi'
++++ export FI_PROVIDER_PATH=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info/libfabric/lib/prov:/usr/lib64/libfabric
++++ FI_PROVIDER_PATH=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info/libfabric/lib/prov:/usr/lib64/libfabric
+++ PS1='(tid_env) '
+++ export PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++ PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++ export CONDA_PREFIX=/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env
+++ CONDA_PREFIX=/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=tid_env
+++ CONDA_DEFAULT_ENV=tid_env
+++ export 'CONDA_PROMPT_MODIFIER=(tid_env) '
+++ CONDA_PROMPT_MODIFIER='(tid_env) '
+++ export CONDA_PREFIX_1=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
+++ CONDA_PREFIX_1=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
+++ export CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-3k8n6rds
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-15m3df9h
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-27v3wq1v
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140847-33a5ci3v
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140846-dsrv5j5w
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-213fli4f
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-2sq0ejs7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-3i9ogggj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140846-1aakh631
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-1dszimjh
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-24s7kbnz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-1m4z6zjl
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140847-2apj2l6z
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-1prcl4dm
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-1s8cs3jt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140846-3exuvz2s
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-1fnatgn1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-3m5ja19g
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-ddsfhc2m
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-ppzgqxuw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140845-591vr89u
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140846-2yr1k94q
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sweet-breeze-215
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/27v3wq1v
+wandb: Syncing run kind-shadow-222
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/24s7kbnz
+wandb: Syncing run solar-star-212
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/ddsfhc2m
+wandb: Syncing run feasible-disco-215
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/15m3df9h
+wandb: Syncing run avid-shadow-232
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/33a5ci3v
+wandb: Syncing run devout-breeze-230
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1aakh631
+wandb: Syncing run clear-yogurt-231
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/dsrv5j5w
+wandb: Syncing run comfy-glade-212
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3k8n6rds
+wandb: Syncing run confused-sponge-217
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3i9ogggj
+wandb: Syncing run royal-butterfly-213
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/213fli4f
+wandb: Syncing run genial-sky-218
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/2sq0ejs7
+wandb: Syncing run solar-eon-218
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1m4z6zjl
+wandb: Syncing run expert-dawn-233
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/2apj2l6z
+wandb: Syncing run unique-smoke-216
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1dszimjh
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Syncing run vital-wildflower-225
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: Syncing run pleasant-frost-218
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1prcl4dm
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140847-z0o4d58b
+wandb: Run `wandb offline` to turn off syncing.
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/ppzgqxuw
+wandb: Syncing run still-music-226
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1s8cs3jt
+wandb: Syncing run comic-waterfall-228
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3exuvz2s
+wandb: Syncing run swept-wave-218
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1fnatgn1
+wandb: Syncing run robust-morning-212
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3m5ja19g
+wandb: Syncing run feasible-vortex-229
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/2yr1k94q
+wandb: Syncing run crisp-fog-219
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/591vr89u
+wandb: Syncing run splendid-donkey-234
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/z0o4d58b
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140848-1ck2ljn7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140848-2zlxv85j
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run peachy-cloud-236
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1ck2ljn7
+wandb: Syncing run upbeat-paper-235
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/2zlxv85j
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140848-5kbs7zxt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run cosmic-tree-237
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/5kbs7zxt
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140848-3fx8dh59
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run polar-sea-238
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3fx8dh59
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140849-20dbd5yy
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run soft-totem-239
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/20dbd5yy
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140849-314fvjk9
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run generous-glade-240
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/314fvjk9
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140851-27cmtj62
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run pleasant-yogurt-243
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/27cmtj62
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140851-haxsxs69
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sweet-pine-241
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/haxsxs69
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140851-1h6cxn94
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run whole-sea-242
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1h6cxn94
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140852-26njdnah
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fancy-river-244
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/26njdnah
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140852-jqu0192o
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ethereal-bush-246
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/jqu0192o
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140852-3t1ex6ks
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fluent-planet-245
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3t1ex6ks
+wandb: Currently logged in as: tidiane. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140853-1sgf1ebe
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run olive-snowflake-247
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/1sgf1ebe
+wandb: - Waiting for wandb.init()...wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140853-3nvu14wn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140853-29l10l8i
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run true-jazz-248
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3nvu14wn
+wandb: Syncing run stellar-snowflake-249
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/29l10l8i
+wandb: - Waiting for wandb.init()...wandb: \ Waiting for wandb.init()...wandb: \ Waiting for wandb.init()...wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.291509418399344 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.78883059881236 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2752070221319 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.980316188530624 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2368045336191127 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3079714506474804 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.242984010972807 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.6667693986931615 seconds), retrying request
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140854-3sb7686d
+wandb: Run `wandb offline` to turn off syncing.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.482546827748408 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.272735254079869 seconds), retrying request
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.5
+wandb: Run data is saved locally in /home/fr/fr_fr/fr_tn110/wandb/run-20230426_140854-3rle4dr7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run glowing-sky-250
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3sb7686d
+wandb: Syncing run distinctive-durian-251
+wandb: ⭐️ View project at https://wandb.ai/tidiane/meta_rl
+wandb: 🚀 View run at https://wandb.ai/tidiane/meta_rl/runs/3rle4dr7
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.276890762096488 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.070690280492386 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.058558599760568 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.946164305451669 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1905057056981905 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.838909121565671 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3869286880304763 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.606061516667248 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3320241216915423 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.680898648327311 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2667534075099356 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.4945098976230184 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.030567930706331 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.984768657065214 seconds), retrying request
+wandb: Network error resolved after 0:00:01.451437, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.158901757019276 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.650793575729047 seconds), retrying request
+wandb: Network error resolved after 0:00:01.650527, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0341797439038825 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.752277244584685 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.621122, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1311845357884716 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.9590529768426705 seconds), retrying request
+wandb: Network error resolved after 0:00:01.634750, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0731096660812245 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.903927074256629 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4259029747635195 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.478194375276349 seconds), retrying request
+wandb: Network error resolved after 0:00:01.617834, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0246061954510886 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.075015543471356 seconds), retrying request
+wandb: Network error resolved after 0:00:01.496547, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.310783538423564 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.099256818483026 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.712391992057345 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.685233, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1240524445404962 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.474745423998289 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.087882592792433 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.271089970067457 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1492987183090673 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.313848995171797 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.087968424933215 seconds), retrying request
+wandb: Network error resolved after 0:00:01.502454, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.31318372036895 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.173136032208764 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.085473095685627 seconds), retrying request
+wandb: Network error resolved after 0:00:01.504049, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.229730889755274 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.610884, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2425961304025908 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.602733, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.236906739030823 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.0267606754473855 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.530201, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.072763999867294 seconds), retrying request
+wandb: Network error resolved after 0:00:01.492291, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4679945592767476 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.654992, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.01318358203746 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.620287410182463 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0421574414323342 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.2061125315856955 seconds), retrying request
+wandb: Network error resolved after 0:00:01.433048, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3309874243752176 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.620305, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.451021324134385 seconds), retrying request
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.9710498055255945 seconds), retrying request
+wandb: Network error resolved after 0:00:01.583417, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1334922234012197 seconds), retrying request
+wandb: Network error resolved after 0:00:01.479022, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.178262991075128 seconds), retrying request
+wandb: Network error resolved after 0:00:01.678994, resuming normal operation.
+wandb: Network error resolved after 0:00:01.635250, resuming normal operation.
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.426283, resuming normal operation.
+wandb: Network error resolved after 0:00:01.740039, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.1635783674331455 seconds), retrying request
+wandb: Network error resolved after 0:00:01.596524, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.504241861228239 seconds), retrying request
+wandb: Network error resolved after 0:00:01.695552, resuming normal operation.
+wandb: Network error resolved after 0:00:01.651267, resuming normal operation.
+wandb: 429 encountered ({"error":"rate limit exceeded"}), retrying request
+wandb: Network error resolved after 0:00:01.654585, resuming normal operation.
+wandb: Network error resolved after 0:00:01.699843, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.854581371322642 seconds), retrying request
+wandb: Network error resolved after 0:00:01.428312, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.336553921889223 seconds), retrying request
+wandb: Network error resolved after 0:00:01.645168, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.079574643514174 seconds), retrying request
+wandb: Network error resolved after 0:00:01.558957, resuming normal operation.
+wandb: Network error resolved after 0:00:01.400994, resuming normal operation.
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.75042236784417 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.748403283845173 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.735353841404255 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.548851720876502 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.582090186408868 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0551399981454246 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.086725358015611 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.27528745543072 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.054643462881385 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.251432683423227 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.12102886265332 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.390730218362794 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.256589768898953 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.205503656505806 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.651293541505778 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.123171380580171 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.362635644443113 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3601281650781525 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2189949872827475 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3671157883686784 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.372300059556469 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.623865580609357 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.688118027777419 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3581987051440945 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3183154233695817 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.159417890101747 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.16741122995208 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1413291835219668 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.27211717329757 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.665537242378925 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.74433396825129 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.065908880090747 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0910533392301676 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.870659949066083 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.834630817343306 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.51554336103659 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.3767294630755 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.912185473235407 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.201079294203147 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.170650944930351 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 16.763540615626457 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.75665796212365 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.179749356231262 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 16.047348790980305 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.639562207811903 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 18.88689265121526 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.01526413308587 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2035431722247925 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.69539875288173 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.438130884154289 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.332471915291178 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.531474527060553 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.297065393437122 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.919466368705574 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.592187337469998 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.809342122489262 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.728213797591636 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.496920308260736 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.07596902441792 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 19.135582196517824 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.007677140786839 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.327916427688019 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.030711137958431 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.312100446750254 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.91423554200835 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.899979782056804 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2650867094110336 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.149380028303476 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.54804423412672 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.967941663295548 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2519135126339678 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.073764758374212 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.79843483555055 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.675596539784628 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.466834588364879 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.22271339846105 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.348180590111775 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 33.931066708459674 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.059011928571191 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.311512608214545 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2616051672214352 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.325807027239837 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0092118772973797 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.304366057227499 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1516344478099265 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.336373827160843 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.05485869580552 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4905347002511706 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.688709680108337 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.810137912498093 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1630069367414135 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.525410893941693 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3586184907570003 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.465855749312662 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.910632732349155 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1382231680760855 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4292525615894864 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.6812004934875295 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.380338611360424 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2656904682042165 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.067155301182973 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.692220234363936 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.315081136366155 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.49906487955272 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.6634500724133146 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.396950199283786 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.902291926326307 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.461342804322301 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.368095142128395 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.907747049434701 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0327037320752064 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.066724489834645 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.031384738790221 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.912142144521326 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.986826396014168 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.440857923279137 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.89780312488241 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2730515420541897 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.725241677746599 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.057033380004205 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.680958916246245 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.486275383069436 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.354078378189341 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.116447377646303 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2535158789787024 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.222182088427205 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.645482694689912 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0571728837507086 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.64005937817111 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.650357097008929 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.936301295216825 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.033275462076815 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4571254059432075 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.747541767886808 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.043724250579368 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.0786458446548 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.124877585186656 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.582174997580628 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.227646044206221 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.854682400513825 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.062784869267151 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.429545497415826 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.091239853246205 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2299951544822316 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0014745084970396 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4132592757461735 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.348628472854082 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.478460667474605 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.349934401083434 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.049179842216518 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.452829265155386 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0042445838672185 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0659518439926203 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.020430716762057 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3674818605139474 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.480848921228268 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0126736209467437 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.334674908374485 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1972985923403296 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.360745289290132 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.332442706405611 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2767864639490867 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1743070365403683 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.103544806158008 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1879414999305538 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.042673884038374 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.8583127842479055 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.192466824206858 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0630386170657684 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0287571967375184 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.151819867635259 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4418495111115934 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 8.157560408378618 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.441948805351642 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.877218910810393 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.045775209197749 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.307850733897001 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0239265433346962 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0326482216099375 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.042952408564005 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3313281225085354 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.89634351783034 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.02571451512453 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.02382579162994 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.040472082488425 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4179966136805953 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.599665508053166 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.100501491604265 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0502279563117782 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.519073956328901 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.129830191027214 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.643805345752686 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1612347743687588 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1429878194993526 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2811588472934314 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.479704686074492 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.476818349150867 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.201350259408379 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.252861571371731 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.934291037401491 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.002381845351264 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0292278657563014 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.725456281627258 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.072008466708725 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1750870291385636 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.638350766427184 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0820719646670844 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.58646508495191 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3248478793486176 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3656192209411033 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.217738255352728 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.228960914023077 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0199463937677513 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.21365203265503 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.174969680155849 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2914362350661577 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0130040370000595 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.099902386452626 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1634699180313506 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.259292857289671 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2344782783122525 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.139873547255518 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.30778534773393 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3289640559811056 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.053520286661524 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1234130522848953 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3220354125064118 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.270932351793179 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0212740578813926 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1980462270664636 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.024133362665975 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.316037560292809 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1696957049295618 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.241619727310111 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.039559996687758 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.102119757138592 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.225660540752807 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3565651312173173 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.164004629427069 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.125357845526374 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.485678573962664 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.016099896406658 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.123364534686025 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.218932421520913 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.051578002005837 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0445138627316135 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0454395555785068 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.351505660428771 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.345189290584042 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1438790112797554 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.437768757140081 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2811080926587612 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.968708218568684 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.249382159783785 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.997206001134204 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.761286174551093 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3770268259156686 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.709642801241155 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.281380036992049 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.719436053839468 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.105470499406106 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.495275271874001 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.253009695774959 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.915306795574432 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.492706745210715 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.853867962953797 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.07924416046538 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0294933296520483 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1823190759636777 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0992104142883323 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.5100051875841976 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.234204408435539 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.470864100268921 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.159634378415178 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.167117928217605 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.047147399549515 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0825403151615967 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.135077987583408 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4796969082371705 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3236872433473548 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0896774875437143 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.336090769861425 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1213666519267296 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1078366738961765 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.443565878784778 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2517739146413724 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.450280620476528 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.259345158489958 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.194294033241353 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.450685108719807 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.6476884042874795 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0389238259961413 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.83349832926225 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2244965827531495 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2542854631262976 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.646622575382021 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.817084094917909 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.241138086124908 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.399946601827351 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2261772780062468 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.301184380093818 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.438186194139888 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.905716722866219 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.309737723163467 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.315913177252107 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.283062652089024 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.9337119339029405 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.025747712857385 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.454536249659765 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4875354282947426 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3881795830355164 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.050391083157159 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4410334630213195 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0339273347824647 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4397663006452 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2573639005068378 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0098423208243363 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.337880420823478 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2284433655956755 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.117258425907231 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4912014632291575 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1179112110872667 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.215755627019197 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2368072252788016 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2494250288071425 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2038738337785952 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2239026972075866 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.373939786016691 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.478996644633292 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2304424454117653 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.839083349288385 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1652284056400966 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.546677551141503 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3875095456691464 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4624290324663614 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.575697710924336 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.405002306729114 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.960122784160759 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.272257850918639 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.311819306422518 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.139434151601535 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.053389910042189 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.663412603700464 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.2639150130854855 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.533328311484441 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.229814000349764 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.595463076007582 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.232238750595623 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.527841878422194 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.199590774962351 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.969720320601152 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.208021900713467 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.876124586861682 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.291409723428322 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.8336293530063354 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.2191456437854775 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2624861127374976 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2968962524332213 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.172546063080308 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0116231127414497 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.206591770468292 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.265858186159731 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.271053507903086 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.070835944693024 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3527516404359106 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4187570748432208 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.770856989793434 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.791416053231945 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.960111566707818 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2079606159607392 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.082614658192392 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0542708217313383 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.494491826370566 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2521325792352744 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4982669872147305 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.169434401478004 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.084617538131031 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.385414798879039 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 17.38463733368633 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.361990634543883 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1397999494363034 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.570817668277073 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2488395611821197 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.659602463000914 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2772364124498456 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4079894266938995 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.337146343077145 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2483124353535273 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.44379019333265 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3751129916187903 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.18495007569341 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.418416491524879 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.017047415355775 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4432140188077733 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.759229063952104 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3958184088613264 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1545685811977573 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.243009551957249 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.26056915916746 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.553909268893916 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0899180339626 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.853260569481374 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.262135063619191 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.422933436090988 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.098619606741033 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2576428551898537 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0330128724008807 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.854950684596073 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1427549561230483 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.090974680473345 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0532136584314133 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4068808603235294 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0950474706194413 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.546889766036442 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3623232804285794 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.604329376557105 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.481747292666351 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 36.20582343291187 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.447097890959006 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0412520929075124 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.131061043147063 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3282854401295827 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1839381167811043 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.004000471855517 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.372330448799138 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0359402507358935 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.70854149960983 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1419293303662132 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.134530803404527 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4597694614712635 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.360758794706195 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.857105400691319 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.408548983217464 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 9.451825050610115 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.7969395052575186 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.431985312541497 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.327989435946779 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.453661934809353 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.302385883968372 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.180056600737679 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1631416742038576 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2359078893350963 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 16.925704037759687 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0963997223252986 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.56776987164685 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0401252284940115 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.1382703508488285 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.373528847351972 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.7539509089890215 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.6028626307106295 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3925876303364118 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0980169552193555 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.684917558442657 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3893414518539493 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.346065545354877 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.073229979354089 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 34.75112551471957 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.259513965314973 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1500038751248036 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.386912111994614 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.622895506777706 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.12126053850579 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.472030365028996 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.449041602982273 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.0193399046205 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3745621216844652 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3598140220833463 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3147771413905325 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.290466379204337 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.176010863502604 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.011696502738085 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.976119335905413 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3329310169265716 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1448562221979786 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0838791145325817 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3181927248645158 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.77392342344248 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.5387658076203525 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.2535024763584923 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.115272964328392 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.345598260971445 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.866192770752233 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1964163720358236 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.413353203500651 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.338924614992223 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.807388403653751 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.161110302420664 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.202335138863515 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4819218958677203 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4267564896584095 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.653664258398042 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.0828881064057807 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.478270974078405 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.3490741070939616 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.1809889688402295 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1949337991985662 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.559907772660894 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.417352215916226 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.106190696598731 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.238825074812799 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.739887113770304 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.458695244288922 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.227498681619589 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1267529727194416 seconds), retrying request
+wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.114700553519827 seconds), retrying request
