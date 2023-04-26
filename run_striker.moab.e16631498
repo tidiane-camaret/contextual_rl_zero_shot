@@ -1144,3 +1144,173 @@ wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.4586952442
 wandb: 429 encountered (Filestream rate limit exceeded, retrying in 4.227498681619589 seconds), retrying request
 wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.1267529727194416 seconds), retrying request
 wandb: 429 encountered (Filestream rate limit exceeded, retrying in 2.114700553519827 seconds), retrying request
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/save_util.py:278: UserWarning: Path 'results/policies' does not exist. Will create it.
+  warnings.warn(f"Path '{path.parent}' does not exist. Will create it.")
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+wandb: Waiting for W&B process to finish... (success).
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:                global_step ▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                mean_reward ▁
+wandb:        rollout/ep_len_mean ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        rollout/ep_rew_mean ▁▁▁▁▂▂▂▂▂▂▃▂▂▂▂▃▄▄▄▄▅▄▅▅▅▅▅▅▆▆▇▆▆▇▇▇▇▇██
+wandb:                 std_reward ▁
+wandb:                   time/fps █▃▃▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            train/approx_kl ▁▁▂▂▃▅▆▅▄▄▅▅▅▄▅▅▅▄▅▅▅▆▅▇▇▆▇▆▆▆▇▇▇▇▇██▇█▇
+wandb:        train/clip_fraction ▂▁▂▃▄▅▇▆▅▅▅▅▅▅▅▅▅▅▅▆▅▆▆▇▇▇▇▇▇▇██▇▇▇█████
+wandb:           train/clip_range ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train/entropy_loss ▁▁▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇██
+wandb:   train/explained_variance ▁▅▇▇████████████████████████████████████
+wandb:        train/learning_rate ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                 train/loss █▅▃▃▃▂▃▂▂▂▂▂▂▁▃▂▃▃▃▂▃▂▂▁▁▁▂▂▃▂▁▁▁▃▂▁▂▁▁▁
+wandb: train/policy_gradient_loss ▇▇▆▆▅▃▁▃▄▅▄▅▅▆▅▅▅▆▆▅▆▆▆▆▆▆▇▆▇▇▆▆▆▇▇▇▇▇▇█
+wandb:                  train/std ████▇▇▇▇▇▆▆▆▆▅▅▅▅▅▄▄▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▂▂▁▁▁
+wandb:           train/value_loss █▅▃▂▂▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:                global_step 983040
+wandb:                mean_reward -193.43562
+wandb:        rollout/ep_len_mean 100.0
+wandb:        rollout/ep_rew_mean -151.75095
+wandb:                 std_reward 66.17729
+wandb:                   time/fps 688.0
+wandb:            train/approx_kl 0.01539
+wandb:        train/clip_fraction 0.21171
+wandb:           train/clip_range 0.2
+wandb:         train/entropy_loss -5.70358
+wandb:   train/explained_variance 0.99111
+wandb:        train/learning_rate 0.0003
+wandb:                 train/loss 4.26518
+wandb: train/policy_gradient_loss -0.00179
+wandb:                  train/std 0.54628
+wandb:           train/value_loss 14.89747
+wandb: 
+wandb: Synced unique-smoke-216: https://wandb.ai/tidiane/meta_rl/runs/1dszimjh
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 5 other file(s)
+wandb: Find logs at: ./wandb/run-20230426_140845-1dszimjh/logs
+Traceback (most recent call last):
+  File "/home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/run_striker.py", line 93, in <module>
+    eval_env.render()
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/core.py", line 295, in render
+    return self.env.render(mode, **kwargs)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/envs/mujoco/mujoco_env.py", line 172, in render
+    self._get_viewer(mode).render()
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/envs/mujoco/mujoco_env.py", line 184, in _get_viewer
+    self.viewer = mujoco_py.MjViewer(self.sim)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjviewer.py", line 137, in __init__
+    super().__init__(sim)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjviewer.py", line 28, in __init__
+    super().__init__(sim)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 311, in mujoco_py.cymj.MjRenderContextWindow.__init__
+    super().__init__(sim, offscreen=False)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 46, in mujoco_py.cymj.MjRenderContext.__init__
+    self._setup_opengl_context(offscreen, device_id, opengl_backend, quiet=quiet)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 102, in mujoco_py.cymj.MjRenderContext._setup_opengl_context
+    self.opengl_context = GlfwContext(offscreen=offscreen, quiet=quiet)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/opengl_context.pyx", line 44, in mujoco_py.cymj.GlfwContext.__init__
+    GlfwContext._init_glfw()
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/opengl_context.pyx", line 64, in mujoco_py.cymj.GlfwContext._init_glfw
+    raise GlfwError("Failed to initialize GLFW")
+mujoco_py.cymj.GlfwError: Failed to initialize GLFW
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+wandb: 
+wandb: Run history:
+wandb:                global_step ▁▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:                mean_reward ▁
+wandb:        rollout/ep_len_mean ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:        rollout/ep_rew_mean ▁▁▁▂▁▂▂▁▂▂▂▁▂▃▃▃▄▃▄▅▅▅▆▆▆▅▆▇▆▆▆▇▇▇▇▇▇▇▇█
+wandb:                 std_reward ▁
+wandb:                   time/fps █▃▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:            train/approx_kl ▁▁▂▂▃▆▆▅▃▄▅▄▅▅▅▅▄▅▄▅▅▅▄▆▆▅▆▆▆▇▆▆▇▆▇▇▇█▇█
+wandb:        train/clip_fraction ▂▁▂▃▃▆▆▅▄▄▅▄▅▅▅▆▅▆▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇██
+wandb:           train/clip_range ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:         train/entropy_loss ▁▁▁▁▂▂▂▂▂▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:   train/explained_variance ▁▅▇▇████████████████████████████████████
+wandb:        train/learning_rate ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                 train/loss ▆▃▄▃▂▂▃▂▁▁▂▂▁▂█▄▅▄▆▃▅▂▃▄▂▁▁▃▂▁▃▁▂▁▁▁▂▁▁▃
+wandb: train/policy_gradient_loss ██▇▆▅▁▂▄▅▅▅▆▅▅▅▅▅▅▆▅▅▆▇▇▆▇▇▇▇▇██▇█▇██▇▇▇
+wandb:                  train/std ███▇▇▇▇▇▆▆▆▅▅▅▅▄▄▄▄▄▄▄▃▃▃▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁
+wandb:           train/value_loss █▅▃▂▂▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:                global_step 1003520
+wandb:                mean_reward -204.05796
+wandb:        rollout/ep_len_mean 100.0
+wandb:        rollout/ep_rew_mean -168.43385
+wandb:                 std_reward 70.09308
+wandb:                   time/fps 753.0
+wandb:            train/approx_kl 0.01736
+wandb:        train/clip_fraction 0.23272
+wandb:           train/clip_range 0.2
+wandb:         train/entropy_loss -5.87008
+wandb:   train/explained_variance 0.99087
+wandb:        train/learning_rate 0.0003
+wandb:                 train/loss 28.77738
+wandb: train/policy_gradient_loss -0.00459
+wandb:                  train/std 0.56016
+wandb:           train/value_loss 22.74466
+wandb: 
+wandb: Synced genial-sky-218: https://wandb.ai/tidiane/meta_rl/runs/2sq0ejs7
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 30 other file(s)
+wandb: Find logs at: ./wandb/run-20230426_140845-2sq0ejs7/logs
+Traceback (most recent call last):
+  File "/home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/run_striker.py", line 93, in <module>
+    eval_env.render()
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/core.py", line 295, in render
+    return self.env.render(mode, **kwargs)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/envs/mujoco/mujoco_env.py", line 172, in render
+    self._get_viewer(mode).render()
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/gym/envs/mujoco/mujoco_env.py", line 184, in _get_viewer
+    self.viewer = mujoco_py.MjViewer(self.sim)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjviewer.py", line 137, in __init__
+    super().__init__(sim)
+  File "/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjviewer.py", line 28, in __init__
+    super().__init__(sim)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 311, in mujoco_py.cymj.MjRenderContextWindow.__init__
+    super().__init__(sim, offscreen=False)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 46, in mujoco_py.cymj.MjRenderContext.__init__
+    self._setup_opengl_context(offscreen, device_id, opengl_backend, quiet=quiet)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/mjrendercontext.pyx", line 102, in mujoco_py.cymj.MjRenderContext._setup_opengl_context
+    self.opengl_context = GlfwContext(offscreen=offscreen, quiet=quiet)
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/opengl_context.pyx", line 44, in mujoco_py.cymj.GlfwContext.__init__
+    GlfwContext._init_glfw()
+  File "miniconda3/envs/tid_env/lib/python3.10/site-packages/mujoco_py/opengl_context.pyx", line 64, in mujoco_py.cymj.GlfwContext._init_glfw
+    raise GlfwError("Failed to initialize GLFW")
+mujoco_py.cymj.GlfwError: Failed to initialize GLFW
+/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/lib/python3.10/site-packages/stable_baselines3/common/evaluation.py:67: UserWarning: Evaluation environment is not wrapped with a ``Monitor`` wrapper. This may result in reporting modified episode lengths and rewards, if other wrappers happen to modify these. Consider wrapping environment first with ``Monitor`` wrapper.
+  warnings.warn(
+wandb: Waiting for W&B process to finish... (success).
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[17537,1],37]
+  Exit code:    1
+--------------------------------------------------------------------------
+
+real	28m14.120s
+user	23m49.989s
+sys	0m14.101s
