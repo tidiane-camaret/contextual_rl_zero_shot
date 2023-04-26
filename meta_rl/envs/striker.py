@@ -2,10 +2,14 @@ import numpy as np
 from gym import utils
 from gym.envs.mujoco import mujoco_env
 
+NUM_OF_PARAMS = 2
 
 class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self, scale=None, oracle=False):
-        self.scale = scale
+        if scale is None:
+            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
+        else:
+            self.scale = scale
         self.oracle = oracle
         utils.EzPickle.__init__(self)
         self._striked = False
@@ -15,12 +19,7 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
         self.original_mass = np.copy(self.model.body_mass)
         self.original_inertia = np.copy(self.model.body_inertia)
-        self.original_friction = np.copy(self.model.geom_friction)
-        
-        self.env_id = int((self.scale[0] * 5 + self.scale[1]) * 10)
-        self.model.body_mass[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_mass
-        self.model.body_inertia[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_inertia
-        self.model.geom_friction[4, 0] = (self.scale[1] - 0.2) * 0.8 + 0.2
+        self.original_damping = np.copy(self.model.dof_damping)
 
     def step(self, a):
         vec_1 = self.get_body_com("object") - self.get_body_com("tips_arm")
@@ -52,10 +51,7 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def reset_model(self):
 
-        # TODO : see if this is necessary
-        self.model.body_mass[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_mass
-        self.model.body_inertia[:] = ((self.scale[0] - 0.1) * 5 + 1) * self.original_inertia
-        self.model.geom_friction[4, 0] = (self.scale[1] - 0.2) * 0.8 + 0.2
+        self.change_env()
 
         self._min_strike_dist = np.inf
         self._striked = False
@@ -85,6 +81,30 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         qvel[7:] = 0
         self.set_state(qpos, qvel)
         return self._get_obs()
+
+
+    def change_env(self, scale=None):
+        mass = np.copy(self.original_mass)
+        inertia = np.copy(self.original_inertia)
+        damping = np.copy(self.original_damping)
+
+        if scale is None:
+            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
+        else:
+            self.scale = scale
+
+        self.env_id = int((self.scale[0] * 5 + self.scale[1]) * 10)
+
+        mass[11] = ((self.scale[0]-0.1)*8+1) * mass[11]  # 0.2~4.2*mass
+        inertia[11, :] = ((self.scale[0]-0.1)*8+1) * inertia[11, :]
+
+        damping[7] = (self.scale[1] - 0.2) * 2 + 0.5  # default 0.5: 0.1~1.1
+        damping[8] = (self.scale[1] - 0.2) * 2 + 0.5
+
+        self.model.body_mass[:] = mass
+        self.model.body_inertia[:] = inertia
+        self.model.dof_damping[:] = damping
+        return
 
     def _get_obs(self):
         raw_obs = np.concatenate(

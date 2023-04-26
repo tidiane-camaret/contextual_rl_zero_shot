@@ -35,7 +35,7 @@ conda activate tid_env
 
 
 time mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
-
+time mpirun python dev/automl/meta_rl/scripts/run_striker.py --oracle 8 10
 
 # submit the job on nemo : msub -l nodes=1:ppn=20 nemo_jobs/run_striker.moab
 # normal : msub -l nodes=1:ppn=10,walltime=60:00 nemo_jobs/run_striker.moab
