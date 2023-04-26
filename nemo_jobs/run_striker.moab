@@ -1,0 +1,29 @@
+
+# job script for nemo
+
+#!/bin/bash -x
+
+
+# modules to load when using nemo cluster
+module load devel/python/3.9.7
+
+
+pip install -r dev/automl/meta_rl/requirements.txt
+
+conda init bash
+conda activate tid_env
+
+# packages for mujoco 
+conda install -c conda-forge glew
+conda install -c conda-forge mesalib
+conda install -c menpo glfw3
+export CPATH=$CONDA_PREFIX/include
+
+time mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
+
+
+# submit the job on nemo : msub -l nodes=1:ppn=20 nemo_jobs/run_striker.moab
+# express : msub -q express -l nodes=1:ppn=1 nemo_jobs/run_striker.moab
+
+
+# to check the job status : checkjob + jobid
