@@ -23,7 +23,7 @@ NUM_EVALS = 1000
 oracle = True
 
 run = wandb.init(
-    project="meta_rl",
+    project="meta_rl_epi",
     monitor_gym=True, # auto-upload the videos of agents playing the game
     sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
     config={

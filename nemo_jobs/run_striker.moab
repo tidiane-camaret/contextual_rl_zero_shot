@@ -38,6 +38,7 @@ time mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
 
 
 # submit the job on nemo : msub -l nodes=1:ppn=20 nemo_jobs/run_striker.moab
+# normal : msub -l nodes=1:ppn=10,walltime=60:00 nemo_jobs/run_striker.moab
 # express : msub -q express -l nodes=1:ppn=1,walltime=15:00 nemo_jobs/run_striker.moab
 # gpu : msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 nemo_jobs/run_striker.moab
 
