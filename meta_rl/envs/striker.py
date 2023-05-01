@@ -6,22 +6,23 @@ NUM_OF_PARAMS = 2
 
 class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self, eval_mode = False, eval_scale = [0.7,0.7], oracle=False):
-
         self.eval_mode = eval_mode
         self.eval_scale = eval_scale
         self.oracle = oracle
-    
-        self.set_params()
-
         utils.EzPickle.__init__(self)
         self._striked = False
         self._min_strike_dist = np.inf
         self.strike_threshold = 0.1
+        
+        self.scale = self.eval_scale # set it here just so that initialization can happen in oracle mode
+
         mujoco_env.MujocoEnv.__init__(self, "striker.xml", 5)
 
         self.original_mass = np.copy(self.model.body_mass)
         self.original_inertia = np.copy(self.model.body_inertia)
         self.original_damping = np.copy(self.model.dof_damping)
+    
+        self.set_params()
 
     def step(self, a):
         vec_1 = self.get_body_com("object") - self.get_body_com("tips_arm")
@@ -87,16 +88,13 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def set_params(self):
 
-        if self.eval_mode:
-            self.scale = self.eval_scale
-        else:
+        if not self.eval_mode:
+            #print("not eval mode")
             self.scale = self.np_random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4 
 
         mass = np.copy(self.original_mass)
         inertia = np.copy(self.original_inertia)
         damping = np.copy(self.original_damping)
-
-        self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
 
         self.env_id = int((self.scale[0] * 5 + self.scale[1]) * 10)
 
@@ -109,14 +107,17 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.model.body_mass[:] = mass
         self.model.body_inertia[:] = inertia
         self.model.dof_damping[:] = damping
-
-        #print("scale: ", self.scale,
-              #"mass: ", self.model.body_mass,
+        
+        """
+        print(
+              "scale: ", self.scale,
+              "mass: ", self.model.body_mass[11],
               #"inertia: ", self.model.body_inertia,
               #"damping: ", self.model.dof_damping
-        #      )
+              )
         return
-
+        """
+        
     def _get_obs(self):
         raw_obs = np.concatenate(
             [

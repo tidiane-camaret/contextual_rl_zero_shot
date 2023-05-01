@@ -8,7 +8,6 @@ from gym.wrappers import RecordEpisodeStatistics
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common import vec_env, monitor
 from stable_baselines3 import A2C, PPO, DQN
-from sb3_contrib import TRPO
 
 import wandb
 from wandb.integration.sb3 import WandbCallback
@@ -22,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('--oracle', action='store_true')
     parser.add_argument('--render', action='store_true')
     parser.add_argument('--nb_steps', type=int, default=400_000)
-    parser.add_argument('--nb_evals', type=int, default=10000)
+    parser.add_argument('--nb_evals', type=int, default=100)
     args = parser.parse_args()
     oracle = args.oracle
     render = args.render
@@ -33,7 +32,6 @@ if __name__ == "__main__":
 
     task_name = "striker"
     NUM_OF_PARAMS = 2
-
 
     run = wandb.init(
         project="meta_rl_epi",
@@ -46,6 +44,8 @@ if __name__ == "__main__":
             "total_timesteps": nb_total_timesteps,
         }
         )
+
+        
 
     # generate the training environment
 
@@ -76,16 +76,32 @@ if __name__ == "__main__":
     """
     # evaluate the policy on an unseen scale value
 
-    eval_env = gym.make('StrikerCustom-v0', eval_mode=True, oracle=oracle)
+    eval_coeff_list = np.linspace(0.1, 2, 10)
+    mean_reward_list = []
+    std_reward_list = []
 
-    mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_evals)
+    for eval_coeff in eval_coeff_list:
+        eval_env = gym.make('StrikerCustom-v0', eval_mode=True, oracle=oracle, eval_scale=[eval_coeff, eval_coeff])
 
+        mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_evals)
+        mean_reward_list.append(mean_reward)
+        std_reward_list.append(std_reward)
+        print(f"eval_coeff: {eval_coeff}, mean_reward:{mean_reward:.2f} +/- {std_reward}")
+    
+    
+    mean_reward_list = np.array(mean_reward_list)
+    std_reward_list = np.array(std_reward_list)
+    # log the results
+    data = [[param, mean_reward] for param, mean_reward in zip(eval_coeff_list, mean_reward_list)]
+    table = wandb.Table(data=data, columns=["param", "mean_reward"])
+    wandb.log({"mean_reward_plot": wandb.plot.line(table, "param", "mean_reward")})
     print(f"mean_reward:{mean_reward:.2f} +/- {std_reward}")
     wandb.log({"mean_reward": mean_reward, "std_reward": std_reward})
 
     # close wandb
+    """
     run.finish()
-
+    """
     # render the policy
 
     obs = eval_env.reset()
