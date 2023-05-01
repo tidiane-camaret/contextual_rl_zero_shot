@@ -21,17 +21,18 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--oracle', action='store_true')
     parser.add_argument('--render', action='store_true')
+    parser.add_argument('--nb_steps', type=int, default=400_000)
+    parser.add_argument('--nb_evals', type=int, default=10000)
     args = parser.parse_args()
     oracle = args.oracle
     render = args.render
+    nb_total_timesteps = args.nb_steps
+    nb_evals = args.nb_evals
 
     print("Oracle: ", oracle)
 
     task_name = "striker"
     NUM_OF_PARAMS = 2
-    NUM_OF_ENVS = 2
-    TOTAL_TIMESTEPS = 400_000
-    NUM_EVALS = 10000
 
 
     run = wandb.init(
@@ -42,19 +43,13 @@ if __name__ == "__main__":
             "task_name": task_name,
             "oracle": oracle,
             "num_of_params": NUM_OF_PARAMS,
-            "num_of_envs": NUM_OF_ENVS,
-            "total_timesteps": TOTAL_TIMESTEPS,
+            "total_timesteps": nb_total_timesteps,
         }
         )
 
     # generate the training environment
 
-    scale_list = [None] * NUM_OF_ENVS
-    # same shape, but filled with ones
-    #scale_list = np.ones((NUM_OF_ENVS, NUM_OF_PARAMS, ))*0.5
-
-
-    train_env = gym.make('StrikerCustom-v0', scale=None, oracle=oracle)
+    train_env = gym.make('StrikerCustom-v0', eval_mode=False, oracle=oracle)
     """
     # vectorized environment. TODO : see how it can speed up training
     train_env = vec_env.DummyVecEnv([
@@ -71,7 +66,7 @@ if __name__ == "__main__":
                 tensorboard_log="results/tensorboard/"+task_name+"/")
 
 
-    model.learn(total_timesteps=TOTAL_TIMESTEPS,
+    model.learn(total_timesteps=nb_total_timesteps,
                 callback=WandbCallback(),
                 )
     """
@@ -81,9 +76,9 @@ if __name__ == "__main__":
     """
     # evaluate the policy on an unseen scale value
 
-    eval_env = gym.make('StrikerCustom-v0', scale = [0.6,0.6], oracle=oracle)
+    eval_env = gym.make('StrikerCustom-v0', eval_mode=True, oracle=oracle)
 
-    mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=NUM_EVALS)
+    mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_evals)
 
     print(f"mean_reward:{mean_reward:.2f} +/- {std_reward}")
     wandb.log({"mean_reward": mean_reward, "std_reward": std_reward})

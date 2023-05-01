@@ -5,12 +5,14 @@ from gym.envs.mujoco import mujoco_env
 NUM_OF_PARAMS = 2
 
 class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
-    def __init__(self, scale=None, oracle=False):
-        if scale is None:
-            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
-        else:
-            self.scale = scale
+    def __init__(self, eval_mode = False, eval_scale = [0.7,0.7], oracle=False):
+
+        self.eval_mode = eval_mode
+        self.eval_scale = eval_scale
         self.oracle = oracle
+    
+        self.set_params()
+
         utils.EzPickle.__init__(self)
         self._striked = False
         self._min_strike_dist = np.inf
@@ -51,7 +53,7 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def reset_model(self):
 
-        self.change_env(scale=self.scale)
+        self.set_params()
 
         self._min_strike_dist = np.inf
         self._striked = False
@@ -83,15 +85,18 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         return self._get_obs()
 
 
-    def change_env(self, scale=None):
+    def set_params(self):
+
+        if self.eval_mode:
+            self.scale = self.eval_scale
+        else:
+            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4 
+
         mass = np.copy(self.original_mass)
         inertia = np.copy(self.original_inertia)
         damping = np.copy(self.original_damping)
 
-        if scale is None:
-            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
-        else:
-            self.scale = scale
+        self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
 
         self.env_id = int((self.scale[0] * 5 + self.scale[1]) * 10)
 
@@ -104,6 +109,12 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.model.body_mass[:] = mass
         self.model.body_inertia[:] = inertia
         self.model.dof_damping[:] = damping
+
+        #print("scale: ", self.scale,
+              #"mass: ", self.model.body_mass,
+              #"inertia: ", self.model.body_inertia,
+              #"damping: ", self.model.dof_damping
+        #      )
         return
 
     def _get_obs(self):
