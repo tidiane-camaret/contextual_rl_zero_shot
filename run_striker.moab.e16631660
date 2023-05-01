@@ -1,0 +1,221 @@
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_vx=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for this output (/usr/share/lmod/lmod/init/bash)
+Shell debugging restarted
++ unset __lmod_vx
++ module load devel/python/3.9.7
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ module load devel/conda
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Lmod has detected the following error: Cannot load module "tools/conda/latest"
+because these module(s) are loaded:
+   devel/python
+
+While processing the following module(s):
+    Module fullname     Module Filename
+    ---------------     ---------------
+    tools/conda/latest  /opt/bwhpc/modulefiles/development/common/tools/conda/latest.lua
+
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 1
++ module load mpi/openmpi/4.1-gnu-9.2
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_sh_dbg=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for Lmod's output
+Shell debugging restarted
++ unset __lmod_sh_dbg
++ return 0
++ export CPATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/include
++ CPATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/include
++ source miniconda3/etc/profile.d/conda.sh
+++ export CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ '[' -z x ']'
++ conda activate tid_env
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate tid_env
++ '[' -n '' ']'
++ local ask_conda
+++ PS1=
+++ __conda_exe shell.posix activate tid_env
+++ /home/fr/fr_fr/fr_tn110/miniconda3/bin/conda shell.posix activate tid_env
++ ask_conda='. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh"
+. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh"
+PS1='\''(tid_env) '\''
+export PATH='\''/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric'\''
+export CONDA_PREFIX='\''/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''tid_env'\''
+export CONDA_PROMPT_MODIFIER='\''(tid_env) '\''
+export CONDA_PREFIX_1='\''/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest'\''
+export CONDA_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/python'\'''
++ eval '. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh"
+. "/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh"
+PS1='\''(tid_env) '\''
+export PATH='\''/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric'\''
+export CONDA_PREFIX='\''/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env'\''
+export CONDA_SHLVL='\''2'\''
+export CONDA_DEFAULT_ENV='\''tid_env'\''
+export CONDA_PROMPT_MODIFIER='\''(tid_env) '\''
+export CONDA_PREFIX_1='\''/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest'\''
+export CONDA_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda'\''
+export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+export CONDA_PYTHON_EXE='\''/home/fr/fr_fr/fr_tn110/miniconda3/bin/python'\'''
+++ . /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/xgboost_deactivate.sh
++++ '[' 1 = 1 ']'
++++ unset OCL_ICD_FILENAMES_RESET
++++ unset OCL_ICD_FILENAMES
+++ . /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/etc/conda/deactivate.d/mpivars.deactivate.sh
++++ '[' '' '!=' 1 ']'
+++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/mpi.jar
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/mpi.jar:\?||'
++++ export CLASSPATH=
++++ CLASSPATH=
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric:\?||'
++++ export LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
++++ LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:\?||'
++++ export LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:
++++ LD_LIBRARY_PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/lib64:/opt/bwhpc/common/compiler/gnu/9.2.0/lib:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib64:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/lib::/home/fr/fr_fr/fr_tn110/.mujoco/mujoco210/bin:/usr/lib/nvidia:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/share/man
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/share/man:\?||'
++++ export MANPATH=/opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::
++++ MANPATH=/opt/bwhpc/common/compiler/gnu/9.2.0/share/man:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/share/man:/usr/share/lmod/lmod/share/man::
+++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric:\?||'
++++ export LIBRARY_PATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
++++ LIBRARY_PATH=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib:
+++++ echo /opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++++ sed 's|/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric:||'
++++ export PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
++++ PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++++ which fi_info
++++ FIP=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q 'compilers_and_libraries.*mpi'
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q /mpi/
+++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
+++++ rev
+++++ cut -f1 '-d '
+++++ rev
+++++ sed 's|/libfabric/bin/fi_info||'
++++ export I_MPI_ROOT=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ I_MPI_ROOT=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ echo /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/lib/libfabric/prov:/usr/lib64/libfabric
++++ grep -q /opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
++++ [[ /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info != '' ]]
++++ echo /opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info
++++ grep -q 'compilers_and_libraries.*mpi'
++++ export FI_PROVIDER_PATH=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info/libfabric/lib/prov:/usr/lib64/libfabric
++++ FI_PROVIDER_PATH=/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin/fi_info/libfabric/lib/prov:/usr/lib64/libfabric
+++ PS1='(tid_env) '
+++ export PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++ PATH=/opt/bwhpc/common/compiler/gnu/9.2.0/bin:/opt/bwhpc/common/mpi/openmpi/4.1.1-gnu-9.2/bin:/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/condabin:/usr/bin:/usr/sbin:/usr/lib64/qt-3.3/bin:/opt/moab/bin:/opt/VirtualGL/bin:/bin:/usr/local/bin:/usr/local/sbin:/home/fr/fr_fr/fr_tn110/.local/bin:/home/fr/fr_fr/fr_tn110/bin:/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest/bin/libfabric
+++ export CONDA_PREFIX=/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env
+++ CONDA_PREFIX=/home/fr/fr_fr/fr_tn110/miniconda3/envs/tid_env
+++ export CONDA_SHLVL=2
+++ CONDA_SHLVL=2
+++ export CONDA_DEFAULT_ENV=tid_env
+++ CONDA_DEFAULT_ENV=tid_env
+++ export 'CONDA_PROMPT_MODIFIER=(tid_env) '
+++ CONDA_PROMPT_MODIFIER='(tid_env) '
+++ export CONDA_PREFIX_1=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
+++ CONDA_PREFIX_1=/opt/bwhpc/intel/oneapi/2022.1/intelpython/latest
+++ export CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ CONDA_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/home/fr/fr_fr/fr_tn110/miniconda3/bin/python
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ mpirun python dev/automl/meta_rl/scripts/run_striker.py 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+usage: run_striker.py
+       [-h]
+       [--oracle]
+run_striker.py: error: unrecognized arguments: 8 10
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[43128,1],7]
+  Exit code:    2
+--------------------------------------------------------------------------
+
+real	1m27.172s
+user	0m5.871s
+sys	0m2.849s

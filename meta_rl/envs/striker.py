@@ -51,7 +51,7 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def reset_model(self):
 
-        self.change_env()
+        self.change_env(scale=self.scale)
 
         self._min_strike_dist = np.inf
         self._striked = False

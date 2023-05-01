@@ -20,8 +20,10 @@ from meta_rl.striker_custom import OriginalStrikerEnv as StrikerEnv
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--oracle', action='store_true')
+    parser.add_argument('--render', action='store_true')
     args = parser.parse_args()
     oracle = args.oracle
+    render = args.render
 
     print("Oracle: ", oracle)
 
@@ -33,7 +35,7 @@ if __name__ == "__main__":
 
 
     run = wandb.init(
-        project="meta_rlepi",
+        project="meta_rl_epi",
         monitor_gym=True, # auto-upload the videos of agents playing the game
         sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
         config={
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     """
     # evaluate the policy on an unseen scale value
 
-    eval_env = gym.make('StrikerCustom-v0', scale = [0.8,0.8], oracle=oracle)
+    eval_env = gym.make('StrikerCustom-v0', scale = [0.6,0.6], oracle=oracle)
 
     mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=NUM_EVALS)
 
@@ -94,10 +96,11 @@ if __name__ == "__main__":
     obs = eval_env.reset()
     print("obs:", obs.shape, )
 
-    for _ in range(10):
-        obs = eval_env.reset()
-        for _ in range(100):
-            action, _states = model.predict(obs)
-            obs, reward, done, info = eval_env.step(action)
-            eval_env.render()
+    if render:
+        for _ in range(10):
+            obs = eval_env.reset()
+            for _ in range(100):
+                action, _states = model.predict(obs)
+                obs, reward, done, info = eval_env.step(action)
+                eval_env.render()
 
