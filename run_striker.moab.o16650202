@@ -43048,3 +43048,33 @@ Logging to results/tensorboard/striker/PPO_41
 |    std                  | 0.418       |
 |    value_loss           | 29.8        |
 -----------------------------------------
+mean_reward:-173.67 +/- 46.20030033982588
+mean_reward:-171.92 +/- 63.59632287688214
+mean_reward:-149.36 +/- 51.76360000334428
+obs: (23,)
+obs: (23,)
+mean_reward:-163.18 +/- 61.548956206862364
+obs: (23,)
+mean_reward:-150.19 +/- 50.71717871921752
+mean_reward:-158.36 +/- 58.779198200735344
+mean_reward:-156.78 +/- 55.767910794271955
+mean_reward:-163.34 +/- 57.999078139786135
+mean_reward:-152.89 +/- 52.577784577098456
+obs: (23,)
+mean_reward:-155.10 +/- 51.411908539345546
+obs: (23,)
+obs: (23,)
+obs: (23,)
+obs: (23,)
+obs: (23,)
+obs: (23,)
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True
+Oracle:  True

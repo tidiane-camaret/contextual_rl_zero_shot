@@ -90,7 +90,7 @@ class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         if self.eval_mode:
             self.scale = self.eval_scale
         else:
-            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4 
+            self.scale = self.np_random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4 
 
         mass = np.copy(self.original_mass)
         inertia = np.copy(self.original_inertia)
