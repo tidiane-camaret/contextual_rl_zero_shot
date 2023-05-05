@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     # render the policy
 
-    eval_env = env
+    eval_env = train_env
 
     obs = eval_env.reset()
     print("obs:", obs.shape, )
