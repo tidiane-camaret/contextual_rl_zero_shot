@@ -27,7 +27,7 @@ msub -q express -l nodes=1:ppn=1,walltime=15:00 nemo_jobs/run_striker.moab
 msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 nemo_jobs/run_striker.moab
 
 ## Interactive session 
-msub -l nodes=1:ppn=1,walltime=3:00:00,pmem=24GB -I 
+msub -l nodes=1:ppn=10,walltime=3:00:00,pmem=6GB -I 
 # dont forget to activate the env
 source miniconda3/etc/profile.d/conda.sh
 conda activate tid_env

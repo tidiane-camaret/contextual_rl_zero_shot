@@ -15,7 +15,7 @@ from wandb.integration.sb3 import WandbCallback
 
 # main function with "oracle" as boolean
 NUM_OF_PARAMS = 2
-NUM_OF_ENVS = 4
+NUM_OF_ENVS = 8
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
