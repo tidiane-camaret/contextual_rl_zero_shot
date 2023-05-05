@@ -47,16 +47,8 @@ if __name__ == "__main__":
 
     # generate the training environment
 
-    train_env = gym.make('StrikerCustom-v0', eval_mode=False, oracle=oracle)
-    """
-    # vectorized environment. TODO : see how it can speed up training
-    train_env = vec_env.DummyVecEnv([
-        lambda: monitor.Monitor(
-        RecordEpisodeStatistics(gym.make('StrikerCustom-v0', scale=scale, oracle=oracle)),
-        )
-        for scale in scale_list])
-    
-    """
+    if oracle:
+        train_env = gym.make('Striker
 
     model = PPO('MlpPolicy', 
                 env=train_env,

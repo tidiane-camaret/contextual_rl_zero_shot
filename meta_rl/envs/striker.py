@@ -4,7 +4,7 @@ from gym.envs.mujoco import mujoco_env
 
 NUM_OF_PARAMS = 2
 
-class StrikerEnv(mujoco_env.MujocoEnv, utils.EzPickle):
+class StrikerEnvTid(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self, eval_mode = False, eval_scale = [0.7,0.7], oracle=False):
         self.eval_mode = eval_mode
         self.eval_scale = eval_scale
