@@ -20,8 +20,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--oracle', action='store_true')
     parser.add_argument('--render', action='store_true')
-    parser.add_argument('--nb_steps', type=int, default=400_000)
-    parser.add_argument('--nb_evals', type=int, default=100)
+    parser.add_argument('--nb_steps', type=int, default=2_000_000)
+    parser.add_argument('--nb_evals', type=int, default=1000)
     args = parser.parse_args()
     oracle = args.oracle
     render = args.render
@@ -95,8 +95,6 @@ if __name__ == "__main__":
     data = [[param, mean_reward] for param, mean_reward in zip(eval_coeff_list, mean_reward_list)]
     table = wandb.Table(data=data, columns=["param", "mean_reward"])
     wandb.log({"mean_reward_plot": wandb.plot.line(table, "param", "mean_reward")})
-    print(f"mean_reward:{mean_reward:.2f} +/- {std_reward}")
-    wandb.log({"mean_reward": mean_reward, "std_reward": std_reward})
 
     # close wandb
     """
