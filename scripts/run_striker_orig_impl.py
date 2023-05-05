@@ -32,7 +32,7 @@ if __name__ == "__main__":
     NUM_OF_PARAMS = 2
 
     run = wandb.init(
-        project="meta_rl_epi",
+        project="meta_rl_epi_orig",
         monitor_gym=True, # auto-upload the videos of agents playing the game
         sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
         config={
@@ -48,7 +48,9 @@ if __name__ == "__main__":
     # generate the training environment
 
     if oracle:
-        train_env = gym.make('Striker
+        train_env = gym.make("StrikerAvg-v0")
+    else:
+        train_env = gym.make("StrikerOracle-v0")
 
     model = PPO('MlpPolicy', 
                 env=train_env,
@@ -65,6 +67,7 @@ if __name__ == "__main__":
     model = PPO.load("results/policies/" + "striker_working" )# + task_name)
     """
     # evaluate the policy on an unseen scale value
+    """
 
     eval_coeff_list = np.linspace(0.1, 2, 10)
     mean_reward_list = []
@@ -89,8 +92,10 @@ if __name__ == "__main__":
     # close wandb
     """
     run.finish()
-    """
+
     # render the policy
+
+    eval_env = env
 
     obs = eval_env.reset()
     print("obs:", obs.shape, )

@@ -1,12 +1,13 @@
 import numpy as np
 from .striker_original import StrikerEnv
-import EPI
+import meta_rl
 
+NUM_OF_PARAMS = 2
 
 class StrikerAvgEnv(StrikerEnv):
     def __init__(self):
         # default values for additional properties
-        self.scale = np.zeros(EPI.NUM_OF_PARAMS, dtype=float)
+        self.scale = np.zeros(NUM_OF_PARAMS, dtype=float)
         self.env_id = 0
         super(StrikerAvgEnv, self).__init__()
         self.original_mass = np.copy(self.model.body_mass)
@@ -32,7 +33,7 @@ class StrikerAvgEnv(StrikerEnv):
         damping = np.copy(self.original_damping)
 
         if scale is None:
-            self.scale = np.random.randint(0, 5, EPI.NUM_OF_PARAMS)*0.1  # 0~0.4
+            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
         else:
             self.scale = scale
 

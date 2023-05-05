@@ -1,12 +1,12 @@
 import numpy as np
 from .striker_avg import StrikerAvgEnv
-import EPI
+import meta_rl
 
-
+EMBEDDING_DIMENSION = 2
 class StrikerTaskEnv(StrikerAvgEnv):
     def __init__(self, reset):
         self.epi_reset = reset
-        self.env_vec = np.zeros(EPI.EMBEDDING_DIMENSION)
+        self.env_vec = np.zeros(EMBEDDING_DIMENSION)
         super(StrikerTaskEnv, self).__init__()
         self.interactive_policy = None
 
