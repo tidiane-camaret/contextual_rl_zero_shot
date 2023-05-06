@@ -5,9 +5,11 @@ import meta_rl
 NUM_OF_PARAMS = 2
 
 class StrikerAvgEnv(StrikerEnv):
-    def __init__(self):
+    def __init__(self, eval_mode = False, eval_scale=None):
         # default values for additional properties
-        self.scale = np.zeros(NUM_OF_PARAMS, dtype=float)
+        self.eval_mode = eval_mode
+        self.eval_scale = eval_scale
+        self.scale = self.eval_scale if self.eval_mode else np.zeros(NUM_OF_PARAMS, dtype=float) 
         self.env_id = 0
         super(StrikerAvgEnv, self).__init__()
         self.original_mass = np.copy(self.model.body_mass)
@@ -33,7 +35,7 @@ class StrikerAvgEnv(StrikerEnv):
         damping = np.copy(self.original_damping)
 
         if scale is None:
-            self.scale = np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
+            self.scale = self.eval_scale if self.eval_mode else np.zeros(NUM_OF_PARAMS, dtype=float) 
         else:
             self.scale = scale
 
@@ -45,9 +47,9 @@ class StrikerAvgEnv(StrikerEnv):
         damping[7] = (self.scale[1] - 0.2) * 2 + 0.5  # default 0.5: 0.1~1.1
         damping[8] = (self.scale[1] - 0.2) * 2 + 0.5
 
-        self.model.body_mass = mass
-        self.model.body_inertia = inertia
-        self.model.dof_damping = damping
+        self.model.body_mass[:] = mass
+        self.model.body_inertia[:] = inertia
+        self.model.dof_damping[:] = damping
         return
 
     def force_reset_model(self, qpos, qvel):
