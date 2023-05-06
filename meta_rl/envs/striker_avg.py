@@ -9,7 +9,7 @@ class StrikerAvgEnv(StrikerEnv):
         # default values for additional properties
         self.eval_mode = eval_mode
         self.eval_scale = eval_scale
-        self.scale = self.eval_scale if self.eval_mode else np.zeros(NUM_OF_PARAMS, dtype=float) 
+        self.scale = np.zeros(NUM_OF_PARAMS, dtype=float) 
         self.env_id = 0
         super(StrikerAvgEnv, self).__init__()
         self.original_mass = np.copy(self.model.body_mass)
@@ -35,7 +35,7 @@ class StrikerAvgEnv(StrikerEnv):
         damping = np.copy(self.original_damping)
 
         if scale is None:
-            self.scale = self.eval_scale if self.eval_mode else np.zeros(NUM_OF_PARAMS, dtype=float) 
+            self.scale = self.eval_scale if self.eval_mode else np.random.randint(0, 5, NUM_OF_PARAMS)*0.1  # 0~0.4
         else:
             self.scale = scale
 
