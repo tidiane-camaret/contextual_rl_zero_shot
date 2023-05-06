@@ -22,14 +22,13 @@ if __name__ == "__main__":
     parser.add_argument('--oracle', action='store_true')
     parser.add_argument('--render', action='store_true')
     parser.add_argument('--nb_steps', type=int, default=2_000_000)
-    parser.add_argument('--nb_evals', type=int, default=100)
-    parser.add_argument('--eval_every', type=int, default=1000)
+    parser.add_argument('--nb_runs_per_eval', type=int, default=100)
     args = parser.parse_args()
     oracle = args.oracle
     render = args.render
     nb_total_timesteps = args.nb_steps
-    nb_evals = args.nb_evals
-    eval_every = args.eval_every
+    nb_runs_per_eval = args.nb_runs_per_eval
+    eval_every = nb_total_timesteps // 20
 
     print("Oracle: ", oracle)
 
@@ -84,17 +83,20 @@ if __name__ == "__main__":
 
         # evaluate the policy on unseen scale values
 
-
+        global_mean_eval = []
         for s, scale in enumerate(scale_list):
             if oracle:
                 eval_env = gym.make('StrikerOracle-v0', eval_scale=scale)
             else:
                 eval_env = gym.make('StrikerAvg-v0', eval_scale=scale)
-            mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_evals)
+            mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_runs_per_eval)
             wandb.log({f"mean_reward_{s}": mean_reward})
             wandb.log({f"std_reward_{s}": std_reward})
             print(f"scale_id: {s}, mean_reward:{mean_reward:.2f} +/- {std_reward}")
+            global_mean_eval.append(mean_reward)
+            eval_env.close()
         
+        wandb.log({"global_mean_eval": np.mean(global_mean_eval)})
         
     # close wandb
 
