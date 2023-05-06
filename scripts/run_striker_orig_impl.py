@@ -28,7 +28,7 @@ if __name__ == "__main__":
     render = args.render
     nb_total_timesteps = args.nb_steps
     nb_runs_per_eval = args.nb_runs_per_eval
-    eval_every = nb_total_timesteps // 20
+    eval_every = nb_total_timesteps // 10
 
     print("Oracle: ", oracle)
 
@@ -77,6 +77,7 @@ if __name__ == "__main__":
     scale_list = scale_list * 0.1
 
     for learning_step in range(0, nb_total_timesteps, eval_every):
+        print(f"learning step: {learning_step}")
         model.learn(total_timesteps=eval_every,
                     callback=WandbCallback(),
                     )
@@ -86,9 +87,9 @@ if __name__ == "__main__":
         global_mean_eval = []
         for s, scale in enumerate(scale_list):
             if oracle:
-                eval_env = gym.make('StrikerOracle-v0', eval_scale=scale)
+                eval_env = gym.make('StrikerOracle-v0', eval_scale=scale, eval_mode=True)
             else:
-                eval_env = gym.make('StrikerAvg-v0', eval_scale=scale)
+                eval_env = gym.make('StrikerAvg-v0', eval_scale=scale, eval_mode=True)
             mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_runs_per_eval)
             wandb.log({f"mean_reward_{s}": mean_reward})
             wandb.log({f"std_reward_{s}": std_reward})
