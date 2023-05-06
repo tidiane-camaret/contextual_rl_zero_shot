@@ -23,11 +23,13 @@ if __name__ == "__main__":
     parser.add_argument('--render', action='store_true')
     parser.add_argument('--nb_steps', type=int, default=2_000_000)
     parser.add_argument('--nb_evals', type=int, default=100)
+    parser.add_argument('--eval_every', type=int, default=1000)
     args = parser.parse_args()
     oracle = args.oracle
     render = args.render
     nb_total_timesteps = args.nb_steps
     nb_evals = args.nb_evals
+    eval_every = args.eval_every
 
     print("Oracle: ", oracle)
 
@@ -75,8 +77,8 @@ if __name__ == "__main__":
     scale_list = np.array(list(scale_list))
     scale_list = scale_list * 0.1
 
-    for learning_step in range(0, nb_total_timesteps, 1000):
-        model.learn(total_timesteps=nb_total_timesteps,
+    for learning_step in range(0, nb_total_timesteps, eval_every):
+        model.learn(total_timesteps=eval_every,
                     callback=WandbCallback(),
                     )
 
