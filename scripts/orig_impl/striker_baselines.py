@@ -2,22 +2,29 @@ import argparse
 import numpy as np
 import itertools
 
-import meta_rl
 import gym
 from gym.wrappers import RecordEpisodeStatistics
 
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common import vec_env, monitor
-from stable_baselines3 import A2C, PPO, DQN
+from stable_baselines3 import PPO
 
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
-# main function with "oracle" as boolean
+import meta_rl
+
+
 NUM_OF_PARAMS = 2
 NUM_OF_ENVS = 8
+task_name = "striker"
+
 
 if __name__ == "__main__":
+    """
+    Comparaison of Invariant (Average) and Oracle implementations 
+    for the Striker task.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--oracle', action='store_true')
     parser.add_argument('--render', action='store_true')
@@ -32,8 +39,7 @@ if __name__ == "__main__":
 
     print("Oracle: ", oracle)
 
-    task_name = "striker"
-    NUM_OF_PARAMS = 2
+
 
     run = wandb.init(
         project="meta_rl_epi_orig",
