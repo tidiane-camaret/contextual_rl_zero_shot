@@ -1,126 +1,107 @@
+import argparse
 import numpy as np
-import matplotlib.pyplot as plt
-
 import gym
 from gym.wrappers import RecordEpisodeStatistics
 
-from stable_baselines3 import A2C, DQN, SAC, PPO
-from sb3_contrib import TRPO
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common import vec_env, monitor
+from stable_baselines3 import DQN
 
 import wandb
 from wandb.integration.sb3 import WandbCallback
 
-from meta_rl.cartpole_custom import CartPoleEnv
-
-run = wandb.init(
-    project="meta_rl",
-    monitor_gym=True, # auto-upload the videos of agents playing the game
-    sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
-    )
-
-#env = gym.make("CartPole-v1") # original environment 
+import meta_rl # actually used for the custom envs
 
 
-#env = CartPoleEnv(length=0.5, oracle=False)
-#env = gym.wrappers.RecordEpisodeStatistics(env)
-
-train_param_range = np.linspace(0.5, 2.5, 20)
-
-train_env = vec_env.DummyVecEnv([
-    lambda: monitor.Monitor(
-    RecordEpisodeStatistics(CartPoleEnv(length=l, oracle=False)),
-    )
- for l in train_param_range])  
-
-model = PPO("MlpPolicy", train_env, verbose=1, tensorboard_log="results/tensorboard/cartpole/")
-model.learn(total_timesteps=100_000,
-            callback=WandbCallback(),
-            )
+NUM_OF_PARAMS = 1
+NUM_OF_ENVS = 8
+task_name = "cartpole"
 
 
-# evaluate the model on a different param value
-env_eval = CartPoleEnv(length=4, oracle=False)
-mean_reward, std_reward = evaluate_policy(model, env_eval, n_eval_episodes=1000)
+if __name__ == "__main__":
+    """
+    Comparaison of Invariant (Average) and Oracle implementations 
+    for the Striker task.
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--oracle', action='store_true')
+    parser.add_argument('--render', action='store_true')
+    parser.add_argument('--nb_steps', type=int, default=5_000_000)
+    parser.add_argument('--nb_runs_per_eval', type=int, default=100)
+    args = parser.parse_args()
+    oracle = args.oracle
+    render = args.render
+    nb_total_timesteps = args.nb_steps
+    nb_runs_per_eval = args.nb_runs_per_eval
+    eval_every = nb_total_timesteps // 10
+
+    print("Oracle: ", oracle)
 
 
 
-# now, train the model in the oracle setting
-del model
-train_env = vec_env.DummyVecEnv([
-    lambda: monitor.Monitor(
-    RecordEpisodeStatistics(CartPoleEnv(length=l, oracle=True)),
-    )
-    for l in train_param_range])
+    run = wandb.init(
+        project="meta_rl_epi",
+        monitor_gym=True, # auto-upload the videos of agents playing the game
+        sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
+        config={
+            "task_name": task_name,
+            "oracle": oracle,
+            "num_of_params": NUM_OF_PARAMS,
+            "total_timesteps": nb_total_timesteps,
+        }
+        )
 
-model = PPO("MlpPolicy", train_env, verbose=1, tensorboard_log="results/tensorboard/cartpole/")
-model.learn(total_timesteps=100_000,
-            callback=WandbCallback(),
-            )
+        
 
-# evaluate the model on a different param value
-env_eval = CartPoleEnv(length=4, oracle=True)
-mean_reward_oracle, std_reward_oracle = evaluate_policy(model, env_eval, n_eval_episodes=1000)
+    # generate the training environment
 
-print(f"mean_reward:{mean_reward:.2f} +/- {std_reward}")
-print(f"mean_reward_oracle:{mean_reward_oracle:.2f} +/- {std_reward_oracle}")
+    train_env = vec_env.DummyVecEnv([
+        lambda: monitor.Monitor(
+        RecordEpisodeStatistics(gym.make("CartPoleCustom-v0",oracle=oracle)),
+        )
+        for _ in range(NUM_OF_ENVS)])
 
-run.log({"mean_reward": mean_reward, "std_reward": std_reward})
-run.log({"mean_reward_oracle": mean_reward_oracle, "std_reward_oracle": std_reward_oracle})
+    model = DQN('MlpPolicy', 
+                env=train_env,
+                verbose=1,
+                tensorboard_log="results/tensorboard/"+task_name+"/")
 
-"""
-# evaluate the model on differet param values
-param_range = np.linspace(0.5, 2.5, 4)
-# reverse the order of the params
-#param_range = param_range[::-1]
+    scale_list = np.linspace(0.1, 1, 4) + 0.15
 
-mean_reward_list = []
-std_reward_list = []
-for param in param_range:
-    env_eval = CartPoleEnv(length=param)
-    mean_reward, std_reward = evaluate_policy(model, env_eval, n_eval_episodes=20)
-    mean_reward_list.append(mean_reward)
-    std_reward_list.append(std_reward)
-    print(f"param: {param}, mean_reward:{mean_reward:.2f} +/- {std_reward}")
-    del env_eval
+    for learning_step in range(0, nb_total_timesteps, eval_every):
+        print(f"learning step: {learning_step}")
+        model.learn(total_timesteps=eval_every,
+                    callback=WandbCallback(),
+                    )
 
-mean_reward_list = np.array(mean_reward_list)
-std_reward_list = np.array(std_reward_list)
-# log the results
-data = [[param, mean_reward] for param, mean_reward in zip(param_range, mean_reward_list)]
-table = wandb.Table(data=data, columns=["param", "mean_reward"])
-wandb.log({"mean_reward_plot": wandb.plot.line(table, "param", "mean_reward")})
+        # evaluate the policy on unseen scale values
 
-# plot the results
+        global_mean_eval = []
+        for s, scale in enumerate(scale_list):
+            eval_env = gym.make("CartPoleCustom-v0",eval_mode=True, oracle=oracle, length=scale)
+            mean_reward, std_reward = evaluate_policy(model, eval_env, n_eval_episodes=nb_runs_per_eval)
+            wandb.log({f"mean_reward_{s}": mean_reward})
+            wandb.log({f"std_reward_{s}": std_reward})
+            print(f"scale_id: {s}, mean_reward:{mean_reward:.2f} +/- {std_reward}")
+            global_mean_eval.append(mean_reward)
+            eval_env.close()
+        
+        wandb.log({"global_mean_eval": np.mean(global_mean_eval)})
+        
+    # close wandb
 
-plt.plot(param_range, mean_reward_list)
-plt.fill_between(param_range, mean_reward_list - std_reward_list, mean_reward_list + std_reward_list, alpha=0.2)
-plt.xlabel("param")
-plt.ylabel("mean reward")
-plt.title("CartPole-v1")
-plt.savefig("results/plots/cartpole.png")
-plt.show()
+    run.finish()
 
-"""
+    # render the policy
 
+    obs = eval_env.reset()
+    print("obs:", obs.shape, )
 
+    if render:
+        for _ in range(10):
+            obs = eval_env.reset()
+            for _ in range(100):
+                action, _states = model.predict(obs)
+                obs, reward, done, info = eval_env.step(action)
+                eval_env.render()
 
-
-"""
-# render the model
-
-def render_model(env, model):
-    obs = env.reset()
-    for i in range(1000):
-        action, _state = model.predict(obs, deterministic=True)
-        obs, reward, done, info = env.step(action)
-        env.render()#mode = "human")
-        # VecEnv resets automatically
-        if done:
-            obs = env.reset()
-
-#render_model(env = env,   model = model)
-#render_model(env = CartPoleEnv(param=3),   model = model,)
-"""
-run.finish()

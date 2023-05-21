@@ -11,7 +11,7 @@ from gym.utils import seeding
 import numpy as np
 
 
-class CartPoleEnv(gym.Env):
+class CartPoleEnvTid(gym.Env):
     """
     Description:
         A pole is attached by an un-actuated joint to a cart, which moves along
@@ -60,7 +60,13 @@ class CartPoleEnv(gym.Env):
 
     metadata = {"render.modes": ["human", "rgb_array"], "video.frames_per_second": 50}
 
-    def __init__(self, length=0.5, gravity = 9.8, masscart = 1.0, force_mag = 10.0, oracle = False):
+    def __init__(self, 
+                 length=0.5, 
+                 gravity = 9.8, 
+                 masscart = 1.0, 
+                 force_mag = 10.0,
+                 eval_mode = False, 
+                 oracle = False):
         self.gravity = gravity
         self.masscart = masscart
         self.masspole = 0.1
@@ -71,7 +77,10 @@ class CartPoleEnv(gym.Env):
         self.tau = 0.02  # seconds between state updates
         self.kinematics_integrator = "euler"
 
-        self.oracle = oracle
+        self.eval_mode = eval_mode # if True, the pole length is fixed to self.length
+        self.oracle = oracle # if True, the length of the pole is included in the state
+
+        self.training_scales = np.linspace(0.1, 1, 4)
 
         # Angle at which to fail the episode
         self.theta_threshold_radians = 12 * 2 * math.pi / 360
@@ -165,6 +174,8 @@ class CartPoleEnv(gym.Env):
     def reset(self):
         self.state = self.np_random.uniform(low=-0.05, high=0.05, size=(5,))
         self.steps_beyond_done = None
+        if not self.eval_mode:
+            self.length = self.np_random.choice(self.training_scales) 
         return np.array(self.state, dtype=np.float32)
 
     def render(self, mode="human"):

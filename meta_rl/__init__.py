@@ -1,4 +1,11 @@
 from gym.envs.registration import register
+
+
+register(id='CartPoleCustom-v0',
+         entry_point='meta_rl.envs:CartPoleEnvTid',
+         max_episode_steps=200,
+         reward_threshold=195.0,)
+
 register(id='StrikerCustom-v0',
          entry_point='meta_rl.envs:StrikerEnvTid',
          max_episode_steps=200,
