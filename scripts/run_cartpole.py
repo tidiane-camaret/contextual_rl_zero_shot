@@ -5,6 +5,7 @@ import gym
 from gym.wrappers import RecordEpisodeStatistics
 
 from stable_baselines3 import A2C, DQN, SAC, PPO
+from sb3_contrib import TRPO
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common import vec_env, monitor
 
