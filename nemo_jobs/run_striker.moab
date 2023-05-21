@@ -18,8 +18,8 @@ conda activate tid_env
 
 
 # run the scripts
-time mpirun python dev/automl/meta_rl/scripts/run_striker_orig_impl.py 
-time mpirun python dev/automl/meta_rl/scripts/run_striker_orig_impl.py --oracle 
+time mpirun python dev/automl/meta_rl/scripts/run_cartpole.py 
+time mpirun python dev/automl/meta_rl/scripts/run_cartpole.py --oracle 
 
 
 # to check the job status : checkjob + jobid
