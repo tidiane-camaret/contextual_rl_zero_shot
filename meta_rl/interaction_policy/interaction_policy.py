@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 import torch as th
 from torch.nn import functional as F
 
@@ -12,11 +13,13 @@ class EPI_PPO(PPO):
     It implements the EPI algorithm
     For each trajectory in the replay buffer, we calulate a prediction score
     using a prediction model. This score is added to the reward of the trajectory."""
-    def __init__(self, *args, **kwargs):
+    def __init__(self, pred_model, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.pred_model = pred_model
     
     #@overrides #TODO: see why this was in the original code
-    def train(self) -> None:
+    def train(self, pred_model = None) -> None:
+        pred_model = self.pred_model
         """
         Update policy using the currently gathered rollout buffer.
         """
@@ -37,9 +40,39 @@ class EPI_PPO(PPO):
         continue_training = True
         # train for n_epochs epochs
         for epoch in range(self.n_epochs):
+                # Update prediction model
+                
+            """
+            if epoch % pred_model.update_freq == 0:
+                pickle.dump(self.policy, open(pred_model.filepath + "/policy_itr_"+str(epoch)+".p", "wb"))  # need sess
+                #logger.log('Policy saved:{}'.format(pred_model.filepath + "/policy_itr_"+str(epoch)+".p"))
+                sample_count = 0
+                while sample_count < pred_model.update_batch_size:
+                    sample = self.obtain_samples(epoch)
+                    for path in sample:
+                        traj = np.concatenate([path['observations'], path['actions']], axis=1).reshape(-1)
+                        pred_model.save_trajectory(traj, path['env_infos']['env_id'][0])
+                    sample_count += len(sample)
+
+                #logger.log("Training prediction model...")
+                pred_model.update(epoch)#, logger=logger)
+                #logger.log("Prediction model saved.")
+                """
             approx_kl_divs = []
             # Do a complete pass on the rollout buffer
             for rollout_data in self.rollout_buffer.get(self.batch_size):
+                
+                observations = rollout_data.observations
+                actions = rollout_data.actions
+                env_ids = np.random.randint(0, 100, size=len(observations))
+                print(actions.shape, observations.shape)
+                traj = np.concatenate([observations, actions], axis=1)#.reshape(-1)
+                
+                pred_model.save_trajectory(traj, env_ids)
+                #sample_count += len(path)
+
+                #logger.log("Training prediction model...")
+                pred_model.update(epoch)#, logger=logger)
                 actions = rollout_data.actions
                 if isinstance(self.action_space, spaces.Discrete):
                     # Convert discrete action from float to long
