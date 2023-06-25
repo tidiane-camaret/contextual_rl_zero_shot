@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from sklearn.manifold import TSNE
 
 import torch
@@ -15,9 +16,10 @@ class TrajDataset(Dataset):
     def __init__(self, 
                  traj_dict, 
                  context_size=128, # 
-                 ds_size=100000 #
+                 ds_size=100_000 #
                  ):
         self.traj_dict = traj_dict
+        
         self.context_size = context_size
         self.ds_size = ds_size
 
@@ -30,13 +32,14 @@ class TrajDataset(Dataset):
         # pick context_size number of tuples from the context
         idxs = np.random.choice(len(self.traj_dict[context]), self.context_size+1, replace=False)
         
-        return {"s": torch.tensor(self.traj_dict[context][idxs[-1]][0]).type(torch.float32),
-                "a": torch.tensor(self.traj_dict[context][idxs[-1]][1]).type(torch.float32),
-                "sp": torch.tensor(self.traj_dict[context][idxs[-1]][2]).type(torch.float32),
-                "s_context": torch.tensor([self.traj_dict[context][i][0] for i in idxs[:-1]]).type(torch.float32),
-                "a_context": torch.tensor([self.traj_dict[context][i][1] for i in idxs[:-1]]).type(torch.float32),
-                "sp_context": torch.tensor([self.traj_dict[context][i][2] for i in idxs[:-1]]).type(torch.float32),
+        return {"s": torch.tensor(np.array(self.traj_dict[context][idxs[-1]][0])).type(torch.float32),
+                "a": torch.tensor(np.array(self.traj_dict[context][idxs[-1]][1])).type(torch.float32),
+                "sp": torch.tensor(np.array(self.traj_dict[context][idxs[-1]][2])).type(torch.float32),
+                "s_context": torch.tensor(np.array([self.traj_dict[context][i][0] for i in idxs[:-1]])).type(torch.float32),
+                "a_context": torch.tensor(np.array([self.traj_dict[context][i][1] for i in idxs[:-1]])).type(torch.float32),
+                "sp_context": torch.tensor(np.array([self.traj_dict[context][i][2] for i in idxs[:-1]])).type(torch.float32),
                 #TODO : optimize dataloading
+                # TODO : array before saving the trajs would be faster
                 "context": context
                 }
 ## Define the predictor model
@@ -142,16 +145,20 @@ class Predictor(pl.LightningModule):
         return self(tuples)
     
     def on_validation_epoch_end(self):
+        # plot the latent space
+        #
         # contexts are strings in the form '[0.55 0.15]'.
         # we need to convert them to floats
         contexts = [np.fromstring(c[1:-1], sep=' ') for c in self.contexts]
+        #print("contexts", contexts)
         #contexts = [c.astype(float) for c in self.contexts]
-        latents = TSNE(n_components=2).fit_transform(self.latents)
-        plt.scatter([a[0] for a in latents],
-                    [a[1] for a in latents],
-                    c=[
-                        [c_[0]*2,
-                        c_[1]*2, 
-                        0] 
-                       for c_ in contexts])
-        plt.savefig("latent_space.png")
+        latents = TSNE(n_components=2).fit_transform(np.array(self.latents))
+        # plot 2 graphs, one for each dimension of the context
+        for i in range(len(contexts[0])):
+            plt.figure()
+            plt.scatter(latents[:, 0], latents[:, 1], c=[c[i] for c in contexts])
+            plt.colorbar()
+            plt.savefig(f"latent_space_dim_{i}.png")
+
+        
+

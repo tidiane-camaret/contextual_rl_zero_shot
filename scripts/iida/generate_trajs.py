@@ -33,6 +33,9 @@ if __name__ == "__main__":
     # learn policy over train env (multiple param settings)
     model.learn(total_timesteps=nb_train_steps, progress_bar=True)
 
+    # save model
+    model.save("scripts/iida/ppo_generator")
+
     # produce trajectories for each of the 36 training scales
     # in orig. impl, 8_000_000 steps in total
     

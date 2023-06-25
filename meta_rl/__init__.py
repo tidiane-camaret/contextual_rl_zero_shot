@@ -27,6 +27,13 @@ register(
 )
 
 register(
+    id='StrikerPredictor-v0',
+    entry_point='meta_rl.envs:StrikerPredictorEnv',
+    max_episode_steps=200,
+    reward_threshold=0,
+)
+
+register(
     id='StrikerLSTM-v0',
     entry_point='meta_rl.envs:StrikerAvgEnv',
     max_episode_steps=200,
