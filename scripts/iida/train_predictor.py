@@ -30,14 +30,15 @@ model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[64, 64])
 
 # Create the trainer
 wandb_logger = WandbLogger(project="meta_rl_predictor",
-                           save_dir = 'results',)
+                           save_dir = 'results',
+                           log_model=True)
                            
 
 trainer = pl.Trainer(
     logger=wandb_logger,
     #gpus=1, 
     #num_nodes=8,
-    max_epochs=10
+    max_epochs=1
     )
 
 # Train the model

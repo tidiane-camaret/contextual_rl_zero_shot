@@ -40,19 +40,18 @@ if __name__ == "__main__":
     print("Context: ", context)
 
 
-    """
+ 
     run = wandb.init(
-        project="meta_rl_epi_orig",
+        project="meta_rl_context",
         monitor_gym=True, # auto-upload the videos of agents playing the game
         sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
         config={
             "task_name": task_name,
-            "oracle": oracle,
+            "conext": context,
             "num_of_params": NUM_OF_PARAMS,
             "total_timesteps": nb_total_timesteps,
         }
         )
-    """
         
 
     # generate the training environment
@@ -74,12 +73,7 @@ if __name__ == "__main__":
         for _ in range(NUM_OF_ENVS)])
     
     elif context == 'latent':
-        train_env = vec_env.DummyVecEnv([
-        lambda: monitor.Monitor(
-        RecordEpisodeStatistics(gym.make("StrikerPredictor-v0")
-            ),
-        )
-        for _ in range(NUM_OF_ENVS)])
+        train_env = gym.make("StrikerPredictor-v0")
 
     model = PPO('MlpPolicy', 
                 env=train_env,

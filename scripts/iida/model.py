@@ -158,7 +158,7 @@ class Predictor(pl.LightningModule):
             plt.figure()
             plt.scatter(latents[:, 0], latents[:, 1], c=[c[i] for c in contexts])
             plt.colorbar()
-            plt.savefig(f"latent_space_dim_{i}.png")
+            plt.savefig(f"results/latent_space_dim_{i}.png")
 
         
 

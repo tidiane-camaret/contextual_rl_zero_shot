@@ -1,8 +1,12 @@
 *.egg-info
-results/tensorboard/
-wandb/
 *.pyc
+
+wandb/
+results/
 lightning_logs/
+
 *.pkl
 *.zip
+*.ckpt
+
 ```

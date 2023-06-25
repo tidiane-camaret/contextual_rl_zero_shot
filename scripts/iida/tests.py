@@ -8,9 +8,6 @@ from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 
 from model import TrajDataset, Predictor
+import stable_baselines3
+generator_model = stable_baselines3.PPO.load("scripts/iida/ppo_generator")
 
-# Load the dataset
-with open('scripts/iida/traj_dict_train.pkl', 'rb') as f:
-    traj_dict_train = pickle.load(f)
-
-print(traj_dict_train[list(traj_dict_train.keys())[0]][0])
