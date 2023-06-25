@@ -2,3 +2,6 @@
 results/tensorboard/
 wandb/
 *.pyc
+lightning_logs/
+*.pkl
+```

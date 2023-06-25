@@ -78,7 +78,7 @@ if __name__ == "__main__":
                 verbose=1,
                 tensorboard_log="results/tensorboard/"+task_name+"/")
 
-    scale_list = itertools.product(np.arange(6) + 0.5, repeat=2)
+    scale_list = itertools.product(np.arange(6) + 0.5, repeat=NUM_OF_PARAMS)
     scale_list = np.array(list(scale_list))
     scale_list = scale_list * 0.1
 
