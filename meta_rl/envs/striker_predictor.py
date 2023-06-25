@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.append(".")
 sys.path.append("...")
 from scripts.iida.model import Predictor
@@ -23,7 +24,11 @@ class StrikerPredictorEnv(StrikerAvgEnv):
         # Load the generator model
         self.generator_model = stable_baselines3.PPO.load("scripts/iida/ppo_generator.zip")
         # Load the model
-        self.predictor_model = Predictor.load_from_checkpoint(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[64, 64], checkpoint_path="results/meta_rl_predictor/ulnp3bbz/checkpoints/epoch=0-step=1563.ckpt")
+        self.predictor_model = Predictor.load_from_checkpoint(d_obs=23, 
+                                                              d_act=7, 
+                                                              d_latent=8, 
+                                                              hidden_sizes=[64, 64], 
+                                                              checkpoint_path="/home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/iida/epoch=0-step=1563.ckpt")
 
         
 
