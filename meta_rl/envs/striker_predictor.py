@@ -7,21 +7,25 @@ from .striker_avg import StrikerAvgEnv
 import numpy as np
 import stable_baselines3
 import gym
-
+import torch
 """
 Uses trained predictor model to give latent reprentation of an environment.
 """
+
+LATENT_SIZE = 8
 
 class StrikerPredictorEnv(StrikerAvgEnv):
     def __init__(self,eval_mode = False, eval_scale=None):
         self.eval_mode = eval_mode
         self.eval_scale = eval_scale
+        self.latent = np.zeros(LATENT_SIZE, dtype=float) 
         super(StrikerPredictorEnv, self).__init__()
         # Load the generator model
         self.generator_model = stable_baselines3.PPO.load("scripts/iida/ppo_generator.zip")
         # Load the model
-        self.predictor_model = Predictor.load_from_checkpoint("scripts/iida/predictor.ckpt")
+        self.predictor_model = Predictor.load_from_checkpoint(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[64, 64], checkpoint_path="results/meta_rl_predictor/ulnp3bbz/checkpoints/epoch=0-step=1563.ckpt")
 
+        
 
 
     def reset_model(self):
@@ -54,12 +58,14 @@ def get_latent_representation(scale, predictor_model, generator_model):
         obs, reward, done, info = env.step(action)
         s_.append(obs)
         a_.append(action)
+    #print(torch.unsqueeze(torch.Tensor(s_[:-1]),1).shape)
     traj_dict = {
-        "s": s_[:-1],
-        "a": a_,
-        "sp": s_[1:],
+        "s_context": torch.unsqueeze(torch.Tensor(s_[:-1]),0),
+        "a_context": torch.unsqueeze(torch.Tensor(a_[:-1]),0),
+        "sp_context": torch.unsqueeze(torch.Tensor(s_[1:]),0),
     }
     # Get the latent representation
-    latent = predictor_model.encoder(traj_dict)
+    latent = predictor_model.encoder(traj_dict).squeeze().detach().numpy()
+    #print("latent", latent.shape)
 
     return latent

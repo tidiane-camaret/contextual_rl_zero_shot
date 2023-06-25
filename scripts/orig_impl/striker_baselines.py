@@ -22,8 +22,7 @@ task_name = "striker"
 
 if __name__ == "__main__":
     """
-    Comparaison of Invariant (Average) and Oracle implementations 
-    for the Striker task.
+    Impact of context on the performance of the agent on the striker task.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--context', type=str, default='explicit')
