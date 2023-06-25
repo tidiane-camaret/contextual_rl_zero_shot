@@ -20,13 +20,13 @@ with open('scripts/iida/traj_dict_test.pkl', 'rb') as f:
 
 # Create the datasets
 train_dataset = TrajDataset(traj_dict_train)
-train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
 test_dataset = TrajDataset(traj_dict_test)
-test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
 # Create the model
-model = Predictor(d_obs=23, d_act=7, d_latent=2, hidden_sizes=[64, 64])
+model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[64, 64])
 
 # Create the trainer
 wandb_logger = WandbLogger(project="meta_rl_predictor",)
@@ -35,6 +35,7 @@ wandb_logger = WandbLogger(project="meta_rl_predictor",)
 trainer = pl.Trainer(
     logger=wandb_logger,
     #gpus=1, 
+    #num_nodes=8,
     max_epochs=10
     )
 

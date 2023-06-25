@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
 
 import torch
 import torch.nn as nn
@@ -145,7 +146,12 @@ class Predictor(pl.LightningModule):
         # we need to convert them to floats
         contexts = [np.fromstring(c[1:-1], sep=' ') for c in self.contexts]
         #contexts = [c.astype(float) for c in self.contexts]
-        plt.scatter([a[0] for a in self.latents],
-                    [a[1] for a in self.latents],
-                    c=[[c_[0], c_[1], 0] for c_ in contexts])
+        latents = TSNE(n_components=2).fit_transform(self.latents)
+        plt.scatter([a[0] for a in latents],
+                    [a[1] for a in latents],
+                    c=[
+                        [c_[0]*2,
+                        c_[1]*2, 
+                        0] 
+                       for c_ in contexts])
         plt.savefig("latent_space.png")
