@@ -1,0 +1,26 @@
+
+# job script for nemo
+
+#!/bin/bash -x
+
+
+# modules to load when using nemo cluster
+module load devel/python/3.9.7
+module load devel/conda
+module load mpi/openmpi/4.1-gnu-9.2
+
+export CPATH=$CONDA_PREFIX/include
+
+# ACTIVATE ENVIRONMENT
+
+source miniconda3/etc/profile.d/conda.sh
+conda activate tid_env
+
+
+# run the scripts
+time mpirun python dev/automl/meta_rl/scripts/orig_impl/striker_baselines.py --context explicit
+time mpirun python dev/automl/meta_rl/scripts/orig_impl/striker_baselines.py --context none
+time mpirun python dev/automl/meta_rl/scripts/orig_impl/striker_baselines.py --context latent
+
+
+# to check the job status : checkjob + jobid

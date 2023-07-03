@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(".")
 sys.path.append("...")
-from scripts.iida.model import Predictor
+from scripts.iida.predictor import Predictor
 from .striker_avg import StrikerAvgEnv
 
 import numpy as np
