@@ -28,7 +28,7 @@ class StrikerPredictorEnv(StrikerAvgEnv):
                                                               d_act=7, 
                                                               d_latent=8, 
                                                               hidden_sizes=[64, 64], 
-                                                              checkpoint_path="/home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/iida/epoch=0-step=1563.ckpt")
+                                                              checkpoint_path="scripts/iida/epoch=0-step=1563.ckpt")
 
         
 
@@ -70,7 +70,7 @@ def get_latent_representation(scale, predictor_model, generator_model):
         "sp_context": torch.unsqueeze(torch.Tensor(s_[1:]),0),
     }
     # Get the latent representation
-    latent = predictor_model.encoder(traj_dict).squeeze().detach().numpy()
+    latents_mean, latents_std = predictor_model.encoder(traj_dict).squeeze().detach().numpy()
     #print("latent", latent.shape)
 
-    return latent
+    return np.concatenate([latents_mean, latents_std], axis=0)

@@ -11,7 +11,7 @@ from pytorch_lightning.loggers import WandbLogger
 
 from scripts.iida.predictor import TrajDataset, Predictor
 
-
+print("Training predictor")
 
 # Load the dataset
 with open('scripts/iida/traj_dict_train.pkl', 'rb') as f:
@@ -28,7 +28,7 @@ test_dataset = TrajDataset(traj_dict_test, ds_size=2_000)
 test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=4)
 
 # Create the model
-model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[64, 64])
+model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[32, 32])
 
 # Create the trainer
 wandb_logger = WandbLogger(project="meta_rl_predictor",
@@ -38,9 +38,8 @@ wandb_logger = WandbLogger(project="meta_rl_predictor",
 
 trainer = pl.Trainer(
     logger=wandb_logger,
-    #gpus=1, 
-    #num_nodes=8,
-    max_epochs=10
+    #num_nodes=8, bugs when using slurm. Might need to configure that in the slurm script, TODO see https://github.com/Lightning-AI/lightning/issues/10098
+    max_epochs=50
     )
 
 # Train the model

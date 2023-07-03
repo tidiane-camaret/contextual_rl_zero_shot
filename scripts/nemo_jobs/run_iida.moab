@@ -18,9 +18,6 @@ conda activate tid_env
 
 
 # run the scripts
-time mpirun python dev/automl/meta_rl/scripts/metarl_striker.py --context explicit
-time mpirun python dev/automl/meta_rl/scripts/metarl_striker.py --context none
-time mpirun python dev/automl/meta_rl/scripts/metarl_striker.py --context latent
-
+time mpirun python dev/automl/meta_rl/scripts/iida/train_predictor.py
 
 # to check the job status : checkjob + jobid
