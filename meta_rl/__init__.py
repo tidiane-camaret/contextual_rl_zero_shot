@@ -6,12 +6,6 @@ register(id='CartPoleCustom-v0',
          max_episode_steps=200,
          reward_threshold=195.0,)
 
-register(id='StrikerCustom-v0',
-         entry_point='meta_rl.envs:StrikerEnvTid',
-         max_episode_steps=200,
-         reward_threshold=0.0,)
-
-
 register(
     id='StrikerOriginal-v0',
     entry_point='meta_rl.envs:StrikerEnv',
@@ -33,16 +27,19 @@ register(
     reward_threshold=0,
 )
 
-register(
-    id='StrikerLSTM-v0',
-    entry_point='meta_rl.envs:StrikerAvgEnv',
-    max_episode_steps=200,
-    reward_threshold=0,
-)
 
 register(
     id='StrikerOracle-v0',
     entry_point='meta_rl.envs:StrikerOracleEnv',
+    max_episode_steps=200,
+    reward_threshold=0,
+)
+
+################# EPI #####################
+
+register(
+    id='StrikerLSTM-v0',
+    entry_point='meta_rl.envs:StrikerAvgEnv',
     max_episode_steps=200,
     reward_threshold=0,
 )

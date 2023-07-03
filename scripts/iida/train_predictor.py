@@ -9,7 +9,9 @@ import pytorch_lightning as pl
 import wandb
 from pytorch_lightning.loggers import WandbLogger
 
-from model import TrajDataset, Predictor
+from scripts.iida.predictor import TrajDataset, Predictor
+
+
 
 # Load the dataset
 with open('scripts/iida/traj_dict_train.pkl', 'rb') as f:
@@ -38,7 +40,7 @@ trainer = pl.Trainer(
     logger=wandb_logger,
     #gpus=1, 
     #num_nodes=8,
-    max_epochs=1
+    max_epochs=10
     )
 
 # Train the model
