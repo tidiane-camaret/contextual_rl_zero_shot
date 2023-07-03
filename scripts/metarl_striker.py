@@ -72,7 +72,13 @@ if __name__ == "__main__":
         for _ in range(NUM_OF_ENVS)])
     
     elif context == 'latent':
-        train_env = gym.make("StrikerPredictor-v0")
+        train_env = vec_env.DummyVecEnv([
+        lambda: monitor.Monitor(
+        RecordEpisodeStatistics(gym.make("StrikerPredictor-v0")
+            ),
+        )
+        for _ in range(NUM_OF_ENVS)])
+
 
     model = PPO('MlpPolicy', 
                 env=train_env,
@@ -86,7 +92,7 @@ if __name__ == "__main__":
     for learning_step in range(0, nb_total_timesteps, eval_every):
         print(f"learning step: {learning_step}")
         model.learn(total_timesteps=eval_every,
-                    #callback=WandbCallback(),
+                    callback=WandbCallback(),
                     )
 
         # evaluate the policy on unseen scale values
