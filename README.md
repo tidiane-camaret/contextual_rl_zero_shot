@@ -24,26 +24,27 @@ The project currently contains two baseline models :
 
 - "explicit context" : the dynamics are given as input to the model as additional state data, both at training and testing time.
 
-'''bash
+```bash
 scripts/metarl_striker.py --context explicit
-'''
+```
 
 - "no context" : no dynamics are given as input to the model, neither at training nor testing time.
 
-'''bash
+```bash
 scripts/metarl_striker.py --context none
-'''
+```
 
 # Additional models
 
 - [Context is Everything](https://benevans.zip/iida/)
+
 A previoulsy trained **generator policy** generates trajectories from training environments. A predictor model is then trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
 
-'''bash
+```bash
 scripts/iida/genereate_trajectories.py
 scripts/iida/train_predictor.py
 scripts/metarl_striker.py --context latent
-'''
+```
 
 # Roadmap
 - [x] Implement baseline models
