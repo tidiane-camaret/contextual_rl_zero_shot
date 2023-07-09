@@ -9,6 +9,8 @@ from torch.utils.data import Dataset, DataLoader
 
 import pytorch_lightning as pl
 
+from meta_rl.definitions import RESULTS_DIR
+
 class TrajDataset(Dataset):
     """
     Returns a list of (s, a, s') tuples of the same context.
@@ -99,10 +101,10 @@ class Decoder(nn.Module):
     
 class Predictor(pl.LightningModule):
     def __init__(self, 
-                 d_obs, 
-                 d_act,
-                 d_latent, 
-                 hidden_sizes, 
+                 d_obs=23, 
+                 d_act=7,
+                 d_latent=8, 
+                 hidden_sizes=[32,32], 
                  activation=nn.ReLU,
                  lr=1e-3,
                  ):
@@ -159,7 +161,7 @@ class Predictor(pl.LightningModule):
             plt.figure()
             plt.scatter(latents[:, 0], latents[:, 1], c=[c[i] for c in contexts])
             plt.colorbar()
-            plt.savefig(f"results/plots/latent_space_dim_{i}.png")
+            plt.savefig(RESULTS_DIR / "iida/latent_space_dim_{i}.png")
 
         
 

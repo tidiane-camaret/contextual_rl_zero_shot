@@ -15,7 +15,7 @@ from stable_baselines3.common import vec_env, monitor
 from stable_baselines3 import PPO
 
 import meta_rl
-
+from meta_rl.definitions import ROOT_DIR, RESULTS_DIR
 NUM_OF_PARAMS = 2
 
 if __name__ == "__main__":
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     model.learn(total_timesteps=nb_train_steps, progress_bar=True)
 
     # save model
-    model.save("scripts/iida/ppo_generator")
+    model.save(RESULTS_DIR / "iida/ppo_generator")
 
     # produce trajectories for each of the 36 training scales
     # in orig. impl, 8_000_000 steps in total
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     scale_list_train = scale_list_train * 0.1
     traj_dict_train = get_traj_dict(scale_list_train)
 
-    with open('scripts/iida/traj_dict_train.pkl', 'wb') as f:
+    with open(RESULTS_DIR / 'iida/traj_dict_train.pkl', 'wb') as f:
         pickle.dump(traj_dict_train, f)
 
     scale_list_test = itertools.product(np.arange(6) + 0.5, repeat=NUM_OF_PARAMS)
@@ -74,5 +74,5 @@ if __name__ == "__main__":
     scale_list_test = scale_list_test * 0.1
     traj_dict_test = get_traj_dict(scale_list_test)
 
-    with open('scripts/iida/traj_dict_test.pkl', 'wb') as f:
+    with open(RESULTS_DIR / 'iidaiida/traj_dict_test.pkl', 'wb') as f:
         pickle.dump(traj_dict_test, f)

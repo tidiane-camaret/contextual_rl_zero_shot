@@ -13,6 +13,7 @@ import wandb
 from wandb.integration.sb3 import WandbCallback
 
 import meta_rl
+from meta_rl.definitions import RESULTS_DIR
 
 
 NUM_OF_PARAMS = 2
@@ -49,7 +50,8 @@ if __name__ == "__main__":
             "conext": context,
             "num_of_params": NUM_OF_PARAMS,
             "total_timesteps": nb_total_timesteps,
-        }
+        },
+        #save_dir = RESULTS_DIR,
         )
         
 
@@ -83,7 +85,7 @@ if __name__ == "__main__":
     model = PPO('MlpPolicy', 
                 env=train_env,
                 verbose=1,
-                tensorboard_log="results/tensorboard/"+task_name+"/")
+                tensorboard_log=RESULTS_DIR / "tensorboard/"+task_name+"/")
 
     scale_list = itertools.product(np.arange(6) + 0.5, repeat=NUM_OF_PARAMS)
     scale_list = np.array(list(scale_list))

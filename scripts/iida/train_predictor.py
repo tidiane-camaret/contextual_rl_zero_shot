@@ -1,3 +1,4 @@
+import os
 import pickle
 
 import numpy as np
@@ -10,14 +11,15 @@ import wandb
 from pytorch_lightning.loggers import WandbLogger
 
 from scripts.iida.predictor import TrajDataset, Predictor
+from meta_rl.definitions import RESULTS_DIR
 
 print("Training predictor")
 
 # Load the dataset
-with open('scripts/iida/traj_dict_train.pkl', 'rb') as f:
+with open(RESULTS_DIR / 'iida/traj_dict_train.pkl', 'rb') as f:
     traj_dict_train = pickle.load(f)
 
-with open('scripts/iida/traj_dict_test.pkl', 'rb') as f:
+with open(RESULTS_DIR / 'iida/traj_dict_test.pkl', 'rb') as f:
     traj_dict_test = pickle.load(f)
 
 # Create the datasets
@@ -28,11 +30,11 @@ test_dataset = TrajDataset(traj_dict_test, ds_size=2_000)
 test_dataloader = DataLoader(test_dataset, batch_size=64, shuffle=False, num_workers=4)
 
 # Create the model
-model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[32, 32])
+model = Predictor(d_obs=23, d_act=7, d_latent=8, hidden_sizes=[128, 128])
 
 # Create the trainer
 wandb_logger = WandbLogger(project="meta_rl_predictor",
-                           save_dir = 'results',
+                           save_dir = RESULTS_DIR,
                            log_model=True)
                            
 
@@ -48,4 +50,4 @@ trainer.fit(model,
             test_dataloader,)
 
 # Save the model
-torch.save(model.state_dict(), "scripts/iida/predictor.ckpt")
+torch.save(model.state_dict(), RESULTS_DIR / "iida/predictor.ckpt")

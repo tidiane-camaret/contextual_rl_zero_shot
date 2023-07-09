@@ -9,6 +9,7 @@ import numpy as np
 import stable_baselines3
 import gym
 import torch
+from meta_rl.definitions import ROOT_DIR, RESULTS_DIR
 """
 Uses trained predictor model to give latent reprentation of an environment.
 """
@@ -22,13 +23,9 @@ class StrikerPredictorEnv(StrikerAvgEnv):
         self.latent = np.zeros(LATENT_SIZE, dtype=float) 
         super(StrikerPredictorEnv, self).__init__()
         # Load the generator model
-        self.generator_model = stable_baselines3.PPO.load("scripts/iida/ppo_generator.zip")
+        self.generator_model = stable_baselines3.PPO.load(RESULTS_DIR / "iida/ppo_generator.zip")
         # Load the model
-        self.predictor_model = Predictor.load_from_checkpoint(d_obs=23, 
-                                                              d_act=7, 
-                                                              d_latent=8, 
-                                                              hidden_sizes=[64, 64], 
-                                                              checkpoint_path="scripts/iida/epoch=0-step=1563.ckpt")
+        self.predictor_model = Predictor.load_from_checkpoint(checkpoint_path=RESULTS_DIR / "iida/epoch=49-step=78150.ckpt")
 
         
 
