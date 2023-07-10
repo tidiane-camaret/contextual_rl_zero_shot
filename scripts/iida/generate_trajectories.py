@@ -21,7 +21,7 @@ NUM_OF_PARAMS = 2
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument('--nb_train_steps', type=int, default=200_000)
+    parser.add_argument('--nb_train_steps', type=int, default=1_000_000)
     args = parser.parse_args()
 
     nb_train_steps = args.nb_train_steps

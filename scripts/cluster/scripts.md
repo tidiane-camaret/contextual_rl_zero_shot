@@ -20,11 +20,11 @@
 # export CPATH=$CONDA_PREFIX/include
 
 ## Submit job 
-msub -l nodes=1:ppn=10,walltime=10:00:00,pmem=6GB nemo_jobs/run_striker.moab
+msub -l nodes=1:ppn=10,walltime=10:00:00,pmem=6GB scripts/cluster/run_striker.moab
 # express : 
-msub -q express -l nodes=1:ppn=1,walltime=15:00 nemo_jobs/run_striker.moab
+msub -q express -l nodes=1:ppn=1,walltime=15:00 scripts/cluster/run_striker.moab
 # gpu : 
-msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 nemo_jobs/run_striker.moab
+msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 scripts/cluster/run_striker.moab
 
 ## Interactive session 
 msub -l nodes=1:ppn=10,walltime=3:00:00,pmem=6GB -I 
