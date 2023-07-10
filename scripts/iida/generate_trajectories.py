@@ -74,5 +74,5 @@ if __name__ == "__main__":
     scale_list_test = scale_list_test * 0.1
     traj_dict_test = get_traj_dict(scale_list_test)
 
-    with open(RESULTS_DIR / 'iidaiida/traj_dict_test.pkl', 'wb') as f:
+    with open(RESULTS_DIR / 'iida/traj_dict_test.pkl', 'wb') as f:
         pickle.dump(traj_dict_test, f)
