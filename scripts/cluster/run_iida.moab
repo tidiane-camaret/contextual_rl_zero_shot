@@ -1,4 +1,4 @@
-#MSUB -o /home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/cluster/%j.out
+# #MSUB -o /home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/cluster/%j.out
 # job script for nemo
 
 #!/bin/bash -x

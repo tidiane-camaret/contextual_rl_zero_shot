@@ -9,4 +9,5 @@ lightning_logs/
 *.zip
 *.ckpt
 
+*.moab.*
 ```

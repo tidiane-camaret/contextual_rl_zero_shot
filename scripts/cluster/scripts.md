@@ -33,3 +33,8 @@ source miniconda3/etc/profile.d/conda.sh
 conda activate tid_env
 # run the script
 python3 dev/automl/meta_rl/scripts/run_striker.py 
+
+
+# further infos on arguments : 
+# https://wiki.calculquebec.ca/w/Utilisation_des_noeuds_de_calcul#Param.C3.A8tres_de_la_commande_msub
+# https://wiki.bwhpc.de/e/Batch_Jobs_Moab
