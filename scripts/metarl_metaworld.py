@@ -35,7 +35,7 @@ if __name__ == "__main__":
     nb_runs_per_eval = args.nb_runs_per_eval
 
     ml1 = metaworld.ML1(task_name)
-
+    """
     run = wandb.init(
     project="meta_rl_context",
     monitor_gym=True, # auto-upload the videos of agents playing the game
@@ -48,19 +48,23 @@ if __name__ == "__main__":
     },
     #save_dir = RESULTS_DIR,
         )
-    env = ml1.train_classes['pick-place-v2']()
+    
+    env_list = [ml1.train_classes['pick-place-v2']().set_task(task) for task in ml1.train_tasks[:10]]
 
-    train_vec_env = vec_env.DummyVecEnv([
+    train_env = vec_env.DummyVecEnv([
         lambda: monitor.Monitor(
-        RecordEpisodeStatistics(env.set_task(task)
+        RecordEpisodeStatistics(env
             ),
         )
-        for task in ml1.train_tasks[:10]])
+        for env in env_list])
+    """
+    train_env = ml1.train_classes[task_name]()
+    train_env = train_env.set_task(ml1.train_tasks[0])
     
     model = PPO('MlpPolicy', 
-            env=train_vec_env,
+            env=train_env,
             verbose=1,
-            tensorboard_log=RESULTS_DIR / "tensorboard/"+task_name+"/")
+            tensorboard_log=RESULTS_DIR / "tensorboard" / task_name )
     
     model.learn(total_timesteps=nb_total_timesteps, 
                 callback=WandbCallback())
@@ -68,7 +72,7 @@ if __name__ == "__main__":
     # generate the evaluation environment
     eval_env = vec_env.DummyVecEnv([
         lambda: monitor.Monitor(
-        RecordEpisodeStatistics(env.set_task(task)
+        RecordEpisodeStatistics(train_env.set_task(task)
             ),
         )
         for task in ml1.test_tasks[:10]])
