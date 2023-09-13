@@ -1,10 +1,11 @@
 import numpy as np
-from carl.envs import CARLPendulum as CARLEnv
-# discrete actions : CARLLunarLander 
+import gymnasium as gym
+from carl.envs import CARLCartPole as CARLEnv
+# discrete actions : CARLLunarLander, CARLCartPole
 # continuous actions : CARLPendulum
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-
+from carl_wrapper import context_wrapper
 context_name = "gravity"
 l,u = 0.002, 0.2
 context_distributions = [UniformFloatContextFeature(context_name, l, u)]
@@ -16,50 +17,61 @@ context_sampler = ContextSampler(
 
 contexts = context_sampler.sample_contexts(n_contexts=5)
 
-# wrapper for CARLEnv
-# wraps the environment so that at each state, the context is added to the observation
 
-class CARLEnvWrap(CARLEnv):
-    def step(self, action):
-        obs, reward, done, info, _ = super().step(action)
-        #print(obs)
-        context_obs = np.append(obs["obs"], obs["context"][context_name])
-        return context_obs, reward, done, info, _
-
-    def reset(self, **kwargs):
-        obs = super().reset(**kwargs)
-        #print(obs[0])
-        context_obs = np.append(obs[0]["obs"], obs[0]["context"][context_name])
-        return context_obs
-
-CARLEnvWrap.render_mode = "human"
-env = CARLEnvWrap(
+CARLEnv = context_wrapper(CARLEnv, context_name = context_name, concat_context = True)
+CARLEnv.render_mode = "human"
+env = CARLEnv(
         # You can play with different gravity values here
         contexts=contexts,
         obs_context_as_dict=True,
         hide_context = True,
         )
 
-env.reset()
-obs, reward, done, info, _ = env.step(env.action_space.sample())
+def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
+    def thunk():
+        mu, rel_sigma = 10, 0.5
+        context_distributions = [NormalFloatContextFeature("gravity", mu, rel_sigma*mu)]
+        context_sampler = ContextSampler(
+                            context_distributions=context_distributions,
+                            context_space=CARLEnv.get_context_space(),
+                            seed=seed,
+                        )
+        
+        contexts = context_sampler.sample_contexts(n_contexts=100)
+        # contexts={0: CARLEnv.get_default_context()}
+        env = CARLEnv(
+        # You can play with different gravity values here
+        contexts=contexts,
+        #obs_context_as_dict=False,
+        hide_context = hide_context,
+        )
 
-print(obs)
-"""
-print(obs["obs"])
-print(obs["context"][context_name])
+        env = gym.wrappers.RecordEpisodeStatistics(env)
+        env.action_space.seed(seed) 
 
-#context_obs = np.append(obs["obs"], obs["context"][context_name])
-#print(context_obs)
+        return env
+
+    return thunk
+
+env = gym.vector.SyncVectorEnv([make_env("CARLPendulum-v1", 0, i, False, "test", False) for i in range(4)])
+
 """
+print(env.observation_space)
+print(env.single_observation_space)
+"""
+
 
 # render the environment
 
 env.reset()
-env.render()
+#env.render()
 
-for i in range(100):
+for i in range(10):
+    #print(i)
     action = env.action_space.sample()
-    obs, reward, done, info, _ = env.step(action)
-    env.render()
-    if done:
-        env.reset()
+    obs, reward, done, trunc, info = env.step(action)
+    #env.render()
+    print("context_id", info["context_id"]) 
+    #if done:
+    #    env.reset()
+

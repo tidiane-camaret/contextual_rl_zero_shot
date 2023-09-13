@@ -15,24 +15,16 @@ from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 
 from carl.envs import CARLCartPole as CARLEnv
-# discrete actions : CARLLunarLander, CARLCartPole
+# discrete actions : CARLLunarLander 
 # continuous actions : CARLPendulum
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-
-from carl_wrapper import context_wrapper
-
-
 
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
     parser.add_argument("--hide_context", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
         help="if toggled, the context is not passed to the agent")
-    parser.add_argument("--context_name", type=str, default="gravity",
-        help="the name of the context feature")
-    parser.add_argument("--num_envs", type=int, default=1,
-        help="the number of parallel game environments")
     parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
         help="the name of this experiment")
     parser.add_argument("--seed", type=int, default=1,
@@ -55,6 +47,7 @@ def parse_args():
         help="whether to upload the saved model to huggingface")
     parser.add_argument("--hf-entity", type=str, default="",
         help="the user or org name of the model repository from the Hugging Face Hub")
+    
 
     # Algorithm specific arguments
     parser.add_argument("--env-id", type=str, default="CartPole-v1",
@@ -92,9 +85,31 @@ def parse_args():
     return args
 
 
+def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
+    def thunk():
+        mu, rel_sigma = 10, 0.5
+        context_distributions = [NormalFloatContextFeature("gravity", mu, rel_sigma*mu)]
+        context_sampler = ContextSampler(
+                            context_distributions=context_distributions,
+                            context_space=CARLEnv.get_context_space(),
+                            seed=seed,
+                        )
+        
+        contexts = context_sampler.sample_contexts(n_contexts=100)
+        # contexts={0: CARLEnv.get_default_context()}
+        env = CARLEnv(
+        # You can play with different gravity values here
+        contexts=contexts,
+        obs_context_as_dict=False,
+        hide_context = hide_context,
+        )
 
+        env = gym.wrappers.RecordEpisodeStatistics(env)
+        env.action_space.seed(seed) 
 
+        return env
 
+    return thunk
 
 
 # ALGO LOGIC: initialize agent here:
@@ -102,7 +117,7 @@ class QNetwork(nn.Module):
     def __init__(self, env):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(np.array(env.single_observation_space.shape).prod(), 120),
+            nn.Linear(np.array(env.single_observation_space["obs"].shape).prod(), 120),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
@@ -121,8 +136,6 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
 if __name__ == "__main__":
     import stable_baselines3 as sb3
 
-    
-
     if sb3.__version__ < "2.0":
         raise ValueError(
             """Ongoing migration: run the following command to install the new dependencies:
@@ -132,41 +145,6 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         )
     args = parse_args()
     print("hide context", args.hide_context)
-    context_name = args.context_name 
-
-
-    def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
-        def thunk():
-            context_default = CARLEnv.get_default_context()[context_name]
-            
-            #mu, rel_sigma = 10, 5
-            #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
-            l, u = context_default * 0.2, context_default * 2.2
-            context_distributions = [UniformFloatContextFeature(context_name, l, u)]
-            
-            context_sampler = ContextSampler(
-                                context_distributions=context_distributions,
-                                context_space=CARLEnv.get_context_space(),
-                                seed=seed,
-                            )
-            
-            contexts = context_sampler.sample_contexts(n_contexts=100)
-            env = CARLEnv(
-            # You can play with different gravity values here
-            contexts=contexts,
-            obs_context_as_dict=True,
-            hide_context = hide_context,
-            )
-
-            env = gym.wrappers.RecordEpisodeStatistics(env)
-            env.action_space.seed(seed) 
-
-            return env
-
-        return thunk
-    CARLEnv = context_wrapper(CARLEnv, 
-                          context_name = context_name, 
-                          concat_context = not args.hide_context)
     
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
@@ -207,16 +185,19 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     target_network.load_state_dict(q_network.state_dict())
 
     rb = ReplayBuffer(
-        args.buffer_size,
-        envs.single_observation_space,
-        envs.single_action_space,
-        device,
+        buffer_size = args.buffer_size,
+        observation_space = envs.single_observation_space["obs"],
+        action_space = envs.single_action_space,
+        device = device,
+        n_envs=args.num_envs,
         handle_timeout_termination=False,
     )
     start_time = time.time()
 
     # TRY NOT TO MODIFY: start the game
     obs, _ = envs.reset(seed=args.seed)
+    obs = obs["obs"]
+    print("obs_shape", obs.shape)
     for global_step in range(args.total_timesteps):
         # ALGO LOGIC: put action logic here
         epsilon = linear_schedule(args.start_e, args.end_e, args.exploration_fraction * args.total_timesteps, global_step)
@@ -229,7 +210,11 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         # TRY NOT TO MODIFY: execute the game and log data.
         next_obs, rewards, terminated, truncated, infos = envs.step(actions)
 
+        next_obs = next_obs["obs"]
+
+
         # TRY NOT TO MODIFY: record rewards for plotting purposes
+        
         if "final_info" in infos:
             for info in infos["final_info"]:
                 # Skip the envs that are not done
@@ -242,9 +227,12 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
         # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
         real_next_obs = next_obs.copy()
+        
         for idx, d in enumerate(truncated):
             if d:
-                real_next_obs[idx] = infos["final_observation"][idx]
+                #print(infos["final_observation"][idx])
+                real_next_obs[idx] = infos["final_observation"][idx]["obs"]
+        
         rb.add(obs, real_next_obs, actions, rewards, terminated, infos)
 
         # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
@@ -279,7 +267,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                     )
 
     if args.save_model:
-        model_path = f"results/runs/{run_name}/{args.exp_name}.cleanrl_model"
+        model_path = f"runs/{run_name}/{args.exp_name}.cleanrl_model"
         torch.save(q_network.state_dict(), model_path)
         print(f"model saved to {model_path}")
         from cleanrl_utils.evals.dqn_eval import evaluate
@@ -316,6 +304,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     
     # run the experiment
     obs, info = env.reset()
+    obs = obs["obs"]
     env.render()
 
 
@@ -326,6 +315,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         action = torch.argmax(q_values).cpu().numpy()
 
         obs, r, done, truncated, info = env.step(action)
+        obs = obs["obs"]
         env.render()
         steps += 1
         if done or steps > 100:
