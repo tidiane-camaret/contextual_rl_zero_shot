@@ -117,6 +117,34 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
     slope = (end_e - start_e) / duration
     return max(slope * t + start_e, end_e)
 
+def make_env(seed, context_name = "gravity"):
+    def thunk():
+        context_default = CARLEnv.get_default_context()[context_name]
+        
+        #mu, rel_sigma = 10, 5
+        #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
+        l, u = context_default * 0.2, context_default * 2.2
+        context_distributions = [UniformFloatContextFeature(context_name, l, u)]
+        
+        context_sampler = ContextSampler(
+                            context_distributions=context_distributions,
+                            context_space=CARLEnv.get_context_space(),
+                            seed=seed,
+                        )
+        
+        contexts = context_sampler.sample_contexts(n_contexts=100)
+        env = CARLEnv(
+        # You can play with different gravity values here
+        contexts=contexts,
+        obs_context_as_dict=True,
+        )
+
+        env = gym.wrappers.RecordEpisodeStatistics(env)
+        env.action_space.seed(seed) 
+
+        return env
+
+    return thunk
 
 if __name__ == "__main__":
     import stable_baselines3 as sb3
@@ -134,39 +162,11 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     print("hide context", args.hide_context)
     context_name = args.context_name 
 
-
-    def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
-        def thunk():
-            context_default = CARLEnv.get_default_context()[context_name]
-            
-            #mu, rel_sigma = 10, 5
-            #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
-            l, u = context_default * 0.2, context_default * 2.2
-            context_distributions = [UniformFloatContextFeature(context_name, l, u)]
-            
-            context_sampler = ContextSampler(
-                                context_distributions=context_distributions,
-                                context_space=CARLEnv.get_context_space(),
-                                seed=seed,
-                            )
-            
-            contexts = context_sampler.sample_contexts(n_contexts=100)
-            env = CARLEnv(
-            # You can play with different gravity values here
-            contexts=contexts,
-            obs_context_as_dict=True,
-            hide_context = hide_context,
-            )
-
-            env = gym.wrappers.RecordEpisodeStatistics(env)
-            env.action_space.seed(seed) 
-
-            return env
-
-        return thunk
     CARLEnv = context_wrapper(CARLEnv, 
                           context_name = context_name, 
                           concat_context = not args.hide_context)
+
+
     
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
@@ -197,7 +197,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name, args.hide_context) for i in range(args.num_envs)]
+        [make_env(args.seed + i, context_name=context_name) for i in range(args.num_envs)]
     )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
@@ -212,6 +212,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         envs.single_action_space,
         device,
         handle_timeout_termination=False,
+        n_envs=args.num_envs,
     )
     start_time = time.time()
 
