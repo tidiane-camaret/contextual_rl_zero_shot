@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from stable_baselines3.common.buffers import ReplayBuffer
+
 from torch.utils.tensorboard import SummaryWriter
 
 from carl.envs import CARLCartPole as CARLEnv
@@ -21,14 +21,17 @@ from carl.context.context_space import NormalFloatContextFeature, UniformFloatCo
 from carl.context.sampler import ContextSampler
 
 from carl_wrapper import context_wrapper
-
+#from stable_baselines3.common.buffers import ReplayBuffer
+from context_encoder import ReplayBuffer, ContextEncoder
 
 
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
-    parser.add_argument("--hide_context", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
-        help="if toggled, the context is not passed to the agent")
+    parser.add_argument("--emb_dim", type=int, default=2,
+        help="the dimension of the context embedding") 
+    parser.add_argument("--context_state", type=str, default="implicit",
+        help="the state of the context feature")
     parser.add_argument("--context_name", type=str, default="gravity",
         help="the name of the context feature")
     parser.add_argument("--num_envs", type=int, default=1,
@@ -102,7 +105,7 @@ class QNetwork(nn.Module):
     def __init__(self, env):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(np.array(env.single_observation_space.shape).prod(), 120),
+            nn.Linear(np.array(env.single_observation_space.shape).prod()+args.emb_dim, 120),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
@@ -117,6 +120,21 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
     slope = (end_e - start_e) / duration
     return max(slope * t + start_e, end_e)
 
+def make_env(seed, sampled_contexts):
+    def thunk():
+
+        env = CARLEnv(
+        # You can play with different gravity values here
+        contexts=sampled_contexts,
+        obs_context_as_dict=True,
+        )
+
+        env = gym.wrappers.RecordEpisodeStatistics(env)
+        env.action_space.seed(seed) 
+
+        return env
+
+    return thunk
 
 if __name__ == "__main__":
     import stable_baselines3 as sb3
@@ -131,42 +149,27 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
     args = parse_args()
-    print("hide context", args.hide_context)
+
     context_name = args.context_name 
 
-
-    def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
-        def thunk():
-            context_default = CARLEnv.get_default_context()[context_name]
-            
-            #mu, rel_sigma = 10, 5
-            #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
-            l, u = context_default * 0.2, context_default * 2.2
-            context_distributions = [UniformFloatContextFeature(context_name, l, u)]
-            
-            context_sampler = ContextSampler(
-                                context_distributions=context_distributions,
-                                context_space=CARLEnv.get_context_space(),
-                                seed=seed,
-                            )
-            
-            contexts = context_sampler.sample_contexts(n_contexts=100)
-            env = CARLEnv(
-            # You can play with different gravity values here
-            contexts=contexts,
-            obs_context_as_dict=True,
-            hide_context = hide_context,
-            )
-
-            env = gym.wrappers.RecordEpisodeStatistics(env)
-            env.action_space.seed(seed) 
-
-            return env
-
-        return thunk
     CARLEnv = context_wrapper(CARLEnv, 
                           context_name = context_name, 
-                          concat_context = not args.hide_context)
+                          concat_context = False)
+
+    context_default = CARLEnv.get_default_context()[context_name]
+    
+    #mu, rel_sigma = 10, 5
+    #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
+    l, u = context_default * 0.2, context_default * 2.2
+    context_distributions = [UniformFloatContextFeature(context_name, l, u)]
+    
+    context_sampler = ContextSampler(
+                        context_distributions=context_distributions,
+                        context_space=CARLEnv.get_context_space(),
+                        seed=args.seed,
+                    )
+    
+    sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
     
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
@@ -197,34 +200,65 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name, args.hide_context) for i in range(args.num_envs)]
+        [make_env(args.seed + i, sampled_contexts=sampled_contexts) for i in range(args.num_envs)]
     )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
+
+
+    context_size = 20 #args.batch_size
+    context_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
+    context_dim = int(context_dim)
+
     q_network = QNetwork(envs).to(device)
-    optimizer = optim.Adam(q_network.parameters(), lr=args.learning_rate)
+    
     target_network = QNetwork(envs).to(device)
     target_network.load_state_dict(q_network.state_dict())
 
+    # define the context encoder
+    context_encoder = ContextEncoder(context_dim, args.emb_dim, [32, 32]).to(device)
+    optimizer = optim.Adam(list(q_network.parameters()) + list(context_encoder.parameters()), lr=args.learning_rate)
     rb = ReplayBuffer(
         args.buffer_size,
         envs.single_observation_space,
         envs.single_action_space,
         device,
         handle_timeout_termination=False,
+        n_envs=args.num_envs,
     )
     start_time = time.time()
 
     # TRY NOT TO MODIFY: start the game
-    obs, _ = envs.reset(seed=args.seed)
+    obs, info = envs.reset(seed=args.seed)
+
     for global_step in range(args.total_timesteps):
         # ALGO LOGIC: put action logic here
         epsilon = linear_schedule(args.start_e, args.end_e, args.exploration_fraction * args.total_timesteps, global_step)
         if random.random() < epsilon:
             actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
         else:
-            q_values = q_network(torch.Tensor(obs).to(device))
+            # sample contexts from each element of the batch
+            context_ids = info["context_id"]
+            # if context_ids is an int, convert it to a list
+            if isinstance(context_ids, int):
+                context_ids = [context_ids]
+            contexts = [rb.sample(context_size, context_id=c) for c in context_ids]
+            context_tensor = torch.zeros((len(context_ids), context_size, context_dim), dtype=torch.float32, device=device)
+            for i, context in enumerate(contexts):
+                context_tensor[i] = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)       
+            
+            
+            # encode the contexts   
+            context_mu, context_sigma = context_encoder(context_tensor)
+            # append the context to the observations
+            obs = torch.cat([torch.Tensor(obs), context_mu], dim=-1)
+        
+            q_values = q_network(obs.to(device))
             actions = torch.argmax(q_values, dim=1).cpu().numpy()
+
+            # remove the context from the observations
+            obs = obs[:, :-args.emb_dim]
+            obs = obs.detach().cpu().numpy()
 
         # TRY NOT TO MODIFY: execute the game and log data.
         next_obs, rewards, terminated, truncated, infos = envs.step(actions)
@@ -254,6 +288,23 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         if global_step > args.learning_starts:
             if global_step % args.train_frequency == 0:
                 data = rb.sample(args.batch_size)
+
+                #copy
+
+                # sample contexts from each element of the batch
+                contexts = [rb.sample(context_size, context_id=c.item()) for c in data.context_ids]
+                context_tensor = torch.zeros((args.batch_size, context_size, context_dim), dtype=torch.float32, device=device)
+                for i, context in enumerate(contexts):
+                    context_tensor[i] = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
+
+                # encode the contexts
+                context_mu, context_sigma = context_encoder(context_tensor)
+                # append the context to the observations
+
+                data = data._replace(observations = torch.cat([data.observations, context_mu], dim=-1))
+                data = data._replace(next_observations = torch.cat([data.next_observations, context_mu], dim=-1))
+
+                
                 with torch.no_grad():
                     target_max, _ = target_network(data.next_observations).max(dim=1)
                     td_target = data.rewards.flatten() + args.gamma * target_max * (1 - data.dones.flatten())
@@ -265,6 +316,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                     writer.add_scalar("losses/q_values", old_val.mean().item(), global_step)
                     print("SPS:", int(global_step / (time.time() - start_time)))
                     writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
+
 
                 # optimize the model
                 optimizer.zero_grad()
@@ -307,18 +359,32 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     envs.close()
     writer.close()
 
-    # run trained agent
-    CARLEnv.render_mode = "human"
-    env = CARLEnv(
-        # You can play with different gravity values here
-        contexts={0: CARLEnv.get_default_context()},
-        )
-    
-    # run the experiment
-    obs, info = env.reset()
-    env.render()
+    # plot encoder representations
 
+    contexts_in_rb = rb.context_ids
+    context_values = []
+    context_embs = []
+    # filter out the unique contexts
+    contexts_in_rb = np.unique(contexts_in_rb)
+    for context_id in contexts_in_rb:
+        context_value = sampled_contexts[context_id][context_name]
+        context = rb.sample(context_size, context_id=context_id)
+        context_tensor = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
+        context_tensor = context_tensor.unsqueeze(0)
+        context_mu, context_sigma = context_encoder(context_tensor)
+        context_values.append(context_value)
+        context_embs.append(context_mu.detach().cpu().numpy())
 
+    # plot the context embeddings
+    context_values = np.array(context_values)
+    context_embs = np.array(context_embs)
+    import matplotlib.pyplot as plt
+    plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
+    plt.colorbar()
+
+    plt.savefig(f"results/runs/implicit_dqn_embeddings_{args.seed}.png")
+
+"""
     steps = 0
     while True:
         # get action from agent
@@ -332,3 +398,5 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             break
 
     env.close()
+
+"""

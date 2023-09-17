@@ -27,8 +27,8 @@ from carl_wrapper import context_wrapper
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
-    parser.add_argument("--hide_context", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
-        help="if toggled, the context is not passed to the agent")
+    parser.add_argument("--context_state", type=str, default="hidden",
+        help="the state of the context feature")
     parser.add_argument("--context_name", type=str, default="gravity",
         help="the name of the context feature")
     parser.add_argument("--num_envs", type=int, default=1,
@@ -159,12 +159,14 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
     args = parse_args()
-    print("hide context", args.hide_context)
+    print("context", args.context_state)
     context_name = args.context_name 
+
+    conact_context = True if args.context_state == "visible" else False
 
     CARLEnv = context_wrapper(CARLEnv, 
                           context_name = context_name, 
-                          concat_context = not args.hide_context)
+                          concat_context = not conact_context)
 
 
     

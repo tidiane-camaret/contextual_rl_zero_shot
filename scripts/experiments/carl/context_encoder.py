@@ -18,18 +18,6 @@ from carl.envs import CARLCartPole as CARLEnv
 from carl_wrapper import context_wrapper
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-seed = 0
-num_envs = 4
-buffer_size = 1000
-context_name = "gravity"
-hide_context = False
-total_timesteps = 1000
-batch_size = 16
-# wrap the env so it returns the observation as an array instead of a dict
-CARLEnv = context_wrapper(CARLEnv, 
-                    context_name = context_name, 
-                    concat_context = not hide_context)
 
 def make_env(seed, context_name = "gravity"):
     def thunk():
@@ -59,9 +47,6 @@ def make_env(seed, context_name = "gravity"):
         return env
 
     return thunk
-envs = gym.vector.SyncVectorEnv(
-        [make_env(seed + i, context_name=context_name) for i in range(num_envs)]
-    )
 
 class ReplayBufferSamples(NamedTuple):
     observations: th.Tensor
@@ -126,8 +111,67 @@ class ReplayBuffer(ReplayBuffer):
             self.context_ids[batch_inds, env_indices]
         )
         return ReplayBufferSamples(*tuple(map(self.to_torch, data)))
+    
+
+# define the context encoder
+## Define the predictor model
+class FeedForward(nn.Module):
+    def __init__(self, d_in, d_out, hidden_sizes, activation=nn.ReLU):
+        super(FeedForward, self).__init__()
+        if len(hidden_sizes) == 0:
+            self.model = nn.Linear(d_in, d_out)
+        else:
+            modules = [nn.Linear(d_in, hidden_sizes[0])]
+            for i in range(len(hidden_sizes) - 1):
+                modules.append(activation())
+                modules.append(nn.Linear(hidden_sizes[i], hidden_sizes[i+1]))
+            modules.append(activation())    
+            modules.append(nn.Linear(hidden_sizes[-1], d_out))
+
+            self.model = nn.Sequential(*modules)
+
+    def forward(self, x):
+        return self.model(x)
+    
+class ContextEncoder(nn.Module):
+    """
+    Encodes a context of shape [B, context_size, context_dim] into a latent vector.
+    """
+    def __init__(self, d_in, d_out, hidden_sizes, activation=nn.ReLU):
+        super(ContextEncoder, self).__init__()
+        self.model = FeedForward(d_in, d_out, hidden_sizes, activation)
 
 
+    def forward(self, x):
+        latents = []
+        for i in range(x.shape[1]):
+
+            latent = self.model(x[:, i, :])
+            latents.append(latent)
+        latents = torch.stack(latents, dim=1)
+        latents_mean = torch.mean(latents, dim=1)
+        latents_std = torch.std(latents, dim=1)
+        return latents_mean, latents_std
+    
+
+""""""
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+seed = 0
+num_envs = 4
+buffer_size = 1000
+context_name = "gravity"
+hide_context = False
+total_timesteps = 1000
+batch_size = 16
+# wrap the env so it returns the observation as an array instead of a dict
+CARLEnv = context_wrapper(CARLEnv, 
+                    context_name = context_name, 
+                    concat_context = not hide_context)
+
+
+envs = gym.vector.SyncVectorEnv(
+        [make_env(seed + i, context_name=context_name) for i in range(num_envs)]
+    )
 
 rb = ReplayBuffer(
     buffer_size,
@@ -139,7 +183,7 @@ rb = ReplayBuffer(
 
 )
 
-
+"""
 # reset the environments
 obs, _ = envs.reset(seed=seed)
 
@@ -157,12 +201,25 @@ for global_step in range(total_timesteps):
             real_next_obs[idx] = infos["final_observation"][idx]
     rb.add(obs, real_next_obs, actions, rewards, terminated, infos)
 
+
 # sample some data from the replay buffer
 data = rb.sample(batch_size)
 
-print(data.context_ids)
+#print(data.context_ids)
 contexts = [rb.sample(batch_size, context_id=c.item()) for c in data.context_ids] 
+print(contexts[0].actions)
+# context should be a tensor of shape (batch_size, context_size, context_dim)
+context_size = batch_size
+context_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
+context_dim = int(context_dim)
+# define empty context tensor
+context_tensor = torch.zeros((batch_size, context_size, context_dim), dtype=torch.float32, device=device)
+# fill context tensor with data
+for i, context in enumerate(contexts):
+    context_tensor[i] = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
 
+print(context_tensor)
+context_encoder = ContextEncoder(context_dim, 2, [32, 32]).to(device)
+print(context_encoder(context_tensor))
 
-for context in contexts:
-    print(context.context_ids)
+"""
