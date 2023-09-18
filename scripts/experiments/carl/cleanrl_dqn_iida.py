@@ -102,10 +102,10 @@ def parse_args():
 
 # ALGO LOGIC: initialize agent here:
 class QNetwork(nn.Module):
-    def __init__(self, env):
+    def __init__(self, env, encoder_output_size=2):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(np.array(env.single_observation_space.shape).prod()+args.emb_dim, 120),
+            nn.Linear(np.array(env.single_observation_space.shape).prod() + encoder_output_size, 120),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
@@ -197,7 +197,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     torch.backends.cudnn.deterministic = args.torch_deterministic
 
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
-
+    print(f"device: {device}")
     # env setup
     envs = gym.vector.SyncVectorEnv(
         [make_env(args.seed + i, sampled_contexts=sampled_contexts) for i in range(args.num_envs)]
@@ -209,10 +209,16 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     context_size = 20 #args.batch_size
     context_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
     context_dim = int(context_dim)
+    if args.context_state == "implicit":
+        encoder_output_size = args.emb_dim 
+    elif args.context_state == "implicit_std":
+        encoder_output_size = 2*args.emb_dim
+    else:
+        raise ValueError("context_state must be either implicit or implicit_std")
 
-    q_network = QNetwork(envs).to(device)
+    q_network = QNetwork(envs, encoder_output_size).to(device)
     
-    target_network = QNetwork(envs).to(device)
+    target_network = QNetwork(envs, encoder_output_size).to(device)
     target_network.load_state_dict(q_network.state_dict())
 
     # define the context encoder
@@ -251,14 +257,19 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             # encode the contexts   
             context_mu, context_sigma = context_encoder(context_tensor)
             # append the context to the observations
-            obs = torch.cat([torch.Tensor(obs), context_mu], dim=-1)
-        
-            q_values = q_network(obs.to(device))
+
+            if args.context_state == "implicit":
+                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu], dim=-1)
+            elif args.context_state == "implicit_std":
+                context_sigma = torch.exp(context_sigma)
+                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1)
+
+            q_values = q_network(obs_context)
             actions = torch.argmax(q_values, dim=1).cpu().numpy()
 
             # remove the context from the observations
-            obs = obs[:, :-args.emb_dim]
-            obs = obs.detach().cpu().numpy()
+            #obs = obs[:, :-encoder_output_size]
+            #obs = obs.detach().cpu().numpy()
 
         # TRY NOT TO MODIFY: execute the game and log data.
         next_obs, rewards, terminated, truncated, infos = envs.step(actions)
@@ -300,10 +311,13 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 # encode the contexts
                 context_mu, context_sigma = context_encoder(context_tensor)
                 # append the context to the observations
-
-                data = data._replace(observations = torch.cat([data.observations, context_mu], dim=-1))
-                data = data._replace(next_observations = torch.cat([data.next_observations, context_mu], dim=-1))
-
+                if args.context_state == "implicit":
+                    data = data._replace(observations = torch.cat([data.observations, context_mu], dim=-1))
+                    data = data._replace(next_observations = torch.cat([data.next_observations, context_mu], dim=-1))
+                elif args.context_state == "implicit_std":
+                    context_sigma = torch.exp(context_sigma)
+                    data = data._replace(observations = torch.cat([data.observations, context_mu, context_sigma], dim=-1))
+                    data = data._replace(next_observations = torch.cat([data.next_observations, context_mu, context_sigma], dim=-1))
                 
                 with torch.no_grad():
                     target_max, _ = target_network(data.next_observations).max(dim=1)
@@ -314,7 +328,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 if global_step % 100 == 0:
                     writer.add_scalar("losses/td_loss", loss, global_step)
                     writer.add_scalar("losses/q_values", old_val.mean().item(), global_step)
-                    print("SPS:", int(global_step / (time.time() - start_time)))
+                    #print("SPS:", int(global_step / (time.time() - start_time)))
                     writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
 
 
