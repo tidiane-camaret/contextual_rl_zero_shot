@@ -3,6 +3,7 @@ import argparse
 import os
 import random
 import time
+import importlib
 from distutils.util import strtobool
 
 import gymnasium as gym
@@ -14,7 +15,7 @@ import torch.optim as optim
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 
-from carl.envs import CARLCartPole as CARLEnv
+env_module = importlib.import_module("carl.envs")
 # discrete actions : CARLLunarLander, CARLCartPole
 # continuous actions : CARLPendulum
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
@@ -57,7 +58,7 @@ def parse_args():
         help="the user or org name of the model repository from the Hugging Face Hub")
 
     # Algorithm specific arguments
-    parser.add_argument("--env-id", type=str, default="CartPole-v1",
+    parser.add_argument("--env-id", type=str, default="CARLCartPole",
         help="the id of the environment")
     parser.add_argument("--total-timesteps", type=int, default=500000,
         help="total timesteps of the experiments")
@@ -158,7 +159,9 @@ if __name__ == "__main__":
 poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
+    
     args = parse_args()
+    CARLEnv = getattr(env_module, args.env_id)
     print("context", args.context_state)
     context_name = args.context_name 
 
