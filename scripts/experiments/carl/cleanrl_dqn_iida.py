@@ -371,7 +371,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             push_to_hub(args, episodic_returns, repo_id, "DQN", f"runs/{run_name}", f"videos/{run_name}-eval")
 
     envs.close()
-    writer.close()
+    
 
     # plot encoder representations
 
@@ -398,7 +398,8 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     plt.title(f"Context embeddings for {context_name} using {args.context_state}")
 
     plt.savefig(f"results/runs/dqn_embeddings_{args.context_state}_{args.seed}.png")
-
+    writer.add_figure("charts/context_embeddings", plt.gcf())
+    writer.close()
 """
     steps = 0
     while True:
