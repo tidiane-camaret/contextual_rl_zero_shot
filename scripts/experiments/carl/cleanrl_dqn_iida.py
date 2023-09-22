@@ -395,8 +395,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     import matplotlib.pyplot as plt
     plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
     plt.colorbar()
+    plt.title(f"Context embeddings for {context_name} using {args.context_state}")
 
-    plt.savefig(f"results/runs/implicit_dqn_embeddings_{args.seed}.png")
+    plt.savefig(f"results/runs/dqn_embeddings_{args.context_state}_{args.seed}.png")
 
 """
     steps = 0
