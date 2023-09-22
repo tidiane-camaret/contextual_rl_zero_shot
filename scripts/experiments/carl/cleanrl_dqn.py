@@ -162,11 +162,17 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     print("context", args.context_state)
     context_name = args.context_name 
 
-    conact_context = True if args.context_state == "visible" else False
+    if args.context_state == "hidden":
+        conact_context = False
+    elif args.context_state == "explicit":
+        conact_context = True
+    else:
+        raise ValueError("context_state must be either hidden or explicit")
+
 
     CARLEnv = context_wrapper(CARLEnv, 
                           context_name = context_name, 
-                          concat_context = not conact_context)
+                          concat_context = conact_context)
 
 
     
@@ -248,6 +254,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         for idx, d in enumerate(truncated):
             if d:
                 real_next_obs[idx] = infos["final_observation"][idx]
+        
         rb.add(obs, real_next_obs, actions, rewards, terminated, infos)
 
         # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
