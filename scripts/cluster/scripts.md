@@ -32,7 +32,9 @@ msub -l nodes=1:ppn=10,walltime=3:00:00,pmem=6GB -I
 source miniconda3/etc/profile.d/conda.sh
 conda activate tid_env
 # run the script
-python3 scripts/run_striker.py 
+cd dev/automl/meta_rl/
+bash scripts/experiments/carl/carl_dqn.bash
+
 
 
 # further infos on arguments : 

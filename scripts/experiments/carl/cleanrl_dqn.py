@@ -28,11 +28,11 @@ from carl_wrapper import context_wrapper
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
-    parser.add_argument("--context_state", type=str, default="hidden",
+    parser.add_argument("--context-state", type=str, default="hidden",
         help="the state of the context feature")
-    parser.add_argument("--context_name", type=str, default="gravity",
+    parser.add_argument("--context-name", type=str, default="gravity",
         help="the name of the context feature")
-    parser.add_argument("--num_envs", type=int, default=1,
+    parser.add_argument("--num-envs", type=int, default=1,
         help="the number of parallel game environments")
     parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
         help="the name of this experiment")
@@ -64,8 +64,6 @@ def parse_args():
         help="total timesteps of the experiments")
     parser.add_argument("--learning-rate", type=float, default=2.5e-4,
         help="the learning rate of the optimizer")
-    parser.add_argument("--num-envs", type=int, default=1,
-        help="the number of parallel game environments")
     parser.add_argument("--buffer-size", type=int, default=10000,
         help="the replay memory buffer size")
     parser.add_argument("--gamma", type=float, default=0.99,
