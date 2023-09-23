@@ -7,7 +7,7 @@
 # modules to load when using nemo cluster
 module load devel/python/3.9.7
 module load devel/conda
-module load mpi/openmpi/4.1-gnu-9.2
+# module load mpi/openmpi/4.1-gnu-9.2
 
 export CPATH=$CONDA_PREFIX/include
 

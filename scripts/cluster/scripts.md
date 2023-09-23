@@ -26,6 +26,9 @@ msub -q express -l nodes=1:ppn=1,walltime=15:00 scripts/cluster/run_striker.moab
 # gpu : 
 msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 scripts/cluster/run_striker.moab
 
+# see queue
+showq -u $USER
+
 ## Interactive session 
 msub -l nodes=1:ppn=10,walltime=3:00:00,pmem=6GB -I 
 # dont forget to activate the env
@@ -34,6 +37,9 @@ conda activate tid_env
 # run the script
 cd dev/automl/meta_rl/
 bash scripts/experiments/carl/carl_dqn.bash
+
+
+
 
 
 

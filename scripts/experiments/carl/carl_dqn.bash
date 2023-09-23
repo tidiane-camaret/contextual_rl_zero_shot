@@ -1,5 +1,5 @@
-env_id="CARLAcrobot"
-context_name="LINK_MASS_2"
+env_id="CARLLunarLander"
+context_name="GRAVITY_Y"
 
 echo "Running CARL DQN experiments for $env_id with context $context_name"
 
