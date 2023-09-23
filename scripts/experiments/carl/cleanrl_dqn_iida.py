@@ -398,7 +398,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     plt.colorbar()
     plt.title(f"Context embeddings for {context_name} using {args.context_state}")
 
-    plt.savefig(f"results/runs/dqn_embeddings_{args.context_state}_{args.seed}.png")
+    plt.savefig(f"results/runs/dqn_embeddings_{args.env_id}_{args.context_state}_{args.seed}.png")
     writer.add_figure("charts/context_embeddings", plt.gcf())
     writer.close()
 """
