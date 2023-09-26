@@ -18,6 +18,7 @@ conda activate tid_env
 
 
 # run the scripts
-time bash dev/automl/meta_rl/scripts/experiments/carl/carl_dqn.bash
+cd dev/automl/meta_rl
+time bash scripts/experiments/carl/carl_dqn.bash
 
 # to check the job status : checkjob + jobid

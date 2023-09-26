@@ -123,7 +123,7 @@ def make_env(seed, context_name = "gravity"):
         #mu, rel_sigma = 10, 5
         #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
         l, u = context_default * 0.2, context_default * 2.2
-        context_distributions = [UniformFloatContextFeature(context_name, l, u)]
+        context_distributions = [UniformFloatContextFeature(context_name, min(l,u), max(l,u))]
         
         context_sampler = ContextSampler(
                             context_distributions=context_distributions,

@@ -20,7 +20,8 @@
 # export CPATH=$CONDA_PREFIX/include
 
 ## Submit job 
-msub -l nodes=1:ppn=10,walltime=10:00:00,pmem=6GB scripts/cluster/run_striker.moab
+msub -l nodes=1:ppn=1,walltime=10:00:00,pmem=6GB scripts/cluster/run_striker.moab
+msub -l nodes=1:ppn=1,walltime=10:00:00 scripts/cluster/run_implicit_dqn.moab
 # express : 
 msub -q express -l nodes=1:ppn=1,walltime=15:00 scripts/cluster/run_striker.moab
 # gpu : 
@@ -30,7 +31,7 @@ msub -q gpu -l nodes=1:ppn=1:gpus=1,walltime=40:00 scripts/cluster/run_striker.m
 showq -u $USER
 
 ## Interactive session 
-msub -l nodes=1:ppn=10,walltime=3:00:00,pmem=6GB -I 
+msub -l nodes=1:ppn=10,walltime=8:00:00,pmem=6GB -I 
 # dont forget to activate the env
 source miniconda3/etc/profile.d/conda.sh
 conda activate tid_env
