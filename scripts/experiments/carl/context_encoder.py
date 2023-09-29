@@ -143,12 +143,24 @@ class ContextEncoder(nn.Module):
 
 
     def forward(self, x):
+
+        """
+        # flatten x to [B * context_size, context_dim]
+        # pass x through the model
+        latents = self.model(x.view(-1, x.shape[-1]))
+        # reshape latents back to [B, context_size, d_out]
+        latents = latents.view(x.shape[0], x.shape[1], -1)
+
+
+
+        """
         latents = []
         for i in range(x.shape[1]):
 
             latent = self.model(x[:, i, :])
             latents.append(latent)
         latents = torch.stack(latents, dim=1)
+ 
         latents_mean = torch.mean(latents, dim=1)
         latents_std = torch.std(latents, dim=1)
         return latents_mean, latents_std
