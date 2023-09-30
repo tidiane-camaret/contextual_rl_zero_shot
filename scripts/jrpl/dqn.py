@@ -1,4 +1,7 @@
+
+
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/dqn/#dqnpy
+
 import argparse
 import os
 import random
@@ -14,10 +17,29 @@ import torch.optim as optim
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 
+# allows do dynamically import modules from the carl.envs folder
+import importlib
+env_module = importlib.import_module("carl.envs")
+
+from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
+from carl.context.sampler import ContextSampler
+
+# TODO put this script in the main library
+from scripts.experiments.carl.carl_wrapper import context_wrapper
+
 
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
+    # JRPL arguments
+    parser.add_argument("--context-mode", type=str, default="hidden",
+        help="how the context is provided to the agent: hidden, explicit, learned")
+    parser.add_argument("--context-encoder", type=str, default="mlp_avg",
+        help="if context-mode is learned, the type of context encoder to use")
+    parser.add_argument("--context-name", type=str, default="gravity",
+        help="the name of the context feature")
+    
+    # General arguments
     parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
         help="the name of this experiment")
     parser.add_argument("--seed", type=int, default=1,
@@ -42,7 +64,7 @@ def parse_args():
         help="the user or org name of the model repository from the Hugging Face Hub")
 
     # Algorithm specific arguments
-    parser.add_argument("--env-id", type=str, default="CartPole-v1",
+    parser.add_argument("--env-id", type=str, default="CARLCartPole",
         help="the id of the environment")
     parser.add_argument("--total-timesteps", type=int, default=500000,
         help="total timesteps of the experiments")
@@ -72,20 +94,38 @@ def parse_args():
         help="the frequency of training")
     args = parser.parse_args()
     # fmt: on
-    assert args.num_envs == 1, "vectorized envs are not supported at the moment"
+    #assert args.num_envs == 1, "vectorized envs are not supported at the moment"
 
     return args
 
 
-def make_env(env_id, seed, idx, capture_video, run_name):
+def make_env(seed, context_name = "gravity"):
+    """
+    wrapper for monitoring and seeding envs
+    Returns envs with a distribution of the context
+    """
     def thunk():
-        if capture_video and idx == 0:
-            env = gym.make(env_id, render_mode="rgb_array")
-            env = gym.wrappers.RecordVideo(env, f"videos/{run_name}")
-        else:
-            env = gym.make(env_id)
+        context_default = CARLEnv.get_default_context()[context_name]
+        
+        #mu, rel_sigma = 10, 5
+        #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
+        l, u = context_default * 0.2, context_default * 2.2
+        context_distributions = [UniformFloatContextFeature(context_name, min(l,u), max(l,u))]
+        
+        context_sampler = ContextSampler(
+                            context_distributions=context_distributions,
+                            context_space=CARLEnv.get_context_space(),
+                            seed=seed,
+                        )
+        
+        env = CARLEnv(
+        # You can play with different gravity values here
+        contexts=context_sampler.sample_contexts(n_contexts=100),
+        obs_context_as_dict=True,
+        )
+
         env = gym.wrappers.RecordEpisodeStatistics(env)
-        env.action_space.seed(seed)
+        env.action_space.seed(seed) 
 
         return env
 
@@ -124,6 +164,20 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
     args = parse_args()
+
+    CARLEnv = getattr(env_module, args.env_id)
+    print("context mode : ", args.context_mode)
+    context_name = args.context_name 
+
+    concat_context = True if args.context_mode == "explicit" else False
+
+
+    CARLEnv = context_wrapper(CARLEnv, 
+                          context_name = context_name, 
+                          concat_context = concat_context)
+
+
+    
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
         import wandb
@@ -137,7 +191,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             monitor_gym=True,
             save_code=True,
         )
-    writer = SummaryWriter(f"runs/{run_name}")
+    writer = SummaryWriter(f"results/runs/{run_name}")
     writer.add_text(
         "hyperparameters",
         "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
@@ -153,7 +207,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.env_id, args.seed + i, i, args.capture_video, run_name) for i in range(args.num_envs)]
+        [make_env(args.seed + i, context_name=context_name) for i in range(args.num_envs)]
     )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
@@ -162,12 +216,14 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     target_network = QNetwork(envs).to(device)
     target_network.load_state_dict(q_network.state_dict())
 
+    # TODO : add a condition for which replay buffer to import ? 
     rb = ReplayBuffer(
         args.buffer_size,
         envs.single_observation_space,
         envs.single_action_space,
         device,
         handle_timeout_termination=False,
+        n_envs=args.num_envs,
     )
     start_time = time.time()
 
@@ -235,7 +291,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                     )
 
     if args.save_model:
-        model_path = f"runs/{run_name}/{args.exp_name}.cleanrl_model"
+        model_path = f"results/runs/{run_name}/{args.exp_name}.cleanrl_model"
         torch.save(q_network.state_dict(), model_path)
         print(f"model saved to {model_path}")
         from cleanrl_utils.evals.dqn_eval import evaluate
@@ -262,3 +318,30 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     envs.close()
     writer.close()
+
+
+    # run trained agent
+    CARLEnv.render_mode = "human"
+    env = CARLEnv(
+        # You can play with different gravity values here
+        contexts={0: CARLEnv.get_default_context()},
+        )
+    
+    # run the experiment
+    obs, info = env.reset()
+    env.render()
+
+
+    steps = 0
+    while True:
+        # get action from agent
+        q_values = q_network(torch.Tensor(obs).to(device))
+        action = torch.argmax(q_values).cpu().numpy()
+
+        obs, r, done, truncated, info = env.step(action)
+        env.render()
+        steps += 1
+        if done or steps > 100:
+            break
+
+    env.close()
