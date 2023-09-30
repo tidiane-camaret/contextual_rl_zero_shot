@@ -15,7 +15,6 @@ from carl.context.context_space import NormalFloatContextFeature, UniformFloatCo
 from carl.context.sampler import ContextSampler
 from carl.envs import CARLCartPole as CARLEnv
 
-from carl_wrapper import context_wrapper
 
 
 
@@ -144,7 +143,7 @@ class ContextEncoder(nn.Module):
 
     def forward(self, x):
 
-        """
+
         # flatten x to [B * context_size, context_dim]
         # pass x through the model
         latents = self.model(x.view(-1, x.shape[-1]))
@@ -160,13 +159,15 @@ class ContextEncoder(nn.Module):
             latent = self.model(x[:, i, :])
             latents.append(latent)
         latents = torch.stack(latents, dim=1)
- 
+         """
         latents_mean = torch.mean(latents, dim=1)
         latents_std = torch.std(latents, dim=1)
         return latents_mean, latents_std
     
 
-""""""
+"""
+from carl_wrapper import context_wrapper
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 seed = 0
 num_envs = 4
@@ -195,7 +196,7 @@ rb = ReplayBuffer(
 
 )
 
-"""
+
 # reset the environments
 obs, _ = envs.reset(seed=seed)
 
