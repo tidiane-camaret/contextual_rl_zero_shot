@@ -36,6 +36,8 @@ def parse_args():
         help="how the context is provided to the agent: hidden, explicit, learned")
     parser.add_argument("--context-encoder", type=str, default="mlp_avg",
         help="if context-mode is learned, the type of context encoder to use")
+    parser.add_argument("--emb-dim", type=int, default=2,
+        help="the dimension of the context embedding") 
     parser.add_argument("--context-name", type=str, default="gravity",
         help="the name of the context feature")
     
@@ -134,10 +136,10 @@ def make_env(seed, context_name = "gravity"):
 
 # ALGO LOGIC: initialize agent here:
 class QNetwork(nn.Module):
-    def __init__(self, env):
+    def __init__(self, env, encoder_output_size=0):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(np.array(env.single_observation_space.shape).prod(), 120),
+            nn.Linear(np.array(env.single_observation_space.shape).prod() + encoder_output_size, 120),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
@@ -211,11 +213,29 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
-    q_network = QNetwork(envs).to(device)
-    optimizer = optim.Adam(q_network.parameters(), lr=args.learning_rate)
+
+    encoder_output_size = 0 # default value
+    if args.context_mode == "learned":
+
+        context_size = 20 #args.batch_size
+        transitions_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
+        transitions_dim = int(transitions_dim)
+        if args.context_state == "implicit":
+            encoder_output_size = args.emb_dim 
+        elif args.context_state == "implicit_std":
+            encoder_output_size = 2*args.emb_dim
+        else:
+            raise ValueError("context_state must be either implicit or implicit_std")
+
+        context_encoder = ContextEncoder(context_dim, args.emb_dim, [32, 32]).to(device)
+
+    q_network = QNetwork(envs, encoder_output_size).to(device)
+    
     target_network = QNetwork(envs).to(device)
     target_network.load_state_dict(q_network.state_dict())
 
+    optimizer = optim.Adam(list(q_network.parameters()) + list(context_encoder.parameters()), lr=args.learning_rate)
+    
     # TODO : add a condition for which replay buffer to import ? 
     rb = ReplayBuffer(
         args.buffer_size,
