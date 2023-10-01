@@ -21,7 +21,7 @@
 
 ## Submit job 
 msub -l nodes=1:ppn=1,walltime=10:00:00,pmem=6GB scripts/cluster/run_striker.moab
-msub -l nodes=1:ppn=1,walltime=10:00:00 scripts/cluster/run_implicit_dqn.moab
+msub -l nodes=1:ppn=1,walltime=10:00:00 scripts/cluster/run_jrpl.moab
 # express : 
 msub -q express -l nodes=1:ppn=1,walltime=15:00 scripts/cluster/run_striker.moab
 # gpu : 
@@ -37,7 +37,7 @@ source miniconda3/etc/profile.d/conda.sh
 conda activate tid_env
 # run the script
 cd dev/automl/meta_rl/
-bash scripts/experiments/carl/carl_dqn.bash
+bash scripts/jrpl/run_jrpl.bash
 
 
 

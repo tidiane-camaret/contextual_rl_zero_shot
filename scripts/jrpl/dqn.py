@@ -56,7 +56,7 @@ def parse_args():
         help="if toggled, cuda will be enabled by default")
     parser.add_argument("--track", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
         help="if toggled, this experiment will be tracked with Weights and Biases")
-    parser.add_argument("--wandb-project-name", type=str, default="cleanRL",
+    parser.add_argument("--wandb-project-name", type=str, default="JRPL",
         help="the wandb's project name")
     parser.add_argument("--wandb-entity", type=str, default=None,
         help="the entity (team) of wandb's project")
@@ -174,7 +174,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     
     #mu, rel_sigma = 10, 5
     #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
-    l, u = context_default * 0.2, context_default * 2.2
+    l, u = context_default * 0.1, context_default * 10
     context_distributions = [UniformFloatContextFeature(context_name, min(l,u), max(l,u))]
     
     context_sampler = ContextSampler(
@@ -285,7 +285,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 if args.context_encoder == "mlp_avg":
                     obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu], dim=-1)
                 elif args.context_encoder == "mlp_avg_std":
-                    context_sigma = torch.exp(context_sigma)
+                    #context_sigma = torch.exp(context_sigma)
                     obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1)
                 
                 q_values = q_network(obs_context)
