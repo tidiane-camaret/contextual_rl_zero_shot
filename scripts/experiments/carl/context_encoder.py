@@ -17,7 +17,7 @@ from carl.envs import CARLCartPole as CARLEnv
 
 
 
-
+"""
 def make_env(seed, context_name = "gravity"):
     def thunk():
         context_default = CARLEnv.get_default_context()[context_name]
@@ -46,7 +46,7 @@ def make_env(seed, context_name = "gravity"):
         return env
 
     return thunk
-
+"""
 class ReplayBufferSamples(NamedTuple):
     observations: th.Tensor
     actions: th.Tensor

@@ -4,7 +4,6 @@
 
 
 import numpy as np
-from carl.envs import CARLPendulum as CARLEnv
 from gymnasium.spaces import Tuple, Box
 
 def context_wrapper(cls, context_name = "gravity", concat_context = True):

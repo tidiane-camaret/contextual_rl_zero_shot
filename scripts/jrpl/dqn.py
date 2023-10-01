@@ -29,7 +29,6 @@ from carl.context.sampler import ContextSampler
 # TODO put this script in the main library
 from scripts.experiments.carl.carl_wrapper import context_wrapper
 from scripts.experiments.carl.context_encoder import ContextEncoder
-from scripts.experiments.carl.context_encoder import ReplayBuffer 
 
 
 def parse_args():
@@ -42,9 +41,16 @@ def parse_args():
         help="if context-mode is learned, the type of context encoder to use")
     parser.add_argument("--emb-dim", type=int, default=2,
         help="the dimension of the context embedding") 
+    parser.add_argument("--hidden-encoder-dim", type=int, default=16,
+        help="the hidden sizes of the context encoder")
+    parser.add_argument("--context-length", type=int, default=20,
+        help="length of the encoded context")
     parser.add_argument("--context-name", type=str, default="gravity",
         help="the name of the context feature")
-    
+    parser.add_argument("--context_lower", type=float, default=0.2,
+        help="lower bound of the context feature as a multiple of the default value")   
+    parser.add_argument("--context_upper", type=float, default=2.2,
+        help="upper bound of the context feature as a multiple of the default value") 
     # General arguments
     parser.add_argument("--exp-name", type=str, default=os.path.basename(__file__).rstrip(".py"),
         help="the name of this experiment")
@@ -154,8 +160,8 @@ if __name__ == "__main__":
         raise ValueError(
             """Ongoing migration: run the following command to install the new dependencies:
 
-poetry run pip install "stable_baselines3==2.0.0a1"
-"""
+            poetry run pip install "stable_baselines3==2.0.0a1"
+            """
         )
     args = parse_args()
 
@@ -174,7 +180,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     
     #mu, rel_sigma = 10, 5
     #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
-    l, u = context_default * 0.1, context_default * 10
+    l, u = context_default * args.context_lower, context_default * args.context_upper
     context_distributions = [UniformFloatContextFeature(context_name, min(l,u), max(l,u))]
     
     context_sampler = ContextSampler(
@@ -211,6 +217,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     torch.backends.cudnn.deterministic = args.torch_deterministic
 
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
+    print("device : ", device)
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
@@ -218,12 +225,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     )
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
-
-    encoder_output_size = 0 # default value
     if args.context_mode == "learned":
         from scripts.experiments.carl.context_encoder import ReplayBuffer 
 
-        context_length = 20 #args.batch_size
+        context_length = args.context_length
         transitions_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
         transitions_dim = int(transitions_dim)
         print("transitions_dim : ", transitions_dim)
@@ -234,7 +239,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         else:
             raise ValueError("context_encoder must be either mlp_avg or mlp_avg_std")
 
-        context_encoder = ContextEncoder(transitions_dim, args.emb_dim, [32, 32]).to(device)
+        context_encoder = ContextEncoder(transitions_dim, args.emb_dim, [args.hidden_encoder_dim, args.hidden_encoder_dim]).to(device)
         q_network = QNetwork(envs, encoder_output_size).to(device)
         optimizer = optim.Adam(list(q_network.parameters()) + list(context_encoder.parameters()), lr=args.learning_rate)
         target_network = QNetwork(envs, encoder_output_size).to(device)
@@ -420,6 +425,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         writer.add_figure("charts/context_embeddings", plt.gcf())
     writer.close()
 
+    """
 
     # run trained agent
     CARLEnv.render_mode = "human"
@@ -446,3 +452,5 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             break
 
     env.close()
+
+    """
