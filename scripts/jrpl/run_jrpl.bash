@@ -2,7 +2,7 @@
 #context_name="GRAVITY_Y"
 
 env_id="CARLCartPole"
-context_name="tau"
+context_name="gravity" #"length" #"tau"
 
 
 echo "Running JRPL DQN experiments for $env_id with context $context_name"
