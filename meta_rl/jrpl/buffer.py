@@ -105,7 +105,8 @@ class ReplayBuffer(ReplayBuffer):
                                  )
     
         else:
-            contexts = None
+            # empty tensor
+            contexts = th.zeros(0, 0, 0)
 
 
         data = (

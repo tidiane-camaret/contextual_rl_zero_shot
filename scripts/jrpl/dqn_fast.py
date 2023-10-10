@@ -401,14 +401,13 @@ if __name__ == "__main__":
     envs.close()
     if args.context_mode == "learned":
         # plot encoder representations
-        contexts_in_rb = rb.context_ids
         context_values = []
         context_embs = []
         # filter out the unique contexts
-        contexts_in_rb = np.unique(contexts_in_rb)
+        contexts_in_rb = np.unique(rb.context_ids)
         for context_id in contexts_in_rb:
             context_value = sampled_contexts[context_id][context_name]
-            context = rb.sample(context_length, context_id=context_id)
+            context = rb.sample(batch_size=context_length, context_length=context_length, add_context=False, context_id=context_id)
             context_tensor = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
             context_tensor = context_tensor.unsqueeze(0)
             context_mu, context_sigma = context_encoder(context_tensor)
