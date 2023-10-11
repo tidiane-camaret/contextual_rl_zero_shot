@@ -2,12 +2,12 @@
 #context_name="GRAVITY_Y"
 
 env_id="CARLCartPole"
-context_name="gravity" #"length" #"tau"
+context_name="tau" #"gravity" #"length" #
 
 
 echo "Running JRPL DQN experiments for $env_id with context $context_name"
 
-for seed in 0 1 2 3 4 5 6 7 8 9
+for seed in 10 11 12 13 14 15 16 17 18 19
 do
 
     python3 scripts/jrpl/dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode explicit

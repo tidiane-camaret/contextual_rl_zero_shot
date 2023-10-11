@@ -226,7 +226,7 @@ if __name__ == "__main__":
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
     if args.context_mode == "learned":
-        from meta_rl.jrpl.buffer import ReplayBuffer
+        from scripts.experiments.carl.context_encoder import ReplayBuffer 
 
         context_length = args.context_length
         transitions_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
@@ -274,12 +274,17 @@ if __name__ == "__main__":
             if args.context_mode == "learned":
                 # sample contexts from each element of the batch
                 context_ids = info["context_id"]
-                # context_id needs to be an int for now. Throw an error if it is not
-                if not isinstance(context_ids, int):
-                    raise ValueError("context_id should be an int")
-                rb_sample = rb.sample(batch_size=1, context_length=context_length, add_context=True, context_id=context_ids,)
+                # if context_ids is an int, convert it to a list
+                if isinstance(context_ids, int):
+                    context_ids = [context_ids]
+                contexts = [rb.sample(context_length, context_id=c) for c in context_ids]
+                context_tensor = torch.zeros((len(context_ids), context_length, transitions_dim), dtype=torch.float32, device=device)
+                for i, context in enumerate(contexts):
+                    context_tensor[i] = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)       
+                
+                
                 # encode the contexts   
-                context_mu, context_sigma = context_encoder(rb_sample.contexts)
+                context_mu, context_sigma = context_encoder(context_tensor)
                 # append the context to the observations
 
                 if args.context_encoder == "mlp_avg":
@@ -321,23 +326,17 @@ if __name__ == "__main__":
         # ALGO LOGIC: training.
         if global_step > args.learning_starts:
             if global_step % args.train_frequency == 0:
-                
+                data = rb.sample(args.batch_size)
 
                 if args.context_mode == "learned":
-                    data = rb.sample(args.batch_size, context_length, add_context=True)
-                    """
                     # sample contexts from each element of the batch
                     contexts = [rb.sample(context_length, context_id=c.item()) for c in data.context_ids]
                     context_tensor = torch.zeros((args.batch_size, context_length, transitions_dim), dtype=torch.float32, device=device)
                     for i, context in enumerate(contexts):
                         context_tensor[i] = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
 
-                    print("data.contexts : ", data.contexts.shape)
-                    print("data.observations : ", data.observations.shape)
-                    print("data.next_observations : ", data.next_observations.shape)
-                    """
                     # encode the contexts
-                    context_mu, context_sigma = context_encoder(data.contexts)
+                    context_mu, context_sigma = context_encoder(context_tensor)
                     # append the context to the observations
                     if args.context_encoder == "mlp_avg":
                         data = data._replace(observations = torch.cat([data.observations, context_mu], dim=-1))
@@ -346,8 +345,7 @@ if __name__ == "__main__":
                         context_sigma = torch.exp(context_sigma)
                         data = data._replace(observations = torch.cat([data.observations, context_mu, context_sigma], dim=-1))
                         data = data._replace(next_observations = torch.cat([data.next_observations, context_mu, context_sigma], dim=-1))
-                else :
-                    data = rb.sample(args.batch_size)
+                    
                 with torch.no_grad():
                     target_max, _ = target_network(data.next_observations).max(dim=1)
                     td_target = data.rewards.flatten() + args.gamma * target_max * (1 - data.dones.flatten())
@@ -401,13 +399,14 @@ if __name__ == "__main__":
     envs.close()
     if args.context_mode == "learned":
         # plot encoder representations
+        contexts_in_rb = rb.context_ids
         context_values = []
         context_embs = []
         # filter out the unique contexts
-        contexts_in_rb = np.unique(rb.context_ids)
+        contexts_in_rb = np.unique(contexts_in_rb)
         for context_id in contexts_in_rb:
             context_value = sampled_contexts[context_id][context_name]
-            context = rb.sample(batch_size=context_length, context_length=context_length, add_context=False, context_id=context_id)
+            context = rb.sample(context_length, context_id=context_id)
             context_tensor = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
             context_tensor = context_tensor.unsqueeze(0)
             context_mu, context_sigma = context_encoder(context_tensor)
