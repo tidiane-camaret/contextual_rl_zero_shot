@@ -26,9 +26,8 @@ env_module = importlib.import_module("carl.envs")
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
 
-# TODO put this script in the main library
-from scripts.experiments.carl.carl_wrapper import context_wrapper
-from scripts.experiments.carl.context_encoder import ContextEncoder
+from meta_rl.jrpl.carl_wrapper import context_wrapper
+from meta_rl.jrpl.context_encoder import ContextEncoder
 
 
 def parse_args():

@@ -122,3 +122,69 @@ class ReplayBuffer(ReplayBuffer):
         )
         return ReplayBufferSamples(*tuple(map(self.to_torch, data)))
     
+
+
+"""
+# Old version of the buffer (october 2023) doesnt return the context tensor
+class ReplayBufferSamples(NamedTuple):
+    observations: th.Tensor
+    actions: th.Tensor
+    next_observations: th.Tensor
+    dones: th.Tensor
+    rewards: th.Tensor
+    context_ids: th.Tensor
+
+class ReplayBuffer(ReplayBuffer):
+    
+    #Modified replaybuffer. Stores the context id for each transition.
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.context_ids = np.zeros((self.buffer_size, self.n_envs), dtype=np.int32)
+
+    def add(self, obs, next_obs, action, reward, done, infos):
+        
+        #Add a new transition to the buffer.
+        
+        super().add(obs, next_obs, action, reward, done, infos)
+        self.context_ids[self.pos] = np.array(infos["context_id"]).copy()
+
+    def sample(self, batch_size: int, context_id: int = None, env: Optional[VecNormalize] = None) -> ReplayBufferSamples:
+        
+        # Indices where context_id is equal to the given context_id
+        if context_id is not None:
+            context_inds = np.where(self.context_ids == context_id)
+            # Sample from the context_inds
+            ids = np.random.randint(0, context_inds[0].shape[0], size=batch_size)
+            batch_inds = (context_inds[0][ids], context_inds[1][ids])
+            # since context_inds is a 2d matrix (buffer_size, n_envs), we need to get the env indices as well
+            return self._get_samples(batch_inds=batch_inds[0], env_indices=batch_inds[1], env=env)
+        # If no context_id is given, sample randomly
+        else:
+            batch_inds = np.random.randint(0, self.buffer_size, size=batch_size)
+            return self._get_samples(batch_inds, env=env)
+    
+
+    def _get_samples(self, batch_inds: np.ndarray, env_indices: np.ndarray = None, env: Optional[VecNormalize] = None) -> ReplayBufferSamples:
+        # Sample randomly the env idx
+        if env_indices is None:
+            env_indices = np.random.randint(0, high=self.n_envs, size=(len(batch_inds),))
+
+        if self.optimize_memory_usage:
+            next_obs = self._normalize_obs(self.observations[(batch_inds + 1) % self.buffer_size, env_indices, :], env)
+        else:
+            next_obs = self._normalize_obs(self.next_observations[batch_inds, env_indices, :], env)
+
+        data = (
+            self._normalize_obs(self.observations[batch_inds, env_indices, :], env),
+            self.actions[batch_inds, env_indices, :],
+            next_obs,
+            # Only use dones that are not due to timeouts
+            # deactivated by default (timeouts is initialized as an array of False)
+            (self.dones[batch_inds, env_indices] * (1 - self.timeouts[batch_inds, env_indices])).reshape(-1, 1),
+            self._normalize_reward(self.rewards[batch_inds, env_indices].reshape(-1, 1), env),
+            self.context_ids[batch_inds, env_indices]
+        )
+        return ReplayBufferSamples(*tuple(map(self.to_torch, data)))
+    
+"""
