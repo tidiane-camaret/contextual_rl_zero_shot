@@ -3,9 +3,11 @@ Run an HPO using Hydra, via the how_to_autorl package.
 https://github.com/facebookresearch/how-to-autorl/
 """
 
-from scripts.jrpl.dqn_wrapped import *
-
-
+from meta_rl.scripts.jrpl.dqn_wrapped import parse_args, train_agent
+from meta_rl.meta_rl.jrpl.context_encoder import ContextEncoder
+from meta_rl.meta_rl.jrpl.carl_wrapper import context_wrapper
+import importlib
+import numpy as np
 
 if __name__ == "__main__":
     import stable_baselines3 as sb3

@@ -24,9 +24,9 @@ import importlib
 
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-
-from meta_rl.jrpl.carl_wrapper import context_wrapper
-from meta_rl.jrpl.context_encoder import ContextEncoder
+import sys
+import os
+sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
 
 
 def parse_args():
@@ -102,6 +102,10 @@ def parse_args():
         help="timestep to start learning")
     parser.add_argument("--train-frequency", type=int, default=10,
         help="the frequency of training")
+    
+    # HPO arguments
+    parser.add_argument("--multirun, -m", action="store_true",
+        help="run multiple experiments with a sweeper (see how-to-autorl)")
     args = parser.parse_args()
     # fmt: on
     #assert args.num_envs == 1, "vectorized envs are not supported at the moment"
