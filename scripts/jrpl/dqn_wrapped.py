@@ -109,7 +109,7 @@ def parse_args():
     return args
 
 
-def make_env(seed, sampled_contexts):
+def make_env(seed, sampled_contexts, CARLEnv):
     """
     wrapper for monitoring and seeding envs
     Returns envs with a distribution of the context
@@ -197,7 +197,7 @@ def train_agent(args, CARLEnv):
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.seed + i, sampled_contexts=sampled_contexts) for i in range(args.num_envs)]
+        [make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv) for i in range(args.num_envs)]
     )
 
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
