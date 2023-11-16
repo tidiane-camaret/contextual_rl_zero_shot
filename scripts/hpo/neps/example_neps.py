@@ -13,7 +13,7 @@ CARLEnv = context_wrapper(CARLEnv,
                         concat_context = True)
 
 def run_pipeline(learning_rate, float2, categorical, integer1, integer2):
-    import scripts.jrpl.dqn_wrapped as dqn_wrapped
+    import automl.meta_rl.scripts.jrpl.dqn as dqn
     
     
     from meta_rl.jrpl.context_encoder import ContextEncoder
@@ -23,7 +23,7 @@ def run_pipeline(learning_rate, float2, categorical, integer1, integer2):
     from torch.utils.tensorboard import SummaryWriter
     import gymnasium as gym
     
-    args = dqn_wrapped.parse_args()
+    args = dqn.parse_args()
     args.learning_rate = learning_rate
     print('learning rate : ', args.learning_rate)
     
@@ -79,12 +79,12 @@ def run_pipeline(learning_rate, float2, categorical, integer1, integer2):
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [dqn_wrapped.make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv) for i in range(args.num_envs)]
+        [dqn.make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv) for i in range(args.num_envs)]
     )
     
     assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
     
-    sum_returns = dqn_wrapped.eval_agent(args, envs)
+    sum_returns = dqn.eval_agent(args, envs)
     print("sum returns : ", sum_returns)
     loss = -float(np.sum([learning_rate, float2, int(categorical), integer1, integer2]))
     time.sleep(2)  # For demonstration purposes only

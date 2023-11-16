@@ -3,7 +3,7 @@ Run an HPO using Hydra, via the how_to_autorl package.
 https://github.com/facebookresearch/how-to-autorl/
 """
 
-from meta_rl.scripts.jrpl.dqn_wrapped import parse_args, train_agent
+from automl.meta_rl.scripts.jrpl.dqn import parse_args, train_agent
 from meta_rl.meta_rl.jrpl.context_encoder import ContextEncoder
 from meta_rl.meta_rl.jrpl.carl_wrapper import context_wrapper
 import importlib

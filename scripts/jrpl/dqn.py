@@ -21,13 +21,14 @@ from torch.utils.tensorboard import SummaryWriter
 
 # allows do dynamically import modules from the carl.envs folder
 import importlib
-env_module = importlib.import_module("carl.envs")
 
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-
-from meta_rl.jrpl.carl_wrapper import context_wrapper
-from meta_rl.jrpl.context_encoder import ContextEncoder
+import sys
+import os
+sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
+from meta_rl.meta_rl.jrpl.carl_wrapper import context_wrapper
+from meta_rl.meta_rl.jrpl.context_encoder import ContextEncoder
 
 
 def parse_args():
@@ -103,6 +104,10 @@ def parse_args():
         help="timestep to start learning")
     parser.add_argument("--train-frequency", type=int, default=10,
         help="the frequency of training")
+    
+    # HPO arguments
+    parser.add_argument("--multirun, -m", action="store_true",
+        help="run multiple experiments with a sweeper (see how-to-autorl)")
     args = parser.parse_args()
     # fmt: on
     #assert args.num_envs == 1, "vectorized envs are not supported at the moment"
@@ -110,7 +115,7 @@ def parse_args():
     return args
 
 
-def make_env(seed, sampled_contexts):
+def make_env(seed, sampled_contexts, CARLEnv):
     """
     wrapper for monitoring and seeding envs
     Returns envs with a distribution of the context
@@ -151,36 +156,14 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
     slope = (end_e - start_e) / duration
     return max(slope * t + start_e, end_e)
 
-
-if __name__ == "__main__":
-    import stable_baselines3 as sb3
-
-    if sb3.__version__ < "2.0":
-        raise ValueError(
-            """Ongoing migration: run the following command to install the new dependencies:
-
-            poetry run pip install "stable_baselines3==2.0.0a1"
-            """
-        )
-    args = parse_args()
-
-    CARLEnv = getattr(env_module, args.env_id)
-    print("context mode : ", args.context_mode)
-    context_name = args.context_name 
-
-    concat_context = True if args.context_mode == "explicit" else False
-
-
-    CARLEnv = context_wrapper(CARLEnv, 
-                          context_name = context_name, 
-                          concat_context = concat_context)
-
-    context_default = CARLEnv.get_default_context()[context_name]
+def train_agent(args, CARLEnv):
+    
+    context_default = CARLEnv.get_default_context()[args.context_name]
     
     #mu, rel_sigma = 10, 5
     #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
     l, u = context_default * args.context_lower, context_default * args.context_upper
-    context_distributions = [UniformFloatContextFeature(context_name, min(l,u), max(l,u))]
+    context_distributions = [UniformFloatContextFeature(args.context_name, min(l,u), max(l,u))]
     
     context_sampler = ContextSampler(
                         context_distributions=context_distributions,
@@ -220,10 +203,10 @@ if __name__ == "__main__":
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.seed + i, sampled_contexts=sampled_contexts) for i in range(args.num_envs)]
+        [make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv) for i in range(args.num_envs)]
     )
-    assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
 
+    assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
     if args.context_mode == "learned":
         from meta_rl.jrpl.buffer import ReplayBuffer
 
@@ -262,6 +245,7 @@ if __name__ == "__main__":
     )
     start_time = time.time()
 
+    episodic_returns_list = []
     # TRY NOT TO MODIFY: start the game
     obs, _ = envs.reset(seed=args.seed)
     for global_step in range(args.total_timesteps):
@@ -305,6 +289,7 @@ if __name__ == "__main__":
                 writer.add_scalar("charts/episodic_return", info["episode"]["r"], global_step)
                 writer.add_scalar("charts/episodic_length", info["episode"]["l"], global_step)
                 writer.add_scalar("charts/epsilon", epsilon, global_step)
+                episodic_returns_list.append(info["episode"]["r"])
 
         # TRY NOT TO MODIFY: save data to reply buffer; handle `final_observation`
         real_next_obs = next_obs.copy()
@@ -442,3 +427,29 @@ if __name__ == "__main__":
     env.close()
 
     """
+    return episodic_returns_list
+
+if __name__ == "__main__":
+    import stable_baselines3 as sb3
+
+    if sb3.__version__ < "2.0":
+        raise ValueError(
+            """Ongoing migration: run the following command to install the new dependencies:
+
+            poetry run pip install "stable_baselines3==2.0.0a1"
+            """
+        )
+    args = parse_args()
+    env_module = importlib.import_module("carl.envs")
+    CARLEnv = getattr(env_module, args.env_id)
+    print("context mode : ", args.context_mode)
+    context_name = args.context_name 
+
+    concat_context = True if args.context_mode == "explicit" else False
+    CARLEnv = context_wrapper(CARLEnv, 
+                          context_name = args.context_name, 
+                          concat_context = concat_context)
+    episodic_returns = train_agent(args, CARLEnv)
+    print("episodic_returns : ", np.asarray(episodic_returns).mean())
+
+  

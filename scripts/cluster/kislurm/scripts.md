@@ -20,9 +20,14 @@ tmux attach -t <name>
 cd ~/dev/auto_ml/meta_rl
 python3 scripts/jrpl/dqn.py
 
+# run HPO using how-to-autorl
+conda deactivate
+conda activate autorl-sweepers
+cd automl/how-to-autorl/
+python3 -m examples.dehb_for_cartpole_dqn_jrpl --multirun
 
 # start a job
-sbatch scripts/cluster/kislurm/run_jrpl.sh
+sbatch scripts/cluster/kislurm/run_jrpl_array.sh
 
 # see all jobs
 sacct --user=$USER

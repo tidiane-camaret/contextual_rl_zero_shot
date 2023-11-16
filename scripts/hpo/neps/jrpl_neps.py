@@ -16,7 +16,7 @@ from carl.context.context_space import NormalFloatContextFeature, UniformFloatCo
 from carl.context.sampler import ContextSampler
 from meta_rl.jrpl.carl_wrapper import context_wrapper
 from meta_rl.jrpl.context_encoder import ContextEncoder
-from scripts.jrpl.dqn_wrapped import parse_args
+from automl.meta_rl.scripts.jrpl.dqn import parse_args
 pipeline_space = dict(
     lr=neps.FloatParameter(lower=0.0001, upper=0.1, log=True),
 )
