@@ -30,7 +30,7 @@ conda activate automl_env
 # Running the job
 start=`date +%s`
 
-python3 scripts/jrpl/dqn.py
+python3 scripts/jrpl/train_dqn.py
 
 end=`date +%s`
 runtime=$((end-start))

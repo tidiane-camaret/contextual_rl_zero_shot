@@ -4,6 +4,7 @@
 import torch
 import torch.nn as nn
 
+
 # define the context encoder
 ## Define the predictor model
 class FeedForward(nn.Module):
@@ -15,26 +16,26 @@ class FeedForward(nn.Module):
             modules = [nn.Linear(d_in, hidden_sizes[0])]
             for i in range(len(hidden_sizes) - 1):
                 modules.append(activation())
-                modules.append(nn.Linear(hidden_sizes[i], hidden_sizes[i+1]))
-            modules.append(activation())    
+                modules.append(nn.Linear(hidden_sizes[i], hidden_sizes[i + 1]))
+            modules.append(activation())
             modules.append(nn.Linear(hidden_sizes[-1], d_out))
 
             self.model = nn.Sequential(*modules)
 
     def forward(self, x):
         return self.model(x)
-    
+
+
 class ContextEncoder(nn.Module):
     """
     Encodes a context of shape [B, context_size, context_dim] into a latent vector.
     """
+
     def __init__(self, d_in, d_out, hidden_sizes, activation=nn.ReLU):
         super(ContextEncoder, self).__init__()
         self.model = FeedForward(d_in, d_out, hidden_sizes, activation)
 
-
     def forward(self, x):
-
         # flatten x to [B * context_size, context_dim]
         # pass x through the model
         latents = self.model(x.view(-1, x.shape[-1]))
@@ -44,5 +45,3 @@ class ContextEncoder(nn.Module):
         latents_mean = torch.mean(latents, dim=1)
         latents_std = torch.std(latents, dim=1)
         return latents_mean, latents_std
-    
-

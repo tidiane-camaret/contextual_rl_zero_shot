@@ -1,6 +1,5 @@
 import numpy as np
 from .striker_original import StrikerEnv
-import meta_rl
 
 NUM_OF_PARAMS = 2
 

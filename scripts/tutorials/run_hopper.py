@@ -17,28 +17,23 @@ for i in range(1000):
     # if done:
     #   obs = vec_env.reset()
 """
-import numpy as np
-import matplotlib.pyplot as plt
-
 import gym
-
-from stable_baselines3 import A2C, PPO, DQN
-from stable_baselines3.common.evaluation import evaluate_policy
-from sb3_contrib import TRPO
-
+import matplotlib.pyplot as plt
+import numpy as np
 import wandb
+from sb3_contrib import TRPO
+from stable_baselines3.common.evaluation import evaluate_policy
 from wandb.integration.sb3 import WandbCallback
-
 
 run = wandb.init(
     project="meta_rl",
-    monitor_gym=True, # auto-upload the videos of agents playing the game
+    monitor_gym=True,  # auto-upload the videos of agents playing the game
     sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
-    )
+)
 
 run.config["task"] = "hopper"
 
-#env = gym.make("CartPole-v1") # original environment
+# env = gym.make("CartPole-v1") # original environment
 
 env = gym.make("Striker-v2")
 env = gym.wrappers.RecordEpisodeStatistics(env)
@@ -46,17 +41,18 @@ env = gym.wrappers.RecordEpisodeStatistics(env)
 original_param = env.model.body_mass
 
 model = TRPO("MlpPolicy", env, verbose=1, tensorboard_log="results/tensorboard/hopper/")
-model.learn(total_timesteps=200_000,
-            callback=WandbCallback(
-                #gradient_save_freq=100,
-                #verbose=2,
-                                    ),
-            )
+model.learn(
+    total_timesteps=200_000,
+    callback=WandbCallback(
+        # gradient_save_freq=100,
+        # verbose=2,
+    ),
+)
 
 # evaluate the model on differet param values
 param_range = np.linspace(0.1, 2, 20)
 # reverse the order of the params
-#param_range = param_range[::-1]
+# param_range = param_range[::-1]
 
 mean_reward_list = []
 std_reward_list = []
@@ -72,17 +68,23 @@ for param in param_range:
 mean_reward_list = np.array(mean_reward_list)
 std_reward_list = np.array(std_reward_list)
 # log the results
-data = [[param, mean_reward] for param, mean_reward in zip(param_range, mean_reward_list)]
+data = [
+    [param, mean_reward] for param, mean_reward in zip(param_range, mean_reward_list)
+]
 table = wandb.Table(data=data, columns=["param", "mean_reward"])
 wandb.log({"mean_reward_plot": wandb.plot.line(table, "param", "mean_reward")})
 
 # plot the results
 
 plt.plot(param_range, mean_reward_list)
-plt.fill_between(param_range, mean_reward_list - std_reward_list, mean_reward_list + std_reward_list, alpha=0.2)
+plt.fill_between(
+    param_range,
+    mean_reward_list - std_reward_list,
+    mean_reward_list + std_reward_list,
+    alpha=0.2,
+)
 plt.xlabel("param")
 plt.ylabel("mean reward")
 plt.title("CartPole-v1")
 plt.savefig("results/plots/cartpole.png")
 plt.show()
-

@@ -13,7 +13,7 @@ CARLEnv = context_wrapper(CARLEnv,
                         concat_context = True)
 
 def run_pipeline(learning_rate, float2, categorical, integer1, integer2):
-    import automl.meta_rl.scripts.jrpl.dqn as dqn
+    import automl.meta_rl.meta_rl.jrpl.dqn as dqn
     
     
     from meta_rl.jrpl.context_encoder import ContextEncoder

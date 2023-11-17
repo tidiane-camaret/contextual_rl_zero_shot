@@ -1,5 +1,4 @@
 import sys
-import os
 sys.path.append(".")
 sys.path.append("...")
 from scripts.iida.predictor import Predictor
@@ -9,7 +8,7 @@ import numpy as np
 import stable_baselines3
 import gym
 import torch
-from meta_rl.definitions import ROOT_DIR, RESULTS_DIR
+from meta_rl.definitions import RESULTS_DIR
 """
 Uses trained predictor model to give latent reprentation of an environment.
 """

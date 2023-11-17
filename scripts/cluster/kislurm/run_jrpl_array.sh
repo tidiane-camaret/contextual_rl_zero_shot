@@ -54,25 +54,25 @@ start=`date +%s`
 case $script_num in
     0)
         echo "Running JRPL DQN experiments for $env_id with context $context_name"
-        python3 scripts/jrpl/dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode explicit \
+        python3 scripts/jrpl/train_dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode explicit \
             #--learning-rate $learning_rate --batch-size $batch_size --learning-starts $learning_starts --train-frequency $train_frequency \
             #--exploration-fraction $exploration_fraction --start-e $start_e --end-e $end_e --buffer-size $buffer_size
         ;;
     1)
         echo "Running JRPL DQN experiments for $env_id with context $context_name"
-        python3 scripts/jrpl/dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode hidden \
+        python3 scripts/jrpl/train_dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode hidden \
             #--learning-rate $learning_rate --batch-size $batch_size --learning-starts $learning_starts --train-frequency $train_frequency \
             #--exploration-fraction $exploration_fraction --start-e $start_e --end-e $end_e --buffer-size $buffer_size
         ;;
     2)
         echo "Running JRPL DQN experiments for $env_id with context $context_name"
-        python3 scripts/jrpl/dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode learned --context-encoder mlp_avg  \
+        python3 scripts/jrpl/train_dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode learned --context-encoder mlp_avg  \
             #--learning-rate $learning_rate --batch-size $batch_size --learning-starts $learning_starts --train-frequency $train_frequency \
             #--exploration-fraction $exploration_fraction --start-e $start_e --end-e $end_e --buffer-size $buffer_size
         ;;
     3)
         echo "Running JRPL DQN experiments for $env_id with context $context_name"
-        python3 scripts/jrpl/dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode learned --context-encoder mlp_avg_std  \
+        python3 scripts/jrpl/train_dqn.py --track --env-id $env_id --context-name $context_name --seed $seed --context-mode learned --context-encoder mlp_avg_std  \
             #--learning-rate $learning_rate --batch-size $batch_size --learning-starts $learning_starts --train-frequency $train_frequency \
             #--exploration-fraction $exploration_fraction --start-e $start_e --end-e $end_e --buffer-size $buffer_size
         ;;

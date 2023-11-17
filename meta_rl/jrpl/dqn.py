@@ -22,13 +22,13 @@ from torch.utils.tensorboard import SummaryWriter
 # allows do dynamically import modules from the carl.envs folder
 import importlib
 
-from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
+from carl.context.context_space import UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
 import sys
 import os
 sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
-from meta_rl.meta_rl.jrpl.carl_wrapper import context_wrapper
-from meta_rl.meta_rl.jrpl.context_encoder import ContextEncoder
+from meta_rl.jrpl.carl_wrapper import context_wrapper
+from meta_rl.jrpl.context_encoder import ContextEncoder
 
 
 def parse_args():

@@ -1,11 +1,10 @@
 import numpy as np
-import pickle
 import torch as th
 from torch.nn import functional as F
 
 from gym import spaces
 from stable_baselines3 import PPO 
-from stable_baselines3.common.utils import explained_variance, get_schedule_fn
+from stable_baselines3.common.utils import explained_variance
 
 class EPI_PPO(PPO):
     """

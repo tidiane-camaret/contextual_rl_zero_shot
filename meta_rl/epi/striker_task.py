@@ -1,6 +1,5 @@
 import numpy as np
 from .striker_avg import StrikerAvgEnv
-import meta_rl
 
 EMBEDDING_DIMENSION = 2
 class StrikerTaskEnv(StrikerAvgEnv):
