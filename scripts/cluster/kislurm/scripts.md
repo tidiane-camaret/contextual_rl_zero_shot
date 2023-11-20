@@ -23,6 +23,9 @@ python3 scripts/jrpl/dqn.py
 # run HPO using how-to-autorl
 conda deactivate
 conda activate autorl-sweepers
+cd automl/meta_rl/
+python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun
+# OR : 
 cd automl/how-to-autorl/
 python3 -m examples.dehb_for_cartpole_dqn_jrpl --multirun
 

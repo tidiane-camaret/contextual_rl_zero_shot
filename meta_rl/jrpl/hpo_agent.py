@@ -19,7 +19,7 @@ from meta_rl.jrpl.carl_wrapper import context_wrapper
 log = logging.getLogger(__name__)
 
 
-@hydra.main(config_path="configs", config_name="dqn_cartpole_pb2")
+@hydra.main(config_path="configs", config_name="dqn_cartpole_dehb")
 def train_cleanrl(cfg: DictConfig):
    
     log.info(OmegaConf.to_yaml(cfg))

@@ -12,3 +12,4 @@ lightning_logs/
 *.moab.*
 ```
 results/runs/*
+tmp/
