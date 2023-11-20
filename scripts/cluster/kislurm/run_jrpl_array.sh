@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# Array job with 4 scripts, each with 10 seeds
+# Runs the script in muliple jobs, if possible in parallel
+# Each job is identified by a unique SLURM_ARRAY_TASK_ID
+
 #SBATCH --array=1-40
 
 seed=$(( ($SLURM_ARRAY_TASK_ID - 1) / 4 ))
