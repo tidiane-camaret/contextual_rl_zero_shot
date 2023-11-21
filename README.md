@@ -47,14 +47,13 @@ pip install -r requirements.txt
 ### Train DQN methods
 
 ```bash
-python3 scripts/jrpl/train_dqn.py
+python3 -m scripts.jrpl.train_dqn
 ```
 
 ### Hyperparameter optimization on DQN methods
 
 ```bash
-python3 scripts/hpo/how_to_autorl/dehb_for_cartpole_dqn_jrpl.py --multirun
-```
+python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun ```
 
 # Roadmap
 * [X] Implement DQN for explicit context, no context and JRPL
