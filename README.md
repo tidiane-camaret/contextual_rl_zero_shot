@@ -19,17 +19,17 @@ The current setup uses a range of RL environments, mostly from from the [OpenAI 
     * [X] gravity * uniform(0.1,2.2)
 * [ ] MountainCar-v0 (DQN)
     * [ ] gravity * uniform(0.1,2.2)
-* [] Striker (PPO)
-    * [] gravity * uniform(0.1,2.2)
-* [] Pendulum-v0 (DDPG)
-    * [] length * uniform(0.5,2.2)
-* [] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
+* [ ] Striker (PPO)
+    * [ ] gravity * uniform(0.1,2.2)
+* [ ] Pendulum-v0 (DDPG)
+    * [ ] length * uniform(0.5,2.2)
+* [ ] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
 
 ## Baselines
 
 * [X] Explicit context : the dynamics are given as input to the model as additional state data, both at training and testing time.
 * [X] No context : no dynamics are given as input to the model, neither at training nor testing time.
-* [] [Context is Everything](https://benevans.zip/iida/) : A predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
+* [ ] [Context is Everything](https://benevans.zip/iida/) : A predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
 * [ ] [Environment Probing Interaction Policies](https://openreview.net/pdf?id=ryl8-3AcFX) : Similar architecture, but the context encoder uses an additional RL agent to generate trajectories from the training environments.
 * [X] **Joint Representation and Policy learning (JRPL)**: Similar architecture, but the context encoder is trained jointly with the RL agent on the training environments.
 
