@@ -427,7 +427,7 @@ def train_agent(args, CARLEnv):
     # plot the rewards
 
     plt.errorbar(eval_context_values, rewards_mean, yerr=rewards_std)
-    plt.title(f"Rewards for {context_name} using {args.context_encoder}")
+    plt.title(f"Rewards for {args.env_id} with {context_name} context, using {args.context_mode}")
     plt.savefig(f"results/runs/dqn_eval_{args.env_id}_{args.context_mode}_{args.seed}.png")
     writer.add_figure("charts/eval", plt.gcf())
     writer.close()  
@@ -454,7 +454,7 @@ def eval_agent(args, env, q_network, context_encoder):
             obs, r, done, truncated, info = env.step(action)
             steps += 1
             rewards.append(r)
-            if done or steps > 200:
+            if done or steps > 500:
                 break
 
     else: 
@@ -499,7 +499,7 @@ def eval_agent(args, env, q_network, context_encoder):
             steps += 1
             rewards.append(r)
 
-            if done or steps > 200:
+            if done or steps > 500:
                 break
 
     env.close()
