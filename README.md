@@ -11,18 +11,22 @@ The goals of this project are :
 The current setup uses a range of RL environments, mostly from from the [OpenAI Gym](https://gym.openai.com/) library, with different dynamics. The environments are generated with different dynamics using [CARL](https://github.com/automl/CARL) and the agent is trained/evaluated on subsets of those environments.
 
 ## List of environments used :
-* [X] CartPole-v1 (DQN)
-    * [X] tau * uniform(0.2,2.2)
-    * [X] length * uniform(0.2,2.2)
-    * [X] gravity * uniform(0.2,2.2)
-* [X] LunarLander-v2 (DQN)
-    * [X] gravity * uniform(0.1,2.2)
-* [ ] MountainCar-v0 (DQN)
-    * [ ] gravity * uniform(0.1,2.2)
+
+**training environments** : default context value * uniform(lower,upper)
+**evaluation environments** : 10 linearly spaced values between (lower/2,upper*2)
+
+* [X] CartPole (DQN)
+    * [X] tau : (lower,upper) = (0.2,2.2) 
+    * [X] length : (lower,upper) = (0.2,2.2)
+    * [X] gravity : (lower,upper) = (0.2,2.2)
+* [X] LunarLander (DQN)
+    * [X] gravity : (lower,upper) = (0.1,2.2)
+* [ ] MountainCar (DQN)
+    * [ ] gravity : (lower,upper) = (0.1,2.2)
 * [ ] Striker (PPO)
-    * [ ] gravity * uniform(0.1,2.2)
+    * [ ] gravity : (lower,upper) = (0.1,2.2)
 * [ ] Pendulum-v0 (DDPG)
-    * [ ] length * uniform(0.5,2.2)
+    * [ ] length : (lower,upper) = (0.5,2.2)
 * [ ] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
 
 ## Baselines

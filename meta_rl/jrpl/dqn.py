@@ -399,19 +399,28 @@ def train_agent(args, CARLEnv):
         plt.savefig(f"results/runs/dqn_embeddings_{args.env_id}_{args.context_encoder}_{args.seed}.png")
         writer.add_figure("charts/context_embeddings", plt.gcf())
    
-
+    print("evaluating the trained agent")
     # evaluate the trained agent on new environments
     # contexts are 10 values from l/2 to u*2
     eval_context_values = np.linspace(l/2, u*2, 10)
     rewards_mean, rewards_std = [], []
     for eval_context_value in eval_context_values:
+        print("eval_context_value : ", eval_context_value)
         eval_context = CARLEnv.get_default_context()
-        eval_context[context_name] = eval_context_values
+        eval_context[context_name] = eval_context_value
         env = CARLEnv(
             # You can play with different gravity values here
-            contexts={0: CARLEnv.get_default_context()},
+            contexts={0: eval_context},
             )
-        rewards = np.asarray([eval_agent(args, env, q_network, context_encoder) for _ in range(50)])
+        rewards = []
+        for _ in range(10):
+            if args.context_mode == "learned":
+                r = eval_agent(args, env, q_network, context_encoder)
+            else:
+                r = eval_agent(args, env, q_network, None)
+            rewards.append(r)
+
+        rewards = np.array(rewards)
         rewards_mean.append(rewards.mean())
         rewards_std.append(rewards.std())
 
@@ -475,6 +484,10 @@ def eval_agent(args, env, q_network, context_encoder):
                     ,np.asarray(traj_actions).reshape(-1,1)[:-1]
                     , np.asarray(traj_obs)[1:]
                     ], axis=-1)
+                # if transitions is bigger than context_length, sample a random subset of size context_length
+                if transitions.shape[0] > args.context_length:
+                    idxs = np.random.randint(0, transitions.shape[0], size=args.context_length)
+                    transitions = transitions[idxs]
                 #add a dimension for the batch
                 transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
                 context_mu, context_sigma = context_encoder(transitions)
