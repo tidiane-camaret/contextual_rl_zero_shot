@@ -53,7 +53,8 @@ python3 -m scripts.jrpl.train_dqn
 ### Hyperparameter optimization on DQN methods
 
 ```bash
-python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun ```
+python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun 
+```
 
 # Roadmap
 * [X] Implement DQN for explicit context, no context and JRPL
