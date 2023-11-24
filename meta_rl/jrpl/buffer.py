@@ -4,9 +4,10 @@ Buffer now stores the context id for each transition
 And can return context id and context for each element of the batch
 """
 
-import torch as th
+from typing import NamedTuple, Optional
+
 import numpy as np
-from typing import Optional, NamedTuple
+import torch as th
 from stable_baselines3.common.buffers import ReplayBuffer
 from stable_baselines3.common.vec_env import VecNormalize
 

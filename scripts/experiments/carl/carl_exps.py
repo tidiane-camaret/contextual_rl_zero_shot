@@ -5,7 +5,7 @@ from carl.envs import CARLCartPole as CARLEnv
 # continuous actions : CARLPendulum
 from carl.context.context_space import NormalFloatContextFeature, UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-from carl_wrapper import context_wrapper
+from meta_rl.jrpl.carl_wrapper import context_wrapper
 context_name = "gravity"
 l,u = 0.002, 0.2
 context_distributions = [UniformFloatContextFeature(context_name, l, u)]
@@ -19,7 +19,8 @@ contexts = context_sampler.sample_contexts(n_contexts=5)
 
 
 CARLEnv = context_wrapper(CARLEnv, context_name = context_name, concat_context = True)
-CARLEnv.render_mode = "human"
+print(CARLEnv.spec._max_episode_steps)
+#CARLEnv.render_mode = "human"
 env = CARLEnv(
         # You can play with different gravity values here
         contexts=contexts,
@@ -53,14 +54,14 @@ def make_env(env_id, seed, idx, capture_video, run_name, hide_context):
 
     return thunk
 
-env = gym.vector.SyncVectorEnv([make_env("CARLPendulum-v1", 0, i, False, "test", False) for i in range(4)])
-
+#env = gym.vector.SyncVectorEnv([make_env("CARLPendulum-v1", 0, i, False, "test", False) for i in range(4)])
+env = make_env("CARLPendulum-v1", 0, 0, False, "test", False)
 """
 print(env.observation_space)
 print(env.single_observation_space)
 """
 
-
+print(env)
 # render the environment
 
 env.reset()

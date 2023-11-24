@@ -8,26 +8,24 @@ Joint Representation and Policy Learning (JRPL) for Contextual RL
 import argparse
 import os
 import random
+import sys
 import time
 from distutils.util import strtobool
-import matplotlib.pyplot as plt
+
 import gymnasium as gym
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
 
 # allows do dynamically import modules from the carl.envs folder
-import importlib
-
 from carl.context.context_space import UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
-import sys
-import os
+from torch.utils.tensorboard import SummaryWriter
+
 sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
-from meta_rl.jrpl.carl_wrapper import context_wrapper
 from meta_rl.jrpl.context_encoder import ContextEncoder
 
 
@@ -110,7 +108,7 @@ def parse_args():
         help="run multiple experiments with a sweeper (see how-to-autorl)")
     args = parser.parse_args()
     # fmt: on
-    #assert args.num_envs == 1, "vectorized envs are not supported at the moment"
+    # assert args.num_envs == 1, "vectorized envs are not supported at the moment"
 
     return args
 
@@ -120,16 +118,16 @@ def make_env(seed, sampled_contexts, CARLEnv):
     wrapper for monitoring and seeding envs
     Returns envs with a distribution of the context
     """
-    def thunk():
 
+    def thunk():
         env = CARLEnv(
-        # You can play with different gravity values here
-        contexts=sampled_contexts,
-        obs_context_as_dict=True,
+            # You can play with different gravity values here
+            contexts=sampled_contexts,
+            obs_context_as_dict=True,
         )
 
         env = gym.wrappers.RecordEpisodeStatistics(env)
-        env.action_space.seed(seed) 
+        env.action_space.seed(seed)
 
         return env
 
@@ -141,7 +139,11 @@ class QNetwork(nn.Module):
     def __init__(self, env, encoder_output_size=0):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(np.array(env.single_observation_space.shape).prod() + encoder_output_size, 120),
+            nn.Linear(
+                np.array(env.single_observation_space.shape).prod()
+                + encoder_output_size,
+                120,
+            ),
             nn.ReLU(),
             nn.Linear(120, 84),
             nn.ReLU(),
@@ -156,25 +158,25 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
     slope = (end_e - start_e) / duration
     return max(slope * t + start_e, end_e)
 
+
 def train_agent(args, CARLEnv):
     context_name = args.context_name
-    
+
     context_default = CARLEnv.get_default_context()[context_name]
-    
-    #mu, rel_sigma = 10, 5
-    #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
+
+    # mu, rel_sigma = 10, 5
+    # context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]
     l, u = context_default * args.context_lower, context_default * args.context_upper
-    l, u = min(l,u), max(l,u)
+    l, u = min(l, u), max(l, u)
     context_distributions = [UniformFloatContextFeature(context_name, l, u)]
-    
+
     context_sampler = ContextSampler(
-                        context_distributions=context_distributions,
-                        context_space=CARLEnv.get_context_space(),
-                        seed=args.seed,
-                    )
+        context_distributions=context_distributions,
+        context_space=CARLEnv.get_context_space(),
+        seed=args.seed,
+    )
     sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
 
-    
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
         import wandb
@@ -191,7 +193,8 @@ def train_agent(args, CARLEnv):
     writer = SummaryWriter(f"results/runs/{run_name}")
     writer.add_text(
         "hyperparameters",
-        "|param|value|\n|-|-|\n%s" % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
+        "|param|value|\n|-|-|\n%s"
+        % ("\n".join([f"|{key}|{value}|" for key, value in vars(args).items()])),
     )
 
     # TRY NOT TO MODIFY: seeding
@@ -205,38 +208,54 @@ def train_agent(args, CARLEnv):
 
     # env setup
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv) for i in range(args.num_envs)]
+        [
+            make_env(args.seed + i, sampled_contexts=sampled_contexts, CARLEnv=CARLEnv)
+            for i in range(args.num_envs)
+        ]
     )
 
-    assert isinstance(envs.single_action_space, gym.spaces.Discrete), "only discrete action space is supported"
+    assert isinstance(
+        envs.single_action_space, gym.spaces.Discrete
+    ), "only discrete action space is supported"
     if args.context_mode == "learned":
         from meta_rl.jrpl.buffer import ReplayBuffer
 
         context_length = args.context_length
-        transitions_dim = 2*np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod()
+        transitions_dim = (
+            2 * np.array(envs.single_observation_space.shape).prod()
+            + np.array(envs.single_action_space.shape).prod()
+        )
         transitions_dim = int(transitions_dim)
         print("transitions_dim : ", transitions_dim)
         if args.context_encoder == "mlp_avg":
-            encoder_output_size = args.emb_dim 
+            encoder_output_size = args.emb_dim
         elif args.context_encoder == "mlp_avg_std":
-            encoder_output_size = 2*args.emb_dim
+            encoder_output_size = 2 * args.emb_dim
         else:
             raise ValueError("context_encoder must be either mlp_avg or mlp_avg_std")
 
-        context_encoder = ContextEncoder(transitions_dim, args.emb_dim, [args.hidden_encoder_dim, args.hidden_encoder_dim]).to(device)
+        context_encoder = ContextEncoder(
+            transitions_dim,
+            args.emb_dim,
+            [args.hidden_encoder_dim, args.hidden_encoder_dim],
+        ).to(device)
         q_network = QNetwork(envs, encoder_output_size).to(device)
-        optimizer = optim.Adam(list(q_network.parameters()) + list(context_encoder.parameters()), lr=args.learning_rate)
+        optimizer = optim.Adam(
+            list(q_network.parameters()) + list(context_encoder.parameters()),
+            lr=args.learning_rate,
+        )
         target_network = QNetwork(envs, encoder_output_size).to(device)
 
     else:
         from stable_baselines3.common.buffers import ReplayBuffer
+
         q_network = QNetwork(envs).to(device)
         optimizer = optim.Adam(list(q_network.parameters()), lr=args.learning_rate)
         target_network = QNetwork(envs).to(device)
 
     target_network.load_state_dict(q_network.state_dict())
 
-    # TODO : add a condition for which replay buffer to import ? 
+    # TODO : add a condition for which replay buffer to import ?
     rb = ReplayBuffer(
         args.buffer_size,
         envs.single_observation_space,
@@ -252,9 +271,16 @@ def train_agent(args, CARLEnv):
     obs, _ = envs.reset(seed=args.seed)
     for global_step in range(args.total_timesteps):
         # ALGO LOGIC: put action logic here
-        epsilon = linear_schedule(args.start_e, args.end_e, args.exploration_fraction * args.total_timesteps, global_step)
+        epsilon = linear_schedule(
+            args.start_e,
+            args.end_e,
+            args.exploration_fraction * args.total_timesteps,
+            global_step,
+        )
         if random.random() < epsilon:
-            actions = np.array([envs.single_action_space.sample() for _ in range(envs.num_envs)])
+            actions = np.array(
+                [envs.single_action_space.sample() for _ in range(envs.num_envs)]
+            )
         else:
             if args.context_mode == "learned":
                 # sample contexts from each element of the batch
@@ -262,16 +288,26 @@ def train_agent(args, CARLEnv):
                 # context_id needs to be an int for now. Throw an error if it is not
                 if not isinstance(context_ids, int):
                     raise ValueError("context_id should be an int")
-                data = rb.sample(batch_size=1, context_length=context_length, add_context=True, context_id=context_ids,)
-                # encode the contexts   
+                data = rb.sample(
+                    batch_size=1,
+                    context_length=context_length,
+                    add_context=True,
+                    context_id=context_ids,
+                )
+                # encode the contexts
                 context_mu, context_sigma = context_encoder(data.contexts)
                 # append the context to the observations
                 if args.context_encoder == "mlp_avg":
-                    obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu], dim=-1)
+                    obs_context = torch.cat(
+                        [torch.Tensor(obs).to(device), context_mu], dim=-1
+                    )
                 elif args.context_encoder == "mlp_avg_std":
-                    #context_sigma = torch.exp(context_sigma)
-                    obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1)
-                
+                    # context_sigma = torch.exp(context_sigma)
+                    obs_context = torch.cat(
+                        [torch.Tensor(obs).to(device), context_mu, context_sigma],
+                        dim=-1,
+                    )
+
                 q_values = q_network(obs_context)
 
             else:
@@ -287,9 +323,15 @@ def train_agent(args, CARLEnv):
                 # Skip the envs that are not done
                 if "episode" not in info:
                     continue
-                print(f"global_step={global_step}, episodic_return={info['episode']['r']}")
-                writer.add_scalar("charts/episodic_return", info["episode"]["r"], global_step)
-                writer.add_scalar("charts/episodic_length", info["episode"]["l"], global_step)
+                print(
+                    f"global_step={global_step}, episodic_return={info['episode']['r']}"
+                )
+                writer.add_scalar(
+                    "charts/episodic_return", info["episode"]["r"], global_step
+                )
+                writer.add_scalar(
+                    "charts/episodic_length", info["episode"]["l"], global_step
+                )
                 writer.add_scalar("charts/epsilon", epsilon, global_step)
                 episodic_returns_list.append(info["episode"]["r"])
 
@@ -306,7 +348,6 @@ def train_agent(args, CARLEnv):
         # ALGO LOGIC: training.
         if global_step > args.learning_starts:
             if global_step % args.train_frequency == 0:
-    
                 if args.context_mode == "learned":
                     # sample contexts from each element of the batch
                     data = rb.sample(args.batch_size, context_length, add_context=True)
@@ -314,25 +355,50 @@ def train_agent(args, CARLEnv):
                     context_mu, context_sigma = context_encoder(data.contexts)
                     # append the context to the observations
                     if args.context_encoder == "mlp_avg":
-                        data = data._replace(observations = torch.cat([data.observations, context_mu], dim=-1))
-                        data = data._replace(next_observations = torch.cat([data.next_observations, context_mu], dim=-1))
+                        data = data._replace(
+                            observations=torch.cat(
+                                [data.observations, context_mu], dim=-1
+                            )
+                        )
+                        data = data._replace(
+                            next_observations=torch.cat(
+                                [data.next_observations, context_mu], dim=-1
+                            )
+                        )
                     elif args.context_encoder == "mlp_avg_std":
                         context_sigma = torch.exp(context_sigma)
-                        data = data._replace(observations = torch.cat([data.observations, context_mu, context_sigma], dim=-1))
-                        data = data._replace(next_observations = torch.cat([data.next_observations, context_mu, context_sigma], dim=-1))
-                else :
+                        data = data._replace(
+                            observations=torch.cat(
+                                [data.observations, context_mu, context_sigma], dim=-1
+                            )
+                        )
+                        data = data._replace(
+                            next_observations=torch.cat(
+                                [data.next_observations, context_mu, context_sigma],
+                                dim=-1,
+                            )
+                        )
+                else:
                     data = rb.sample(args.batch_size)
                 with torch.no_grad():
                     target_max, _ = target_network(data.next_observations).max(dim=1)
-                    td_target = data.rewards.flatten() + args.gamma * target_max * (1 - data.dones.flatten())
+                    td_target = data.rewards.flatten() + args.gamma * target_max * (
+                        1 - data.dones.flatten()
+                    )
                 old_val = q_network(data.observations).gather(1, data.actions).squeeze()
                 loss = F.mse_loss(td_target, old_val)
 
                 if global_step % 100 == 0:
                     writer.add_scalar("losses/td_loss", loss, global_step)
-                    writer.add_scalar("losses/q_values", old_val.mean().item(), global_step)
+                    writer.add_scalar(
+                        "losses/q_values", old_val.mean().item(), global_step
+                    )
                     print("SPS:", int(global_step / (time.time() - start_time)))
-                    writer.add_scalar("charts/SPS", int(global_step / (time.time() - start_time)), global_step)
+                    writer.add_scalar(
+                        "charts/SPS",
+                        int(global_step / (time.time() - start_time)),
+                        global_step,
+                    )
 
                 # optimize the model
                 optimizer.zero_grad()
@@ -341,9 +407,12 @@ def train_agent(args, CARLEnv):
 
             # update target network
             if global_step % args.target_network_frequency == 0:
-                for target_network_param, q_network_param in zip(target_network.parameters(), q_network.parameters()):
+                for target_network_param, q_network_param in zip(
+                    target_network.parameters(), q_network.parameters()
+                ):
                     target_network_param.data.copy_(
-                        args.tau * q_network_param.data + (1.0 - args.tau) * target_network_param.data
+                        args.tau * q_network_param.data
+                        + (1.0 - args.tau) * target_network_param.data
                     )
 
     if args.save_model:
@@ -370,7 +439,14 @@ def train_agent(args, CARLEnv):
 
             repo_name = f"{args.env_id}-{args.exp_name}-seed{args.seed}"
             repo_id = f"{args.hf_entity}/{repo_name}" if args.hf_entity else repo_name
-            push_to_hub(args, episodic_returns, repo_id, "DQN", f"runs/{run_name}", f"videos/{run_name}-eval")
+            push_to_hub(
+                args,
+                episodic_returns,
+                repo_id,
+                "DQN",
+                f"runs/{run_name}",
+                f"videos/{run_name}-eval",
+            )
 
     envs.close()
     if args.context_mode == "learned":
@@ -381,8 +457,16 @@ def train_agent(args, CARLEnv):
         contexts_in_rb = np.unique(rb.context_ids)
         for context_id in contexts_in_rb:
             context_value = sampled_contexts[context_id][context_name]
-            context = rb.sample(batch_size=context_length, context_length=context_length, add_context=False, context_id=context_id)
-            context_tensor = torch.cat([context.observations, context.actions, context.next_observations], dim=-1)
+            context = rb.sample(
+                batch_size=context_length,
+                context_length=context_length,
+                add_context=False,
+                context_id=context_id,
+            )
+            context_tensor = torch.cat(
+                [context.observations, context.actions, context.next_observations],
+                dim=-1,
+            )
             context_tensor = context_tensor.unsqueeze(0)
             context_mu, context_sigma = context_encoder(context_tensor)
             context_values.append(context_value)
@@ -391,18 +475,20 @@ def train_agent(args, CARLEnv):
         # plot the context embeddings
         context_values = np.array(context_values)
         context_embs = np.array(context_embs)
-        
+
         plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
         plt.colorbar()
         plt.title(f"Context embeddings for {context_name} using {args.context_encoder}")
 
-        plt.savefig(f"results/runs/dqn_embeddings_{args.env_id}_{args.context_encoder}_{args.seed}.png")
+        plt.savefig(
+            f"results/runs/dqn_embeddings_{args.env_id}_{args.context_encoder}_{args.seed}.png"
+        )
         writer.add_figure("charts/context_embeddings", plt.gcf())
-   
+
     print("evaluating the trained agent")
     # evaluate the trained agent on new environments
     # contexts are 10 values from l/2 to u*2
-    eval_context_values = np.linspace(l/2, u*2, 10)
+    eval_context_values = np.linspace(l / 2, u * 2, 10)
     rewards_mean, rewards_std = [], []
     for eval_context_value in eval_context_values:
         print("eval_context_value : ", eval_context_value)
@@ -411,7 +497,7 @@ def train_agent(args, CARLEnv):
         env = CARLEnv(
             # You can play with different gravity values here
             contexts={0: eval_context},
-            )
+        )
         rewards = []
         for _ in range(10):
             if args.context_mode == "learned":
@@ -423,24 +509,27 @@ def train_agent(args, CARLEnv):
         rewards = np.array(rewards)
         rewards_mean.append(rewards.mean())
         rewards_std.append(rewards.std())
+    print("rewards_mean : ", rewards_mean)
 
     # plot the rewards
 
     plt.errorbar(eval_context_values, rewards_mean, yerr=rewards_std)
-    plt.title(f"Rewards for {args.env_id} with {context_name} context, using {args.context_mode}")
-    plt.savefig(f"results/runs/dqn_eval_{args.env_id}_{args.context_mode}_{args.seed}.png")
+    plt.title(
+        f"Rewards for {args.env_id} with {context_name} context, using {args.context_mode}"
+    )
+    plt.savefig(
+        f"results/runs/dqn_eval_{args.env_id}_{args.context_mode}_{args.seed}.png"
+    )
     writer.add_figure("charts/eval", plt.gcf())
-    writer.close()  
-
+    writer.close()
 
     return episodic_returns_list
-
 
 
 # evaluate trained agent. TODO : move this to a separate function
 def eval_agent(args, env, q_network, context_encoder):
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
-    
+
     # run the experiment
     obs, info = env.reset()
     steps = 0
@@ -457,38 +546,52 @@ def eval_agent(args, env, q_network, context_encoder):
             if done or steps > 500:
                 break
 
-    else: 
+    else:
         # use transitions from the current trajectory to predict the context
         traj_actions = []
         traj_obs = []
-        context_mu = torch.zeros(args.emb_dim,).to(device)
+        context_mu = torch.zeros(
+            args.emb_dim,
+        ).to(device)
         context_sigma = torch.zeros(args.emb_dim).to(device)
         while True:
             if args.context_encoder == "mlp_avg":
-                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu], dim=-1)
+                obs_context = torch.cat(
+                    [torch.Tensor(obs).to(device), context_mu], dim=-1
+                )
             elif args.context_encoder == "mlp_avg_std":
-                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1)
+                obs_context = torch.cat(
+                    [torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1
+                )
             else:
-                raise ValueError("context_encoder must be either mlp_avg or mlp_avg_std")
+                raise ValueError(
+                    "context_encoder must be either mlp_avg or mlp_avg_std"
+                )
             q_values = q_network(obs_context)
             action = torch.argmax(q_values).cpu().numpy()
 
             # add the current transition to the trajectory history
             traj_actions.append(action)
             traj_obs.append(obs)
-            
+
             if steps > 1:
                 # transitions should be a tensor of shape [traj_length-1, context_dim]
                 # containing the transitions : (obs, action, next_obs)
-                transitions = np.concatenate([np.asarray(traj_obs)[:-1]
-                    ,np.asarray(traj_actions).reshape(-1,1)[:-1]
-                    , np.asarray(traj_obs)[1:]
-                    ], axis=-1)
+                transitions = np.concatenate(
+                    [
+                        np.asarray(traj_obs)[:-1],
+                        np.asarray(traj_actions).reshape(-1, 1)[:-1],
+                        np.asarray(traj_obs)[1:],
+                    ],
+                    axis=-1,
+                )
                 # if transitions is bigger than context_length, sample a random subset of size context_length
                 if transitions.shape[0] > args.context_length:
-                    idxs = np.random.randint(0, transitions.shape[0], size=args.context_length)
+                    idxs = np.random.randint(
+                        0, transitions.shape[0], size=args.context_length
+                    )
                     transitions = transitions[idxs]
-                #add a dimension for the batch
+                # add a dimension for the batch
                 transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
                 context_mu, context_sigma = context_encoder(transitions)
                 # remove the batch dimension

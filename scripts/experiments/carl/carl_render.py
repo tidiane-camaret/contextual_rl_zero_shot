@@ -1,7 +1,4 @@
 import importlib
-import os
-import carl
-
 
 env_module = importlib.import_module("carl.envs")
 env_id = "CARLMountainCar"
@@ -10,17 +7,16 @@ CARLEnv = getattr(env_module, env_id)
 
 CARLEnv.render_mode = "human"
 env = CARLEnv(
-        # You can play with different gravity values here
-        contexts={0: CARLEnv.get_default_context()},
-        #obs_context_as_dict=False,
-        #hide_context = True,
-        )
+    # You can play with different gravity values here
+    contexts={0: CARLEnv.get_default_context()},
+    # obs_context_as_dict=False,
+    # hide_context = True,
+)
 
 # run the experiment
 s, info = env.reset()
 print("full obs :", s)
 print("observation shape:", s["obs"].shape)
-
 
 
 env.render()

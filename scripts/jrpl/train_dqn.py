@@ -6,8 +6,9 @@ import importlib
 import logging
 
 import numpy as np
+
 from meta_rl.jrpl.carl_wrapper import context_wrapper
-from meta_rl.jrpl.dqn import parse_args, train_agent, eval_agent
+from meta_rl.jrpl.dqn import parse_args, train_agent
 
 log = logging.getLogger(__name__)
 
