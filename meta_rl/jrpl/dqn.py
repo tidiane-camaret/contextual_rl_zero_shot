@@ -10,7 +10,7 @@ import os
 import random
 import time
 from distutils.util import strtobool
-
+import matplotlib.pyplot as plt
 import gymnasium as gym
 import numpy as np
 import torch
@@ -157,13 +157,15 @@ def linear_schedule(start_e: float, end_e: float, duration: int, t: int):
     return max(slope * t + start_e, end_e)
 
 def train_agent(args, CARLEnv):
+    context_name = args.context_name
     
-    context_default = CARLEnv.get_default_context()[args.context_name]
+    context_default = CARLEnv.get_default_context()[context_name]
     
     #mu, rel_sigma = 10, 5
     #context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]            
     l, u = context_default * args.context_lower, context_default * args.context_upper
-    context_distributions = [UniformFloatContextFeature(args.context_name, min(l,u), max(l,u))]
+    l, u = min(l,u), max(l,u)
+    context_distributions = [UniformFloatContextFeature(context_name, l, u)]
     
     context_sampler = ContextSampler(
                         context_distributions=context_distributions,
@@ -389,45 +391,106 @@ def train_agent(args, CARLEnv):
         # plot the context embeddings
         context_values = np.array(context_values)
         context_embs = np.array(context_embs)
-        import matplotlib.pyplot as plt
+        
         plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
         plt.colorbar()
         plt.title(f"Context embeddings for {context_name} using {args.context_encoder}")
 
         plt.savefig(f"results/runs/dqn_embeddings_{args.env_id}_{args.context_encoder}_{args.seed}.png")
         writer.add_figure("charts/context_embeddings", plt.gcf())
-    writer.close()
+   
 
-    """
+    # evaluate the trained agent on new environments
+    # contexts are 10 values from l/2 to u*2
+    eval_context_values = np.linspace(l/2, u*2, 10)
+    rewards_mean, rewards_std = [], []
+    for eval_context_value in eval_context_values:
+        eval_context = CARLEnv.get_default_context()
+        eval_context[context_name] = eval_context_values
+        env = CARLEnv(
+            # You can play with different gravity values here
+            contexts={0: CARLEnv.get_default_context()},
+            )
+        rewards = np.asarray([eval_agent(args, env, q_network, context_encoder) for _ in range(50)])
+        rewards_mean.append(rewards.mean())
+        rewards_std.append(rewards.std())
 
-    # run trained agent
-    CARLEnv.render_mode = "human"
-    env = CARLEnv(
-        # You can play with different gravity values here
-        contexts={0: CARLEnv.get_default_context()},
-        )
+    # plot the rewards
+
+    plt.errorbar(eval_context_values, rewards_mean, yerr=rewards_std)
+    plt.title(f"Rewards for {context_name} using {args.context_encoder}")
+    plt.savefig(f"results/runs/dqn_eval_{args.env_id}_{args.context_mode}_{args.seed}.png")
+    writer.add_figure("charts/eval", plt.gcf())
+    writer.close()  
+
+
+    return episodic_returns_list
+
+
+
+# evaluate trained agent. TODO : move this to a separate function
+def eval_agent(args, env, q_network, context_encoder):
+    device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
     
     # run the experiment
     obs, info = env.reset()
-    env.render()
-
-
     steps = 0
-    while True:
-        # get action from agent
-        q_values = q_network(torch.Tensor(obs).to(device))
-        action = torch.argmax(q_values).cpu().numpy()
+    rewards = []
 
-        obs, r, done, truncated, info = env.step(action)
-        env.render()
-        steps += 1
-        if done or steps > 100:
-            break
+    if args.context_mode != "learned":
+        while True:
+            # get action from agent
+            q_values = q_network(torch.Tensor(obs).to(device))
+            action = torch.argmax(q_values).cpu().numpy()
+            obs, r, done, truncated, info = env.step(action)
+            steps += 1
+            rewards.append(r)
+            if done or steps > 200:
+                break
+
+    else: 
+        # use transitions from the current trajectory to predict the context
+        traj_actions = []
+        traj_obs = []
+        context_mu = torch.zeros(args.emb_dim,).to(device)
+        context_sigma = torch.zeros(args.emb_dim).to(device)
+        while True:
+            if args.context_encoder == "mlp_avg":
+                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu], dim=-1)
+            elif args.context_encoder == "mlp_avg_std":
+                obs_context = torch.cat([torch.Tensor(obs).to(device), context_mu, context_sigma], dim=-1)
+            else:
+                raise ValueError("context_encoder must be either mlp_avg or mlp_avg_std")
+            q_values = q_network(obs_context)
+            action = torch.argmax(q_values).cpu().numpy()
+
+            # add the current transition to the trajectory history
+            traj_actions.append(action)
+            traj_obs.append(obs)
+            
+            if steps > 1:
+                # transitions should be a tensor of shape [traj_length-1, context_dim]
+                # containing the transitions : (obs, action, next_obs)
+                transitions = np.concatenate([np.asarray(traj_obs)[:-1]
+                    ,np.asarray(traj_actions).reshape(-1,1)[:-1]
+                    , np.asarray(traj_obs)[1:]
+                    ], axis=-1)
+                #add a dimension for the batch
+                transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
+                context_mu, context_sigma = context_encoder(transitions)
+                # remove the batch dimension
+                context_mu = context_mu.squeeze(0)
+                context_sigma = context_sigma.squeeze(0)
+
+            obs, r, done, truncated, info = env.step(action)
+            steps += 1
+            rewards.append(r)
+
+            if done or steps > 200:
+                break
 
     env.close()
-
-    """
-    return episodic_returns_list
+    return sum(rewards)
 
 
 """

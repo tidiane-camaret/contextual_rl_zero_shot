@@ -28,7 +28,7 @@ class FeedForward(nn.Module):
 
 class ContextEncoder(nn.Module):
     """
-    Encodes a context of shape [B, context_size, context_dim] into a latent vector.
+    Encodes a context of shape [B, context_length, context_dim] into a latent vector.
     """
 
     def __init__(self, d_in, d_out, hidden_sizes, activation=nn.ReLU):
@@ -36,10 +36,10 @@ class ContextEncoder(nn.Module):
         self.model = FeedForward(d_in, d_out, hidden_sizes, activation)
 
     def forward(self, x):
-        # flatten x to [B * context_size, context_dim]
+        # flatten x to [B * context_length, context_dim]
         # pass x through the model
         latents = self.model(x.view(-1, x.shape[-1]))
-        # reshape latents back to [B, context_size, d_out]
+        # reshape latents back to [B, context_length, d_out]
         latents = latents.view(x.shape[0], x.shape[1], -1)
 
         latents_mean = torch.mean(latents, dim=1)
