@@ -18,7 +18,8 @@ tmux attach -t <name>
 
 # run scripts
 cd ~/dev/auto_ml/meta_rl
-python3 scripts/jrpl/train_dqn.py
+python3 scripts/jrpl/train_dqn.py 
+python3 scripts/jrpl/train_ddqn.py --env-id CARLMountainCar
 
 # run HPO using how-to-autorl
 conda deactivate

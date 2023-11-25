@@ -1,8 +1,10 @@
 """
 Joint Representation and Policy Learning (JRPL) for Contextual RL
-DQN algorithm for CARL environments
+DDQN algorithm for CARL environments
 adapted from https://docs.cleanrl.dev/rl-algorithms/dqn/#dqnpy
 """
+
+# docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/dqn/#dqnpy
 
 import argparse
 import os
