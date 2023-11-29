@@ -17,14 +17,14 @@ ctrl+b d
 tmux attach -t <name>
 
 # run scripts
-cd ~/dev/auto_ml/meta_rl
+
 python3 scripts/jrpl/train_dqn.py 
 python3 scripts/jrpl/train_ddqn.py --env-id CARLMountainCar
 
 # run HPO using how-to-autorl
 conda deactivate
 conda activate autorl-sweepers
-cd automl/meta_rl/
+
 python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun
 # OR : 
 cd automl/how-to-autorl/

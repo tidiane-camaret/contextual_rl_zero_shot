@@ -13,7 +13,7 @@ The current setup uses a range of RL environments, mostly from from the [OpenAI 
 ## List of environments used :
 
 **training environments** : default context value * uniform(lower,upper)
-**evaluation environments** : 10 linearly spaced values between (lower/2,upper*2)
+**evaluation environments** : 40 linearly spaced values between (lower/2,upper*2)
 
 * [X] CartPole (DQN)
     * [X] tau : (lower,upper) = (0.2,2.2) 
@@ -21,12 +21,12 @@ The current setup uses a range of RL environments, mostly from from the [OpenAI 
     * [X] gravity : (lower,upper) = (0.2,2.2)
 * [X] LunarLander (DQN)
     * [X] gravity : (lower,upper) = (0.1,2.2)
-* [ ] MountainCar (DQN)
-    * [ ] gravity : (lower,upper) = (0.1,2.2)
-* [ ] Striker (PPO)
+* [ ] MountainCar (DQN, DDQN)
     * [ ] gravity : (lower,upper) = (0.1,2.2)
 * [ ] Pendulum-v0 (DDPG)
     * [ ] length : (lower,upper) = (0.5,2.2)
+* [ ] Striker (PPO)
+    * [ ] gravity : (lower,upper) = (0.1,2.2)
 * [ ] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
 
 ## Baselines
@@ -67,9 +67,11 @@ python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun
     * [ ] Make it runnable via slurm jobs using submitit (issues with argparse)
 * [ ] Implement evaluation pipelines (hydra, submitit)
 * [ ] Standardize and document experiments
-* [ ] Implement DDQN for explicit context, no context and JRPL
-* [ ] Implement Context is everyting and EPI baselines
+* [X] Implement DDQN for explicit context, no context and JRPL
+* [ ] Implement DDPG for explicit context, no context and JRPL
 * [ ] Implement PPO for explicit context, no context and JRPL
+* [ ] Implement Context is everyting and EPI baselines
+
 
 
 # Previous experiments

@@ -36,9 +36,9 @@ source ~/miniconda3/bin/activate # Adjust to your path of Miniconda installation
 conda activate autorl-sweepers
 
 # Define the parameters
-env_id="CARLMountainCar"
-context_name="gravity"
-algorithm="ddqn"
+env_id="CARLLunarLander"
+context_name="GRAVITY_X"
+algorithm="dqn"
 
 # HPO best config for gravity
 learning_rate=1.4292428654046575e-06

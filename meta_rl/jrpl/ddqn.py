@@ -103,7 +103,8 @@ def parse_args():
         help="timestep to start learning")
     parser.add_argument("--train-frequency", type=int, default=10,
         help="the frequency of training")
-    
+    parser.add_argument("--algorithm", type=str, default="ddqn",
+        help="unused. for tracking purposes only")    
     # HPO arguments
     parser.add_argument("--multirun, -m", action="store_true",
         help="run multiple experiments with a sweeper (see how-to-autorl)")
@@ -313,6 +314,8 @@ def train_agent(args, CARLEnv):
 
             else:
                 q_values = q_network(torch.Tensor(obs).to(device))
+
+
             actions = torch.argmax(q_values, dim=1).cpu().numpy()
 
         # TRY NOT TO MODIFY: execute the game and log data.
@@ -381,8 +384,14 @@ def train_agent(args, CARLEnv):
                         )
                 else:
                     data = rb.sample(args.batch_size)
+
                 with torch.no_grad():
-                    target_max, _ = target_network(data.next_observations).max(dim=1)
+                    
+                    online_selected_actions = q_network(data.next_observations).argmax(dim=1)
+                    target_max = target_network(data.next_observations).gather(
+                        1, online_selected_actions.unsqueeze(1)
+                    ).squeeze()
+
                     td_target = data.rewards.flatten() + args.gamma * target_max * (
                         1 - data.dones.flatten()
                     )
@@ -508,9 +517,9 @@ def train_agent(args, CARLEnv):
             rewards.append(r)
 
         rewards = np.array(rewards)
+        print("rewards : ", rewards.mean(), rewards.std())
         rewards_mean.append(rewards.mean())
         rewards_std.append(rewards.std())
-    print("rewards_mean : ", rewards_mean)
 
     # plot the rewards
     # clear the figure
@@ -546,7 +555,7 @@ def eval_agent(args, env, q_network, context_encoder):
             obs, r, done, truncated, info = env.step(action)
             steps += 1
             rewards.append(r)
-            if done or steps > 500:
+            if done or steps >= 500:
                 break
 
     else:
@@ -605,7 +614,7 @@ def eval_agent(args, env, q_network, context_encoder):
             steps += 1
             rewards.append(r)
 
-            if done or steps > 500:
+            if done or steps >= 500:
                 break
 
     env.close()

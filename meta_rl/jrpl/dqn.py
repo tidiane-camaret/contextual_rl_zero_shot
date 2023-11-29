@@ -7,7 +7,6 @@ adapted from https://docs.cleanrl.dev/rl-algorithms/dqn/#dqnpy
 import argparse
 import os
 import random
-import sys
 import time
 from distutils.util import strtobool
 
@@ -24,7 +23,6 @@ from carl.context.context_space import UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
 from torch.utils.tensorboard import SummaryWriter
 
-sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
 from meta_rl.jrpl.context_encoder import ContextEncoder
 
 
@@ -101,7 +99,8 @@ def parse_args():
         help="timestep to start learning")
     parser.add_argument("--train-frequency", type=int, default=10,
         help="the frequency of training")
-    
+    parser.add_argument("--algorithm", type=str, default="dqn",
+        help="unused. for tracking purposes only")    
     # HPO arguments
     parser.add_argument("--multirun, -m", action="store_true",
         help="run multiple experiments with a sweeper (see how-to-autorl)")
@@ -212,10 +211,11 @@ def train_agent(args, CARLEnv):
             for i in range(args.num_envs)
         ]
     )
-
+    print("envs.single_observation_space : ", envs.single_observation_space)
     assert isinstance(
         envs.single_action_space, gym.spaces.Discrete
     ), "only discrete action space is supported"
+
     if args.context_mode == "learned":
         from meta_rl.jrpl.buffer import ReplayBuffer
 
@@ -506,9 +506,9 @@ def train_agent(args, CARLEnv):
             rewards.append(r)
 
         rewards = np.array(rewards)
+        print("rewards : ", rewards.mean(), rewards.std())
         rewards_mean.append(rewards.mean())
         rewards_std.append(rewards.std())
-    print("rewards_mean : ", rewards_mean)
 
     # plot the rewards
     # clear the figure

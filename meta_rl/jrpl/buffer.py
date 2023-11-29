@@ -35,9 +35,11 @@ class ReplayBuffer(ReplayBuffer):
         """
         Add a new transition to the buffer.
         """
-        super().add(obs, next_obs, action, reward, done, infos)
         # Store the context id
         self.context_ids[self.pos] = np.array(infos["context_id"]).copy()
+        super().add(obs, next_obs, action, reward, done, infos)
+        
+        
 
     def sample(
         self,
@@ -51,7 +53,7 @@ class ReplayBuffer(ReplayBuffer):
         Sample a batch of transitions.
         if add_context is True, return a context tensor of shape (batch_size, transitions_dim
         """
-
+        
         if context_id is None:
             # Sample in the buffer randomly
             sampled_idxs = np.random.randint(0, self.buffer_size, size=batch_size)
