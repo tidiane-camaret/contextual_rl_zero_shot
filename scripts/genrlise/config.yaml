@@ -1,0 +1,8 @@
+base_algo: 
+  name: dqn
+
+env:
+  name: CartPole
+  context_name: gravity
+
+context_mode: jrpl # hidden, iida, explicit, jrpl, hypernetwork

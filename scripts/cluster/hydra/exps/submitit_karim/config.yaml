@@ -1,0 +1,54 @@
+defaults:
+  - override hydra/launcher: slurm
+  - _self_
+model:
+  name: sac
+
+hydra:
+  callbacks:
+    log_job_return:
+      _target_: hydra.experimental.callbacks.LogJobReturnCallback
+  job:
+    chdir: True
+  sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
+    params:
+      model.name: sac, ppo, dqn
+
+experiment:
+  seed: 100
+
+optim:
+  learning_rate: 1e-3
+  num_steps: 7e4
+  clip: 1.
+
+model_partial:
+  encoder_partial: ${encoder_partial}
+  decoder_partial: ${decoder_partial}
+  latent_partial:
+    num_latents: twice_sources
+
+data:
+  name: shapes3d
+  num_val_data: 10000
+  seed: 20230228
+  possible_dirs:    # CHANGE ME; tried in order
+    #- /scr-ssd/kylehsu/data
+    - /work/dlclarge1/faridk-quantization/data
+
+  batch_size: 128
+
+wandb:
+  offline: True
+  project: disentangle
+  name: null
+  group: null
+  job_type: null
+
+debug: False
+
+eval:
+  period: 5e3
+
+checkpoint:
+  period: ${eval.period}
