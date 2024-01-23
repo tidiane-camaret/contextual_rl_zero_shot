@@ -13,7 +13,8 @@ from torch.utils.tensorboard import SummaryWriter
 
 from meta_rl.algorithms.sac.sac_utils import Args, Actor, SoftQNetwork, make_env
 
-if __name__ == "__main__":
+def train_sac(args: Args = Args()):
+    
     import stable_baselines3 as sb3
 
     if sb3.__version__ < "2.0":
@@ -23,7 +24,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
 
-    args = tyro.cli(Args)
+    
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
         import wandb
@@ -37,7 +38,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             monitor_gym=True,
             save_code=True,
         )
-    writer = SummaryWriter(f"runs/{run_name}")
+    writer = SummaryWriter(f"results/runs/{run_name}")
     writer.add_text(
         "hyperparameters",
         "|param|value|\n|-|-|\n%s"
@@ -228,3 +229,6 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     envs.close()
     writer.close()
+
+if __name__ == "__main__":
+    train_sac()
