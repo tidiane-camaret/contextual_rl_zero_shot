@@ -1,6 +1,6 @@
 import copy
 from typing import Any, Dict, Tuple, final
-import gym
+import gymnasium as gym
 from meta_rl.envs.genrlise.utils.types import Action, Context, State
 
 class BaseEnv(gym.Env):

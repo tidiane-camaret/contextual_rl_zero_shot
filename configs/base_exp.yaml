@@ -1,5 +1,5 @@
 defaults:
-  - env: mountain_car
+  - env: carl_mountain_car
   - override hydra/launcher: slurm
   - _self_ # this indicates that the current config overrides the configs placed above it
            # however, this is already the default behavior, so this line is not necessary
@@ -14,7 +14,8 @@ hydra:
 
   sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
     params:
-      seed: range(10)
+      seed: range(5)
+      context.explicit: true, false
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
@@ -30,3 +31,9 @@ wandb:
   entity: 
 
 seed: 0
+
+context:
+  name: power
+  explicit: true
+  lower_bound: 0.2
+  upper_bound: 2.0

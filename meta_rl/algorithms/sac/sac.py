@@ -13,7 +13,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from meta_rl.algorithms.sac.sac_utils import Args, Actor, SoftQNetwork, make_env
 
-def train_sac(args: Args = Args()):
+def train_sac(env, args: Args = Args()):
     
     import stable_baselines3 as sb3
 
@@ -54,8 +54,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # env setup
+    
     envs = gym.vector.SyncVectorEnv(
-        [make_env(args.env_id, args.seed, 0, args.capture_video, run_name)]
+        [make_env(env, args.seed, 0, args.capture_video, run_name)]
     )
     assert isinstance(
         envs.single_action_space, gym.spaces.Box
