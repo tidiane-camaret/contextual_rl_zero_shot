@@ -37,3 +37,8 @@ context:
   mode: explicit # hidden, learned_iida, learned_jrpl
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
+
+context_encoder:
+  nb_input_transitions: 20
+  hidden_sizes: [64, 64]
+  latent_context_dim: 2

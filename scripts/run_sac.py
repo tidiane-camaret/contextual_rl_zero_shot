@@ -18,6 +18,7 @@ def main(config):
     args.track = config.wandb.track
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
+    
 
     # Additional context-related arguments
     # added for logging purposes
@@ -25,6 +26,11 @@ def main(config):
     args.context_lower_bound_coeff = config.context.lower_bound_coeff
     args.context_upper_bound_coeff = config.context.upper_bound_coeff
     args.context_mode = config.context.mode
+
+    # context encoder arguments
+    args.nb_input_transitions = config.context_encoder.nb_input_transitions
+    args.encoder_hidden_sizes = config.context_encoder.hidden_sizes
+    args.latent_context_dim = config.context_encoder.latent_context_dim
 
     #print("Total timesteps : {}".format(args.total_timesteps))
     if args.env_id == 'ComplexODEBoundedReward':

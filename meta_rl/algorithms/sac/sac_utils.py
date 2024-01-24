@@ -75,10 +75,11 @@ def make_env(env_, seed, idx, capture_video, run_name):
 
 # ALGO LOGIC: initialize agent here:
 class SoftQNetwork(nn.Module):
-    def __init__(self, env):
+    def __init__(self, env, latent_context_dim=0):
         super().__init__()
         self.fc1 = nn.Linear(
             np.array(env.single_observation_space.shape).prod()
+            + latent_context_dim
             + np.prod(env.single_action_space.shape),
             256,
         )
@@ -98,9 +99,9 @@ LOG_STD_MIN = -5
 
 
 class Actor(nn.Module):
-    def __init__(self, env):
+    def __init__(self, env, latent_context_dim=0):
         super().__init__()
-        self.fc1 = nn.Linear(np.array(env.single_observation_space.shape).prod(), 256)
+        self.fc1 = nn.Linear(np.array(env.single_observation_space.shape).prod() + latent_context_dim, 256)
         self.fc2 = nn.Linear(256, 256)
         self.fc_mean = nn.Linear(256, np.prod(env.single_action_space.shape))
         self.fc_logstd = nn.Linear(256, np.prod(env.single_action_space.shape))
