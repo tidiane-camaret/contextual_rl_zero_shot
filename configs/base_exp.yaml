@@ -34,6 +34,6 @@ seed: 0
 
 context:
   name: power
-  mode: explicit
+  mode: explicit # hidden, learned_iida, learned_jrpl
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default

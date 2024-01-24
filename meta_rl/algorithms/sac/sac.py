@@ -7,14 +7,13 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-import tyro
 from stable_baselines3.common.buffers import ReplayBuffer
 from torch.utils.tensorboard import SummaryWriter
 
-from meta_rl.algorithms.sac.sac_utils import Args, Actor, SoftQNetwork, make_env
+from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env
+
 
 def train_sac(env, args: Args = Args()):
-    
     import stable_baselines3 as sb3
 
     if sb3.__version__ < "2.0":
@@ -24,7 +23,6 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 """
         )
 
-    
     run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"
     if args.track:
         import wandb
@@ -54,7 +52,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # env setup
-    
+
     envs = gym.vector.SyncVectorEnv(
         [make_env(env, args.seed, 0, args.capture_video, run_name)]
     )
@@ -230,6 +228,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     envs.close()
     writer.close()
+
 
 if __name__ == "__main__":
     train_sac()
