@@ -18,6 +18,14 @@ def main(config):
     args.track = config.wandb.track
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
+
+    # Additional context-related arguments
+    # added for logging purposes
+    args.context_name = config.context.name
+    args.context_lower_bound_coeff = config.context.lower_bound_coeff
+    args.context_upper_bound_coeff = config.context.upper_bound_coeff
+    args.context_mode = config.context.mode
+
     #print("Total timesteps : {}".format(args.total_timesteps))
     if args.env_id == 'ComplexODEBoundedReward':
         from meta_rl.envs.genrlise.complex_ode_bounded_reward import ComplexODEBoundedReward
@@ -29,7 +37,9 @@ def main(config):
         env_module = importlib.import_module("carl.envs")
         CARLEnv = getattr(env_module, args.env_id)
         CARLEnv = context_wrapper(
-            CARLEnv, context_name=config.context.name, concat_context=config.context.explicit
+            CARLEnv, 
+            context_name=config.context.name, 
+            concat_context= (config.context.mode == 'explicit'),
         )
 
         context_name = config.context.name
@@ -38,9 +48,9 @@ def main(config):
 
         # mu, rel_sigma = 10, 5
         # context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]
-        l, u = context_default * config.context.lower_bound, context_default * config.context.upper_bound
-        l, u = min(l, u), max(l, u)
-        context_distributions = [UniformFloatContextFeature(context_name, l, u)]
+        lower_bound, upper_bound = context_default * config.context.lower_bound_coeff, context_default * config.context.upper_bound_coeff
+        lower_bound, upper_bound = min(lower_bound, upper_bound), max(lower_bound, upper_bound)
+        context_distributions = [UniformFloatContextFeature(context_name, lower_bound, upper_bound)]
 
         context_sampler = ContextSampler(
             context_distributions=context_distributions,

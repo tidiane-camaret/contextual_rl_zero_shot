@@ -14,8 +14,8 @@ hydra:
 
   sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
     params:
-      seed: range(5)
-      context.explicit: true, false
+      seed: range(10)
+      context.mode: explicit, hidden
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
@@ -34,6 +34,6 @@ seed: 0
 
 context:
   name: power
-  explicit: true
-  lower_bound: 0.2
-  upper_bound: 2.0
+  mode: explicit
+  lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
+  upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
