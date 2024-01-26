@@ -15,7 +15,7 @@ hydra:
   sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
     params:
       seed: range(10)
-      context.mode: explicit, hidden
+      context.mode: learned_jrpl
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
@@ -23,10 +23,10 @@ hydra:
     subdir: ${hydra.job.num}
 
 train:
-  total_timesteps: 30000
+  total_timesteps: 10000
 
 wandb:
-  track: True
+  track: False
   project_name: meta_rl
   entity: 
 
@@ -34,11 +34,14 @@ seed: 0
 
 context:
   name: power
-  mode: explicit # hidden, learned_iida, learned_jrpl
+  mode: learned_jrpl #explicit # hidden, learned_iida
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
 
 context_encoder:
   nb_input_transitions: 20
-  hidden_sizes: [64, 64]
+  hidden_sizes: [4, 2]
   latent_context_dim: 2
+
+sac_params:
+  autotune_entropy: True

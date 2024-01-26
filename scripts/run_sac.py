@@ -18,6 +18,7 @@ def main(config):
     args.track = config.wandb.track
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
+    args.autotune = config.sac_params.autotune_entropy
     
 
     # Additional context-related arguments

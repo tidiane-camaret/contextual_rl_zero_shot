@@ -296,7 +296,7 @@ def train_agent(args, CARLEnv):
             )
         else:
             # sample contexts from each element of the batch
-            context_ids = info["context_id"]
+            context_ids = infos["context_id"]
             # context_id needs to be an int for now. Throw an error if it is not
             if not isinstance(context_ids, int):
                 raise ValueError("context_id should be an int")

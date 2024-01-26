@@ -7,7 +7,6 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
-
 from torch.utils.tensorboard import SummaryWriter
 
 from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env
@@ -86,18 +85,18 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     qf2_target = SoftQNetwork(envs, latent_context_dim).to(device)
     qf1_target.load_state_dict(qf1.state_dict())
     qf2_target.load_state_dict(qf2.state_dict())
-    q_optimizer = optim.Adam(
-        list(qf1.parameters()) + list(qf2.parameters()), lr=args.q_lr
-    )
-
-    # JRPL : context encoder should be trained with the same optimizer as the actor
-    # TODO : see what happens if we train the context encoder with the same optimizer as the critic
     if "learned" in args.context_mode:
-        actor_optimizer = optim.Adam(
-            list(actor.parameters()) + list(context_encoder.parameters()), lr=args.policy_lr
+        q_optimizer = optim.Adam(
+            list(qf1.parameters()) + list(qf2.parameters())+ list(context_encoder.parameters()), lr=args.q_lr
         )
     else:
-        actor_optimizer = optim.Adam(list(actor.parameters()), lr=args.policy_lr)
+        q_optimizer = optim.Adam(
+            list(qf1.parameters()) + list(qf2.parameters()), lr=args.q_lr
+        )
+    # JRPL : context encoder should be trained with the same optimizer as the actor
+    # TODO : see what happens if we train the context encoder with the same optimizer as the critic
+    
+    actor_optimizer = optim.Adam(list(actor.parameters()), lr=args.policy_lr)
 
     # Automatic entropy tuning
     if args.autotune:
@@ -131,7 +130,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         else:
             # JRPL: to take an action, we first need to encode the context
             if "learned" in args.context_mode:
-                context_ids = info["context_id"]
+                # TODO : why do we use info ? 
+                print("infos_context_id", infos["context_id"])
+                context_ids = int(infos["context_id"])
                 # context_id needs to be an int for now. Throw an error if it is not
                 # TODO: see if we can avoid the need of context id at all
                 if not isinstance(context_ids, int):
@@ -145,17 +146,16 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 context_mu, context_sigma = context_encoder(data.contexts)
                 # TODO : see if we can regularize the model using the std, vae style
                 #context_mu = torch.normal(context_mu, context_sigma)
-                obs = torch.cat([torch.Tensor(obs), context_mu.detach().cpu()], dim=1) 
-                # TODO : context_mu is put to cpu and then to gpu right after
-                # its for code clarity, but it might be better to do it in one step
-                # see if it really impacts performance
-
-            actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
+                obs_context = torch.cat(
+                        [torch.Tensor(obs).to(device), context_mu], dim=-1
+                    )
+                actions, _, _ = actor.get_action(obs_context)
+            else:
+                actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
             actions = actions.detach().cpu().numpy()
 
         # TRY NOT TO MODIFY: execute the game and log data.
         next_obs, rewards, terminations, truncations, infos = envs.step(actions)
-
         # TRY NOT TO MODIFY: record rewards for plotting purposes
         if "final_info" in infos:
             for info in infos["final_info"]:
@@ -175,6 +175,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         for idx, trunc in enumerate(truncations):
             if trunc:
                 real_next_obs[idx] = infos["final_observation"][idx]
+        
         rb.add(obs, real_next_obs, actions, rewards, terminations, infos)
 
         # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
@@ -184,26 +185,28 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         if global_step > args.learning_starts:
             # JRPL : add context latent vector to the observation
             if "learned" in args.context_mode:
+                print("step {}/{}".format(global_step, args.total_timesteps))
                  # sample contexts from each element of the batch
-                    data = rb.sample(args.batch_size, nb_input_transitions, add_context=True)
-                    # encode the contexts
-                    context_mu, context_sigma = context_encoder(data.contexts)
-                    # append the context to the observations
-                    # TODO : see if we can regularize the model using the std, vae style
-                    #context_mu = torch.normal(context_mu, context_sigma)
-                    data = data._replace(
-                        observations=torch.cat(
-                            [data.observations, context_mu], dim=-1
-                        )
+                data = rb.sample(args.batch_size, nb_input_transitions, add_context=True)
+                # encode the contexts
+                context_mu, context_sigma = context_encoder(data.contexts)
+                # append the context to the observations
+                # TODO : see if we can regularize the model using the std, vae style
+                #context_mu = torch.normal(context_mu, context_sigma)
+                data = data._replace(
+                    observations=torch.cat(
+                        [data.observations, context_mu], dim=-1
                     )
-                    data = data._replace(
-                        next_observations=torch.cat(
-                            [data.next_observations, context_mu], dim=-1
-                        )
+                )
+                data = data._replace(
+                    next_observations=torch.cat(
+                        [data.next_observations, context_mu.clone().detach()], dim=-1
                     )
+                )
             else:
                 data = rb.sample(args.batch_size)
 
+            
             with torch.no_grad():
                 next_state_actions, next_state_log_pi, _ = actor.get_action(
                     data.next_observations
@@ -233,9 +236,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 for _ in range(
                     args.policy_frequency
                 ):  # compensate for the delay by doing 'actor_update_interval' instead of 1
-                    pi, log_pi, _ = actor.get_action(data.observations)
-                    qf1_pi = qf1(data.observations, pi)
-                    qf2_pi = qf2(data.observations, pi)
+                    detached_obs = data.observations.clone().detach()
+                    pi, log_pi, _ = actor.get_action(detached_obs)
+                    qf1_pi = qf1(detached_obs, pi)
+                    qf2_pi = qf2(detached_obs, pi)
                     min_qf_pi = torch.min(qf1_pi, qf2_pi)
                     actor_loss = ((alpha * log_pi) - min_qf_pi).mean()
 
@@ -294,7 +298,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                     )
 
     envs.close()
+
     # plot encoder representations
+    
     # TODO : put this in a separate function with rb and context encoder as arguments
     if "learned" in args.context_mode:
         import matplotlib.pyplot as plt
@@ -326,10 +332,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
         plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
         plt.colorbar()
-        plt.title(f"Context embeddings for {context_name} using {args.context_encoder}")
+        plt.title(f"Context embeddings for {args.context_name} using {args.context_mode}")
 
         plt.savefig(
-            f"results/runs/dqn_embeddings_{args.env_id}_{args.context_encoder}_{args.seed}.png"
+            f"results/runs/sac_embeddings_{args.env_id}_{args.context_mode}_{args.seed}.png"
         )
         writer.add_figure("charts/context_embeddings", plt.gcf())
     writer.close()
