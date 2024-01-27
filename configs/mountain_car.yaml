@@ -1,0 +1,9 @@
+context:
+  name: power
+
+env:
+  id: CARLMountainCarContinuous
+  max_episode_steps: 999
+
+train:
+  total_timesteps: 30000

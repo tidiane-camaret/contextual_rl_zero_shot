@@ -1,7 +1,7 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/sac/#sac_continuous_actionpy
 import random
 import time
-
+import wandb
 import gymnasium as gym
 import numpy as np
 import torch
@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env
 
 
-def train_sac(env, args: Args = Args()):
+def train_sac(env, args: Args = Args(), eval_envs=None):
     import stable_baselines3 as sb3
 
     if sb3.__version__ < "2.0":
@@ -66,9 +66,13 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     if "learned" in args.context_mode:
         from meta_rl.jrpl.buffer import ReplayBuffer
         from meta_rl.jrpl.context_encoder import ContextEncoder
+
         latent_context_dim = args.latent_context_dim
         nb_input_transitions = args.nb_input_transitions
-        transitions_dim = int(2 * np.array(envs.single_observation_space.shape).prod() + np.array(envs.single_action_space.shape).prod())
+        transitions_dim = int(
+            2 * np.array(envs.single_observation_space.shape).prod()
+            + np.array(envs.single_action_space.shape).prod()
+        )
         context_encoder = ContextEncoder(
             d_in=transitions_dim,
             d_out=latent_context_dim,
@@ -76,6 +80,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         ).to(device)
     else:
         from stable_baselines3.common.buffers import ReplayBuffer
+
         latent_context_dim = 0
 
     actor = Actor(envs, latent_context_dim).to(device)
@@ -87,7 +92,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     qf2_target.load_state_dict(qf2.state_dict())
     if "learned" in args.context_mode:
         q_optimizer = optim.Adam(
-            list(qf1.parameters()) + list(qf2.parameters())+ list(context_encoder.parameters()), lr=args.q_lr
+            list(qf1.parameters())
+            + list(qf2.parameters())
+            + list(context_encoder.parameters()),
+            lr=args.q_lr,
         )
     else:
         q_optimizer = optim.Adam(
@@ -95,7 +103,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         )
     # JRPL : context encoder should be trained with the same optimizer as the actor
     # TODO : see what happens if we train the context encoder with the same optimizer as the critic
-    
+
     actor_optimizer = optim.Adam(list(actor.parameters()), lr=args.policy_lr)
 
     # Automatic entropy tuning
@@ -130,25 +138,29 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         else:
             # JRPL: to take an action, we first need to encode the context
             if "learned" in args.context_mode:
-                # TODO : why do we use info ? 
-                print("infos_context_id", infos["context_id"])
-                context_ids = int(infos["context_id"])
+                context_ids = infos["context_id"]
                 # context_id needs to be an int for now. Throw an error if it is not
                 # TODO: see if we can avoid the need of context id at all
+                """
                 if not isinstance(context_ids, int):
                     raise ValueError("context_id should be an int")
+                
                 data = rb.sample(
                     batch_size=1,
                     context_length=nb_input_transitions,
                     add_context=True,
                     context_id=context_ids,
                 )
-                context_mu, context_sigma = context_encoder(data.contexts)
+                """
+                contexts = rb.sample_from_context(context_ids, nb_input_transitions).to(
+                    device
+                )
+                context_mu, context_sigma = context_encoder(contexts)
                 # TODO : see if we can regularize the model using the std, vae style
-                #context_mu = torch.normal(context_mu, context_sigma)
+                # context_mu = torch.normal(context_mu, context_sigma)
                 obs_context = torch.cat(
-                        [torch.Tensor(obs).to(device), context_mu], dim=-1
-                    )
+                    [torch.Tensor(obs).to(device), context_mu], dim=-1
+                )
                 actions, _, _ = actor.get_action(obs_context)
             else:
                 actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
@@ -175,7 +187,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         for idx, trunc in enumerate(truncations):
             if trunc:
                 real_next_obs[idx] = infos["final_observation"][idx]
-        
+
         rb.add(obs, real_next_obs, actions, rewards, terminations, infos)
 
         # TRY NOT TO MODIFY: CRUCIAL step easy to overlook
@@ -186,17 +198,22 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             # JRPL : add context latent vector to the observation
             if "learned" in args.context_mode:
                 print("step {}/{}".format(global_step, args.total_timesteps))
-                 # sample contexts from each element of the batch
+                # sample contexts from each element of the batch
+                """
                 data = rb.sample(args.batch_size, nb_input_transitions, add_context=True)
+                """
+                data = rb.sample(args.batch_size)
+                # print(data.context_ids.detach().cpu().numpy())
+                contexts = rb.sample_from_context(
+                    data.context_ids.detach().cpu().numpy(), nb_input_transitions
+                )
                 # encode the contexts
-                context_mu, context_sigma = context_encoder(data.contexts)
+                context_mu, context_sigma = context_encoder(contexts.to(device))
                 # append the context to the observations
                 # TODO : see if we can regularize the model using the std, vae style
-                #context_mu = torch.normal(context_mu, context_sigma)
+                # context_mu = torch.normal(context_mu, context_sigma)
                 data = data._replace(
-                    observations=torch.cat(
-                        [data.observations, context_mu], dim=-1
-                    )
+                    observations=torch.cat([data.observations, context_mu], dim=-1)
                 )
                 data = data._replace(
                     next_observations=torch.cat(
@@ -206,7 +223,6 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             else:
                 data = rb.sample(args.batch_size)
 
-            
             with torch.no_grad():
                 next_state_actions, next_state_log_pi, _ = actor.get_action(
                     data.next_observations
@@ -300,30 +316,20 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     envs.close()
 
     # plot encoder representations
-    
+
     # TODO : put this in a separate function with rb and context encoder as arguments
     if "learned" in args.context_mode:
         import matplotlib.pyplot as plt
-        
+
         context_values = []
         context_embs = []
         # filter out the unique contexts
-        contexts_in_rb = np.unique(rb.context_ids)
+        contexts_in_rb = rb.hashmap.keys()
+
         for context_id in contexts_in_rb:
-            context_value = sampled_contexts[context_id][args.context_name]
-            context = rb.sample(
-                batch_size=nb_input_transitions,
-                context_length=nb_input_transitions,
-                add_context=False,
-                context_id=context_id,
-            )
-            context_tensor = torch.cat(
-                [context.observations, context.actions, context.next_observations],
-                dim=-1,
-            )
-            context_tensor = context_tensor.unsqueeze(0)
-            context_mu, context_sigma = context_encoder(context_tensor)
-            context_values.append(context_value)
+            c = rb.sample_from_context([context_id], nb_input_transitions).to(device)
+            context_mu, context_sigma = context_encoder(c)
+            context_values.append(args.sampled_contexts[context_id][args.context_name])
             context_embs.append(context_mu.detach().cpu().numpy())
 
         # plot the context embeddings
@@ -332,7 +338,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
         plt.scatter(context_embs[:, 0, 0], context_embs[:, 0, 1], c=context_values)
         plt.colorbar()
-        plt.title(f"Context embeddings for {args.context_name} using {args.context_mode}")
+        plt.title(
+            f"Context embeddings for {args.context_name} using {args.context_mode}"
+        )
 
         plt.savefig(
             f"results/runs/sac_embeddings_{args.env_id}_{args.context_mode}_{args.seed}.png"
@@ -340,6 +348,78 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         writer.add_figure("charts/context_embeddings", plt.gcf())
     writer.close()
 
+    if eval_envs:
+        rewards_list = []
+        # evaluate the agent
+        for eval_env in eval_envs:
+            obs, info = eval_env.reset()
+            steps = 0
+            rewards = []
+
+            if "learned" not in args.context_mode:
+                actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
+                actions = actions.detach().cpu().numpy()
+                obs, r, done, truncated, info = env.step(actions)
+                steps += 1
+                rewards.append(r)
+                if done or steps >= args.env_max_episode_steps:
+                    break
+            else:
+                traj_actions = []
+                traj_obs = []
+                context_mu = torch.zeros(args.latent_context_dim,).to(device)
+                context_sigma = torch.zeros(args.latent_context_dim).to(device)
+                while True:
+                    obs_context = torch.cat(
+                        [torch.Tensor(obs).to(device), context_mu], dim=-1
+                    )
+                    actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))
+                    actions = actions.detach().cpu().numpy()
+                    # add the current transition to the trajectory history
+                    traj_actions.append(actions)
+                    traj_obs.append(obs)
+
+                    if steps > 1:
+                        # transitions should be a tensor of shape [traj_length-1, context_dim]
+                        # containing the transitions : (obs, action, next_obs)
+                        transitions = np.concatenate(
+                            [
+                                np.asarray(traj_obs)[:-1],
+                                np.asarray(traj_actions).reshape(-1, 1)[:-1],
+                                np.asarray(traj_obs)[1:],
+                            ],
+                            axis=-1,
+                        )
+                        # if transitions is bigger than context_length, sample a random subset of size context_length
+                        if transitions.shape[0] > args.nb_input_transitions:
+                            idxs = np.random.randint(
+                                0, transitions.shape[0], size=args.nb_input_transitions
+                            )
+                            transitions = transitions[idxs]
+                        # add a dimension for the batch
+                        transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
+                        context_mu, context_sigma = context_encoder(transitions)
+                        # remove the batch dimension
+                        context_mu = context_mu.squeeze(0)
+                        context_sigma = context_sigma.squeeze(0)
+
+                    obs, r, done, truncated, info = env.step(actions)
+                    steps += 1
+                    rewards.append(r)
+
+                    if done or steps >= args.env_max_episode_steps:
+                        break
+            rewards_list.append(np.sum(rewards))
+
+            eval_table = [[x, y] for (x, y) in zip(range(len(rewards_list)), rewards_list)]
+            eval_table_wandb = wandb.Table(data=eval_table, columns=["context_value", "reward"])
+            writer.log(
+                {
+                    "eval_table": wandb.plot.line(
+                        eval_table_wandb, "context_value", "reward", title="Custom Y vs X Line Plot"
+                    )
+                }
+            )
 
 if __name__ == "__main__":
     train_sac()

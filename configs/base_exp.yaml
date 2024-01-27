@@ -1,6 +1,8 @@
 defaults:
-  - env: carl_mountain_car
+  #- env: carl_mountain_car
+  - pendulum.yaml
   - override hydra/launcher: slurm
+  
   - _self_ # this indicates that the current config overrides the configs placed above it
            # however, this is already the default behavior, so this line is not necessary
 
@@ -22,25 +24,21 @@ hydra:
     dir: results/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
     subdir: ${hydra.job.num}
 
-train:
-  total_timesteps: 10000
-
 wandb:
-  track: False
+  track: True
   project_name: meta_rl
   entity: 
 
 seed: 0
 
 context:
-  name: power
   mode: learned_jrpl #explicit # hidden, learned_iida
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
 
 context_encoder:
   nb_input_transitions: 20
-  hidden_sizes: [4, 2]
+  hidden_sizes: [8, 4]
   latent_context_dim: 2
 
 sac_params:

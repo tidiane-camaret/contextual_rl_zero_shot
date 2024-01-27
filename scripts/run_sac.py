@@ -2,6 +2,7 @@ import os
 import importlib
 import hydra
 import pprint
+import numpy as np
 from meta_rl.algorithms.sac.sac import train_sac
 from meta_rl.algorithms.sac.sac_utils import Args
 
@@ -14,6 +15,7 @@ def main(config):
     # but we could migrate those to hydra config files in the future
     args.total_timesteps = config.train.total_timesteps
     args.env_id = config.env.id
+    args.env_max_episode_steps = config.env.max_episode_steps
     args.seed = config.seed
     args.track = config.wandb.track
     args.wandb_project_name = config.wandb.project_name
@@ -66,8 +68,21 @@ def main(config):
         )
         sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
         env = CARLEnv(contexts=sampled_contexts,)
-        
-    train_sac(env, args)
+        args.sampled_contexts = sampled_contexts
+
+        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
+        eval_envs = []
+        for eval_context_value in eval_context_values:
+            print("eval_context_value : ", eval_context_value)
+            eval_context = CARLEnv.get_default_context()
+            eval_context[context_name] = eval_context_value
+            env = CARLEnv(
+                # You can play with different gravity values here
+                contexts={0: eval_context},
+            )
+            eval_envs.append(env)
+            
+    train_sac(env, args, eval_envs=eval_envs)
 
 if __name__ == '__main__':
     try:
