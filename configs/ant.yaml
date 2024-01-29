@@ -1,0 +1,9 @@
+context:
+  name: mass_torso
+
+env:
+  id: CARLBraxAnt
+  max_episode_steps: 1000
+
+train:
+  total_timesteps: 30000

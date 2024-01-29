@@ -3,7 +3,7 @@ partition: ml_gpu-rtx2080   # CHANGE ME
 #account: mlgpu01    # CHANGE ME
 exclude:
 submitit_folder: ${hydra.sweep.dir}/.submitit/%j
-timeout_min: 60
+timeout_min: 180
 cpus_per_task: 8
 #num_gpus: null
 tasks_per_node: 1
