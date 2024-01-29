@@ -1,6 +1,6 @@
 defaults:
   #- env: carl_mountain_car
-  - pendulum.yaml
+  - mountain_car.yaml
   - override hydra/launcher: slurm
   
   - _self_ # this indicates that the current config overrides the configs placed above it

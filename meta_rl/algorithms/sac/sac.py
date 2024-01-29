@@ -199,11 +199,8 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             if "learned" in args.context_mode:
                 print("step {}/{}".format(global_step, args.total_timesteps))
                 # sample contexts from each element of the batch
-                """
-                data = rb.sample(args.batch_size, nb_input_transitions, add_context=True)
-                """
                 data = rb.sample(args.batch_size)
-                # print(data.context_ids.detach().cpu().numpy())
+
                 contexts = rb.sample_from_context(
                     data.context_ids.detach().cpu().numpy(), nb_input_transitions
                 )
@@ -355,29 +352,35 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             obs, info = eval_env.reset()
             steps = 0
             rewards = []
-
+            
             if "learned" not in args.context_mode:
-                actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
-                actions = actions.detach().cpu().numpy()
-                obs, r, done, truncated, info = env.step(actions)
-                steps += 1
-                rewards.append(r)
-                if done or steps >= args.env_max_episode_steps:
-                    break
+                while True:
+                    actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
+                    actions = actions.detach().cpu().numpy()
+                    obs, r, done, truncated, info = env.step(actions)
+                    steps += 1
+                    rewards.append(r)
+                    if done or steps >= args.env_max_episode_steps:
+                        break
             else:
                 traj_actions = []
                 traj_obs = []
-                context_mu = torch.zeros(args.latent_context_dim,).to(device)
-                context_sigma = torch.zeros(args.latent_context_dim).to(device)
+                context_mu = torch.zeros(1,args.latent_context_dim).to(device)
+                
+                #context_sigma = torch.zeros((1,args.latent_context_dim)).to(device)
                 while True:
+                    
                     obs_context = torch.cat(
                         [torch.Tensor(obs).to(device), context_mu], dim=-1
                     )
+                    obs_context = obs_context.unsqueeze(0)
                     actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))
                     actions = actions.detach().cpu().numpy()
                     # add the current transition to the trajectory history
-                    traj_actions.append(actions)
-                    traj_obs.append(obs)
+                    print("actions, obs at step", steps)
+                    print(actions.shape, obs.shape)
+                    traj_actions.append(actions.squeeze(1)) if len(actions.shape) > 1 else traj_actions.append(actions)
+                    traj_obs.append(obs.squeeze(1)) if len(obs.shape) > 1 else traj_obs.append(obs)
 
                     if steps > 1:
                         # transitions should be a tensor of shape [traj_length-1, context_dim]
@@ -400,8 +403,9 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                         transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
                         context_mu, context_sigma = context_encoder(transitions)
                         # remove the batch dimension
-                        context_mu = context_mu.squeeze(0)
-                        context_sigma = context_sigma.squeeze(0)
+                        #context_mu = context_mu.squeeze(0)
+                        #context_sigma = context_sigma.squeeze(0)
+                        
 
                     obs, r, done, truncated, info = env.step(actions)
                     steps += 1

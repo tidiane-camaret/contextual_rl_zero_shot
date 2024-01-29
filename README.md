@@ -10,33 +10,46 @@ The goals of this project are :
 
 The current setup uses a range of RL environments, mostly from from the [OpenAI Gym](https://gym.openai.com/) library, with different dynamics. The environments are generated with different dynamics using [CARL](https://github.com/automl/CARL) and the agent is trained/evaluated on subsets of those environments.
 
+## Base algorithms
+
+* [X] DQN (discrete action space)
+* [X] DDQN (discrete action space)
+* [X] SAC (continuous action space)
+* [] PPO (continuous action space)
+
 ## List of environments used :
 
 **training environments** : default context value * uniform(lower,upper)
 **evaluation environments** : 40 linearly spaced values between (lower/2,upper*2)
 
+
 * [X] CartPole (DQN)
-    * [X] tau : (lower,upper) = (0.2,2.2) 
-    * [X] length : (lower,upper) = (0.2,2.2)
-    * [X] gravity : (lower,upper) = (0.2,2.2)
+    * tau : (lower,upper) = (0.2,2.2) 
+    * length : (lower,upper) = (0.2,2.2)
+    * gravity : (lower,upper) = (0.2,2.2)
 * [X] LunarLander (DQN)
-    * [X] gravity : (lower,upper) = (0.1,2.2)
-* [ ] MountainCar (DQN, DDQN)
-    * [ ] gravity : (lower,upper) = (0.1,2.2)
-* [ ] Pendulum-v0 (DDPG)
-    * [ ] length : (lower,upper) = (0.5,2.2)
+    * gravity : (lower,upper) = (0.1,2.2)
+* [X] MountainCar (DQN, DDQN)
+    * gravity : (lower,upper) = (0.1,2.2)
+* [X] MountainCar_Continous (SAC)
+    * gravity : (lower,upper) = (0.1,2.2)
+* [X] Pendulum (SAC)
+    * length : (lower,upper) = (0.5,2.2)
+* [ ] Ordinary_differential_equation (https://arxiv.org/abs/2310.16686
+) (SAC)
+* [ ] Mujoco_Ant (SAC)
 * [ ] Striker (PPO)
-    * [ ] gravity : (lower,upper) = (0.1,2.2)
+    * gravity : (lower,upper) = (0.1,2.2)
 * [ ] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
 
 ## Baselines
 
 * [X] Explicit context : the dynamics are given as input to the model as additional state data, both at training and testing time.
 * [X] No context : no dynamics are given as input to the model, neither at training nor testing time.
-* [ ] [Context is Everything](https://benevans.zip/iida/) : A predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
-* [ ] [Environment Probing Interaction Policies](https://openreview.net/pdf?id=ryl8-3AcFX) : Similar architecture, but the context encoder uses an additional RL agent to generate trajectories from the training environments.
+* [X] [Context is Everything](https://benevans.zip/iida/) : A predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
 * [X] **Joint Representation and Policy learning (JRPL)**: Similar architecture, but the context encoder is trained jointly with the RL agent on the training environments.
-
+* [ ] **Hypernetworks**: [Dynamics Generalisation in Reinforcement Learning via Adaptive Context-Aware Policies](https://arxiv.org/abs/2310.16686)
+* [ ] [Environment Probing Interaction Policies](https://openreview.net/pdf?id=ryl8-3AcFX) : Similar architecture, but the context encoder uses an additional RL agent to generate trajectories from the training environments.
 
 # Usage
 
@@ -47,6 +60,12 @@ pip install -r requirements.txt
 ```
 
 ## Run experiments
+
+### Train SAC methods
+
+```bash
+python3 scripts/run_sac.py
+```
 
 ### Train DQN methods
 
