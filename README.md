@@ -1,4 +1,4 @@
-# meta_rl
+# Meta RL
 
 This repo contains a series of experiments on meta reinforcement learning, aiming to benchmark several meta learning frameworks for reinforcement learning tasks.
 
@@ -17,7 +17,7 @@ The current setup uses a range of RL environments, mostly from from the [OpenAI 
 * [X] SAC (continuous action space)
 * [ ] PPO (continuous action space)
 
-## List of environments used :
+## List of environments
 
 **training environments** : default context value * uniform(lower,upper)
 **evaluation environments** : 40 linearly spaced values between (lower/2,upper*2)
@@ -68,17 +68,6 @@ pip install -r requirements.txt
 python3 scripts/run_sac.py
 ```
 
-### Train DQN methods
-
-```bash
-python3 -m scripts.jrpl.train_dqn
-```
-
-### Hyperparameter optimization on DQN methods
-
-```bash
-python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun 
-```
 
 # Roadmap
 * [X] Implement DQN for explicit context, no context and JRPL
@@ -95,6 +84,18 @@ python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun
 
 
 # Previous experiments
+
+### Train DQN methods
+
+```bash
+python3 -m scripts.jrpl.train_dqn
+```
+
+### Hyperparameter optimization on DQN methods
+
+```bash
+python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun 
+```
 
 ## Evaluation of baseline models
 
