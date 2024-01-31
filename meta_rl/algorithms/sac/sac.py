@@ -141,17 +141,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 context_ids = infos["context_id"]
                 # context_id needs to be an int for now. Throw an error if it is not
                 # TODO: see if we can avoid the need of context id at all
-                """
-                if not isinstance(context_ids, int):
-                    raise ValueError("context_id should be an int")
-                
-                data = rb.sample(
-                    batch_size=1,
-                    context_length=nb_input_transitions,
-                    add_context=True,
-                    context_id=context_ids,
-                )
-                """
+
                 contexts = rb.sample_from_context(context_ids, nb_input_transitions).to(
                     device
                 )

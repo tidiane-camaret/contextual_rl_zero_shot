@@ -9,6 +9,66 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+import time
+from collections import deque
+
+
+class RecordEpisodeStatistics(gym.wrappers.RecordEpisodeStatistics):
+    """
+    have to override `self.episode_returns += np.array(rewards)`
+    to `self.episode_returns += rewards`
+    because jax would modify the `self.episode_returns` to be a
+    jax array.
+    See https://wandb.ai/costa-huang/brax/reports/Brax-as-Pybullet-replacement--Vmlldzo5ODI4MDk
+    """
+
+    def step(self, action):
+
+        (
+            observations,
+            rewards,
+            terminations,
+            truncations,
+            infos,
+        ) = self.env.step(action)
+        assert isinstance(
+            infos, dict
+        ), f"`info` dtype is {type(infos)} while supported dtype is `dict`. This may be due to usage of other wrappers in the wrong order."
+        self.episode_returns += np.array(rewards)
+        self.episode_lengths += 1
+        dones = np.logical_or(terminations, truncations)
+        num_dones = np.sum(dones)
+        if num_dones:
+            if "episode" in infos or "_episode" in infos:
+                raise ValueError(
+                    "Attempted to add episode stats when they already exist"
+                )
+            else:
+                infos["episode"] = {
+                    "r": np.where(dones, self.episode_returns, 0.0),
+                    "l": np.where(dones, self.episode_lengths, 0),
+                    "t": np.where(
+                        dones,
+                        np.round(time.perf_counter() - self.episode_start_times, 6),
+                        0.0,
+                    ),
+                }
+                if self.is_vector_env:
+                    infos["_episode"] = np.where(dones, True, False)
+            self.return_queue.extend(self.episode_returns[dones])
+            self.length_queue.extend(self.episode_lengths[dones])
+            self.episode_count += num_dones
+            self.episode_lengths[dones] = 0
+            self.episode_returns[dones] = 0
+            self.episode_start_times[dones] = time.perf_counter()
+        return (
+            observations,
+            rewards,
+            terminations,
+            truncations,
+            infos,
+        )
+
 @dataclass
 class Args:
     exp_name: str = os.path.basename(__file__)[: -len(".py")]
@@ -66,7 +126,8 @@ def make_env(env_, seed, idx, capture_video, run_name):
             env = gym.wrappers.RecordVideo(env_, f"videos/{run_name}")
         #else:
             #env = gym.make(env_id)
-        env = gym.wrappers.RecordEpisodeStatistics(env_)
+        env = RecordEpisodeStatistics(env_) # TODO causes issues with brax, see why
+
         env.action_space.seed(seed)
         return env
 
@@ -146,3 +207,6 @@ class Actor(nn.Module):
         log_prob = log_prob.sum(1, keepdim=True)
         mean = torch.tanh(mean) * self.action_scale + self.action_bias
         return action, log_prob, mean
+
+
+

@@ -38,9 +38,7 @@ def main(config):
     #print("Total timesteps : {}".format(args.total_timesteps))
     if args.env_id == 'ComplexODEBoundedReward':
         from meta_rl.envs.genrlise.complex_ode_bounded_reward import ComplexODEBoundedReward
-        env = ComplexODEBoundedReward([1, 1], 1)
-
-    
+        env = ComplexODEBoundedReward([1, 1], 1)    
 
     elif "CARL" in args.env_id :
         from meta_rl.jrpl.carl_wrapper import context_wrapper
@@ -77,7 +75,7 @@ def main(config):
         env = CARLEnv(contexts=sampled_contexts,)
         args.sampled_contexts = sampled_contexts
 
-        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
+        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 1)
         eval_envs = []
         for eval_context_value in eval_context_values:
             print("eval_context_value : ", eval_context_value)
