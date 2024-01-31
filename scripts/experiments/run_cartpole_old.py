@@ -2,7 +2,7 @@ import argparse
 import numpy as np
 import itertools
 
-from meta_rl.envs.cartpole_tid import CartPoleEnv
+from scripts.experiments.old.cartpole_tid import CartPoleEnv
 
 import gym
 from gym.wrappers import RecordEpisodeStatistics

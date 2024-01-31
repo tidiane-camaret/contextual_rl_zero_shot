@@ -1,5 +1,16 @@
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
+register(
+     id="CartPoleContinuous-v0",
+     entry_point="meta_rl.envs:CartPoleContinuousEnv",
+     max_episode_steps=300,
+)
+
+register(
+     id="GridWorld-v0",
+     entry_point="meta_rl.envs:GridWorldEnv",
+     max_episode_steps=300,
+)
 
 register(id='CartPoleCustom-v0',
          entry_point='meta_rl.envs:CartPoleEnvTid',

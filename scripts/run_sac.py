@@ -39,12 +39,19 @@ def main(config):
     if args.env_id == 'ComplexODEBoundedReward':
         from meta_rl.envs.genrlise.complex_ode_bounded_reward import ComplexODEBoundedReward
         env = ComplexODEBoundedReward([1, 1], 1)
+
+    
+
     elif "CARL" in args.env_id :
         from meta_rl.jrpl.carl_wrapper import context_wrapper
         from carl.context.context_space import UniformFloatContextFeature
         from carl.context.sampler import ContextSampler
-        env_module = importlib.import_module("carl.envs")
-        CARLEnv = getattr(env_module, args.env_id)
+        if args.env_id == 'CARLCartPoleContinuous':
+            from meta_rl.envs.carl_cartpole import CARLCartPoleContinuous
+            CARLEnv = CARLCartPoleContinuous
+        else :
+            env_module = importlib.import_module("carl.envs")
+            CARLEnv = getattr(env_module, args.env_id)
         CARLEnv = context_wrapper(
             CARLEnv, 
             context_name=config.context.name, 
