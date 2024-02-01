@@ -29,6 +29,8 @@ wandb:
   project_name: meta_rl
   entity: 
 
+capture_video: True
+
 seed: 0
 
 context:

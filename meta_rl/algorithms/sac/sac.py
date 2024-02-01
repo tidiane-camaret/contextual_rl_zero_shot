@@ -359,9 +359,10 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 
                 #context_sigma = torch.zeros((1,args.latent_context_dim)).to(device)
                 while True:
-                    
+                    obs_np = np.array(obs) # cannot convert jax array to tensor directly
+                    print("obs_np", obs_np.shape, "context_mu", context_mu.shape)
                     obs_context = torch.cat(
-                        [torch.Tensor(obs).to(device), context_mu], dim=-1
+                        [torch.Tensor(obs_np).to(device), context_mu], dim=-1
                     )
                     obs_context = obs_context.unsqueeze(0)
                     actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))

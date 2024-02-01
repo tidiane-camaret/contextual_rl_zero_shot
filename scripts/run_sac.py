@@ -18,6 +18,7 @@ def main(config):
     args.env_max_episode_steps = config.env.max_episode_steps
     args.seed = config.seed
     args.track = config.wandb.track
+    args.capture_video = config.capture_video
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
     args.autotune = config.sac_params.autotune_entropy
@@ -77,6 +78,7 @@ def main(config):
 
         eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 1)
         eval_envs = []
+        '''
         for eval_context_value in eval_context_values:
             print("eval_context_value : ", eval_context_value)
             eval_context = CARLEnv.get_default_context()
@@ -86,7 +88,7 @@ def main(config):
                 contexts={0: eval_context},
             )
             eval_envs.append(env)
-            
+        '''
     train_sac(env, args, eval_envs=eval_envs)
 
 if __name__ == '__main__':
