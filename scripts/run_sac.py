@@ -22,6 +22,7 @@ def main(config):
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
     args.autotune = config.sac_params.autotune_entropy
+    args.nb_evals_per_seed = config.context.nb_evals_per_seed
     
 
     # Additional context-related arguments
@@ -76,9 +77,9 @@ def main(config):
         env = CARLEnv(contexts=sampled_contexts,)
         args.sampled_contexts = sampled_contexts
 
-        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 1)
-        eval_envs = []
-        '''
+        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
+        eval_envs = {}
+        
         for eval_context_value in eval_context_values:
             print("eval_context_value : ", eval_context_value)
             eval_context = CARLEnv.get_default_context()
@@ -87,8 +88,8 @@ def main(config):
                 # You can play with different gravity values here
                 contexts={0: eval_context},
             )
-            eval_envs.append(env)
-        '''
+            eval_envs[eval_context_value] = env
+        
     train_sac(env, args, eval_envs=eval_envs)
 
 if __name__ == '__main__':

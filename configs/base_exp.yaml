@@ -1,6 +1,6 @@
 defaults:
   #- env: carl_mountain_car
-  - brax_ant.yaml
+  - pendulum.yaml
   - override hydra/launcher: slurm
   
   - _self_ # this indicates that the current config overrides the configs placed above it
@@ -21,7 +21,7 @@ hydra:
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
-    dir: results/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    dir: results/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/${env.id}/${context.mode}/${seed}
     subdir: ${hydra.job.num}
 
 wandb:
@@ -37,7 +37,8 @@ context:
   mode: learned_jrpl #explicit # hidden, learned_iida
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
-
+  nb_evals_per_seed: 100
+  
 context_encoder:
   nb_input_transitions: 20
   hidden_sizes: [8, 4]

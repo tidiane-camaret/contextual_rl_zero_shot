@@ -210,3 +210,78 @@ class Actor(nn.Module):
 
 
 
+def eval_sac(eval_env, actor, context_encoder, args):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    eval_env = gym.vector.SyncVectorEnv(
+        [make_env(eval_env, args.seed, 0, False, None)]
+    )
+    obs, info = eval_env.reset()
+    steps = 0
+    rewards = []
+    
+    if "learned" not in args.context_mode:
+        while True:
+            actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
+            actions = actions.detach().cpu().numpy()
+            obs, r, done, truncated, info = eval_env.step(actions)
+            steps += 1
+            rewards.append(r)
+            if done or steps >= args.env_max_episode_steps:
+                break
+    else:
+        traj_actions = []
+        traj_obs = []
+        context_mu = torch.zeros(1,args.latent_context_dim).to(device)
+
+        while True:
+            obs_np = np.array(obs) # cannot convert jax array to tensor directly
+            print("obs_np", obs_np.shape, "context_mu", context_mu.shape)
+            obs_context = torch.cat(
+                [torch.Tensor(obs_np).to(device), context_mu], dim=-1
+            )
+            actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))
+            actions = actions.detach().cpu().numpy()
+
+            # add the current transition to the trajectory history
+            traj_actions.append(actions)
+            traj_obs.append(obs)
+
+            if steps > 0: # if we have transitions, encode the context
+                transitions = np.concatenate(
+                    [
+                        np.asarray(traj_obs)[:-1],
+                        np.asarray(traj_actions)[:-1],
+                        np.asarray(traj_obs)[1:],
+                    ],
+                    axis=-1,
+                )
+                # if transitions is bigger than context_length, sample a random subset of size context_length
+                if transitions.shape[0] > args.nb_input_transitions:
+                    idxs = np.random.randint(
+                        0, transitions.shape[0], size=args.nb_input_transitions
+                    )
+                    transitions = transitions[idxs]
+                # add a dimension for the batch
+                transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
+                context_mu, context_sigma = context_encoder(transitions)
+
+            obs, r, done, truncated, info = eval_env.step(actions)
+            steps += 1
+            rewards.append(r)
+
+            if done or steps >= args.env_max_episode_steps:
+                break
+    return(np.sum(rewards))
+
+    """
+
+    eval_table = [[x, y] for (x, y) in zip(range(len(rewards_list)), rewards_list)]
+    eval_table_wandb = wandb.Table(data=eval_table, columns=["context_value", "reward"])
+    writer.log(
+        {
+            "eval_table": wandb.plot.line(
+                eval_table_wandb, "context_value", "reward", title="Custom Y vs X Line Plot"
+            )
+        }
+    )
+    """

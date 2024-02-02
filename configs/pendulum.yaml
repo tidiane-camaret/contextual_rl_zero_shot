@@ -6,4 +6,4 @@ env:
   max_episode_steps: 200
 
 train:
-  total_timesteps: 10 #30000
+  total_timesteps: 30000

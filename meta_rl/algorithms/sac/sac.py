@@ -2,6 +2,7 @@
 import random
 import time
 import wandb
+import json
 import gymnasium as gym
 import numpy as np
 import torch
@@ -9,7 +10,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
-from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env
+from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env, eval_sac
 
 
 def train_sac(env, args: Args = Args(), eval_envs=None):
@@ -335,86 +336,25 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         writer.add_figure("charts/context_embeddings", plt.gcf())
     writer.close()
 
+    # if context_encoder does not exist, define it as None
+    if "learned" not in args.context_mode:
+        context_encoder = None
+
     if eval_envs:
-        rewards_list = []
+        rewards_dict = {}
         # evaluate the agent
-        for eval_env in eval_envs:
-            obs, info = eval_env.reset()
-            steps = 0
-            rewards = []
+        for eval_context_value, eval_env in eval_envs.items():
+            # right now, juste sample a reward
+            rewards = [eval_sac(eval_env, actor, context_encoder, args) for _ in range(args.nb_evals_per_seed)]
+
+            rewards_dict[eval_context_value] = np.mean(rewards)
             
-            if "learned" not in args.context_mode:
-                while True:
-                    actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
-                    actions = actions.detach().cpu().numpy()
-                    obs, r, done, truncated, info = env.step(actions)
-                    steps += 1
-                    rewards.append(r)
-                    if done or steps >= args.env_max_episode_steps:
-                        break
-            else:
-                traj_actions = []
-                traj_obs = []
-                context_mu = torch.zeros(1,args.latent_context_dim).to(device)
-                
-                #context_sigma = torch.zeros((1,args.latent_context_dim)).to(device)
-                while True:
-                    obs_np = np.array(obs) # cannot convert jax array to tensor directly
-                    print("obs_np", obs_np.shape, "context_mu", context_mu.shape)
-                    obs_context = torch.cat(
-                        [torch.Tensor(obs_np).to(device), context_mu], dim=-1
-                    )
-                    obs_context = obs_context.unsqueeze(0)
-                    actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))
-                    actions = actions.detach().cpu().numpy()
-                    # add the current transition to the trajectory history
-                    print("actions, obs at step", steps)
-                    print(actions.shape, obs.shape)
-                    traj_actions.append(actions.squeeze(1)) if len(actions.shape) > 1 else traj_actions.append(actions)
-                    traj_obs.append(obs.squeeze(1)) if len(obs.shape) > 1 else traj_obs.append(obs)
-
-                    if steps > 1:
-                        # transitions should be a tensor of shape [traj_length-1, context_dim]
-                        # containing the transitions : (obs, action, next_obs)
-                        transitions = np.concatenate(
-                            [
-                                np.asarray(traj_obs)[:-1],
-                                np.asarray(traj_actions).reshape(-1, 1)[:-1],
-                                np.asarray(traj_obs)[1:],
-                            ],
-                            axis=-1,
-                        )
-                        # if transitions is bigger than context_length, sample a random subset of size context_length
-                        if transitions.shape[0] > args.nb_input_transitions:
-                            idxs = np.random.randint(
-                                0, transitions.shape[0], size=args.nb_input_transitions
-                            )
-                            transitions = transitions[idxs]
-                        # add a dimension for the batch
-                        transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
-                        context_mu, context_sigma = context_encoder(transitions)
-                        # remove the batch dimension
-                        #context_mu = context_mu.squeeze(0)
-                        #context_sigma = context_sigma.squeeze(0)
-                        
-
-                    obs, r, done, truncated, info = env.step(actions)
-                    steps += 1
-                    rewards.append(r)
-
-                    if done or steps >= args.env_max_episode_steps:
-                        break
-            rewards_list.append(np.sum(rewards))
-
-            eval_table = [[x, y] for (x, y) in zip(range(len(rewards_list)), rewards_list)]
-            eval_table_wandb = wandb.Table(data=eval_table, columns=["context_value", "reward"])
-            writer.log(
-                {
-                    "eval_table": wandb.plot.line(
-                        eval_table_wandb, "context_value", "reward", title="Custom Y vs X Line Plot"
-                    )
-                }
-            )
+        # write the rewards to a file
+        with open(
+            f"results/runs/sac_rewards_{args.env_id}_{args.context_mode}_{args.seed}.json",
+            "w",
+        ) as f:
+            json.dump(rewards_dict, f)    
 
 if __name__ == "__main__":
     train_sac()
