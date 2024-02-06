@@ -1,8 +1,8 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/sac/#sac_continuous_actionpy
+import json
 import random
 import time
-import wandb
-import json
+
 import gymnasium as gym
 import numpy as np
 import torch
@@ -10,7 +10,13 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 
-from meta_rl.algorithms.sac.sac_utils import Actor, Args, SoftQNetwork, make_env, eval_sac
+from meta_rl.algorithms.sac.sac_utils import (
+    Actor,
+    Args,
+    SoftQNetwork,
+    eval_sac,
+    make_env,
+)
 
 
 def train_sac(env, args: Args = Args(), eval_envs=None):
@@ -54,7 +60,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     # env setup
 
     envs = gym.vector.SyncVectorEnv(
-        [make_env(env, args.seed, 0, args.capture_video, run_name)]
+        [make_env(env, args.seed, 0, False, run_name)]
     )
     assert isinstance(
         envs.single_action_space, gym.spaces.Box
@@ -102,7 +108,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         q_optimizer = optim.Adam(
             list(qf1.parameters()) + list(qf2.parameters()), lr=args.q_lr
         )
-    # JRPL : context encoder should be trained with the same optimizer as the actor
+    # JRPL : context encoder should be trained with the same optimrun_nameizer as the actor
     # TODO : see what happens if we train the context encoder with the same optimizer as the critic
 
     actor_optimizer = optim.Adam(list(actor.parameters()), lr=args.policy_lr)
@@ -334,8 +340,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             f"results/runs/sac_embeddings_{args.env_id}_{args.context_mode}_{args.seed}.png"
         )
         writer.add_figure("charts/context_embeddings", plt.gcf())
-    writer.close()
-
+    
     # if context_encoder does not exist, define it as None
     if "learned" not in args.context_mode:
         context_encoder = None
@@ -345,16 +350,24 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         # evaluate the agent
         for eval_context_value, eval_env in eval_envs.items():
             # right now, juste sample a reward
-            rewards = [eval_sac(eval_env, actor, context_encoder, args) for _ in range(args.nb_evals_per_seed)]
+            eval_env = gym.vector.SyncVectorEnv(
+                [make_env(eval_env, args.seed, 0, args.capture_video, "eval_context_"+str(eval_context_value))]
+            )
+            rewards = [
+                eval_sac(eval_env, actor, context_encoder, args)
+                for _ in range(args.nb_evals_per_seed)
+            ]
 
             rewards_dict[eval_context_value] = np.mean(rewards)
-            
+
         # write the rewards to a file
         with open(
             f"results/runs/sac_rewards_{args.env_id}_{args.context_mode}_{args.seed}.json",
             "w",
         ) as f:
-            json.dump(rewards_dict, f)    
+            json.dump(rewards_dict, f)
+
+    writer.close()
 
 if __name__ == "__main__":
     train_sac()

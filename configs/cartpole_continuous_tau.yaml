@@ -1,0 +1,9 @@
+context:
+  name: tau
+
+env:
+  id: CARLCartPoleContinuous
+  max_episode_steps: 200
+
+train:
+  total_timesteps: 30000

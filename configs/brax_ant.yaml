@@ -1,9 +1,14 @@
 context:
   name: mass_torso
+  eval_values: [2, 14, 40]
 
 env:
   id: CARLBraxAnt
   max_episode_steps: 1000
 
 train:
-  total_timesteps: 30000
+  total_timesteps: 200000 #30000
+
+# training time with ml_gpu-rtx2080 , cpus_per_task: 8, mem_gb: 8
+# with context encoder : 2h
+# without context encoder : 1h

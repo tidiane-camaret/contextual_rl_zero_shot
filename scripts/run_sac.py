@@ -1,16 +1,17 @@
-import os
 import importlib
+import os
+
 import hydra
-import pprint
-import numpy as np
+
 from meta_rl.algorithms.sac.sac import train_sac
 from meta_rl.algorithms.sac.sac_utils import Args
 
-@hydra.main(version_base=None, config_path='../configs/', config_name='base_exp')
+
+@hydra.main(version_base=None, config_path="../configs/", config_name="base_exp")
 def main(config):
-    pprint.pprint(config)
+    # pprint.pprint(config)
     print("Working directory : {}".format(os.getcwd()))
-    args = Args() 
+    args = Args()
     # we keep the Args class because it keeps all default values and descriptions
     # but we could migrate those to hydra config files in the future
     args.total_timesteps = config.train.total_timesteps
@@ -22,8 +23,10 @@ def main(config):
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
     args.autotune = config.sac_params.autotune_entropy
+
+    # evaluation arguments
+    args.eval_context_values = config.context.eval_values
     args.nb_evals_per_seed = config.context.nb_evals_per_seed
-    
 
     # Additional context-related arguments
     # added for logging purposes
@@ -37,36 +40,52 @@ def main(config):
     args.encoder_hidden_sizes = config.context_encoder.hidden_sizes
     args.latent_context_dim = config.context_encoder.latent_context_dim
 
-    #print("Total timesteps : {}".format(args.total_timesteps))
-    if args.env_id == 'ComplexODEBoundedReward':
-        from meta_rl.envs.genrlise.complex_ode_bounded_reward import ComplexODEBoundedReward
-        env = ComplexODEBoundedReward([1, 1], 1)    
+    assert (
+        "CARL" in args.env_id
+    ), "Only CARL environments are supported for context-based training"
 
-    elif "CARL" in args.env_id :
-        from meta_rl.jrpl.carl_wrapper import context_wrapper
-        from carl.context.context_space import UniformFloatContextFeature
-        from carl.context.sampler import ContextSampler
-        if args.env_id == 'CARLCartPoleContinuous':
-            from meta_rl.envs.carl_cartpole import CARLCartPoleContinuous
-            CARLEnv = CARLCartPoleContinuous
-        else :
-            env_module = importlib.import_module("carl.envs")
-            CARLEnv = getattr(env_module, args.env_id)
-        CARLEnv = context_wrapper(
-            CARLEnv, 
-            context_name=config.context.name, 
-            concat_context= (config.context.mode == 'explicit'),
-        )
+    from carl.context.context_space import UniformFloatContextFeature
+    from carl.context.sampler import ContextSampler
 
-        context_name = config.context.name
+    from meta_rl.jrpl.carl_wrapper import context_wrapper
 
-        context_default = CARLEnv.get_default_context()[context_name]
+    if args.env_id == "CARLCartPoleContinuous":
+        # custom environment, we need to import it directly
+        from meta_rl.envs.carl_cartpole import CARLCartPoleContinuous
 
-        # mu, rel_sigma = 10, 5
-        # context_distributions = [NormalFloatContextFeature(context_name, mu, rel_sigma*mu)]
-        lower_bound, upper_bound = context_default * config.context.lower_bound_coeff, context_default * config.context.upper_bound_coeff
-        lower_bound, upper_bound = min(lower_bound, upper_bound), max(lower_bound, upper_bound)
-        context_distributions = [UniformFloatContextFeature(context_name, lower_bound, upper_bound)]
+        CARLEnv = CARLCartPoleContinuous
+    else:
+        env_module = importlib.import_module("carl.envs")
+        CARLEnv = getattr(env_module, args.env_id)
+
+    CARLEnv = context_wrapper(
+        CARLEnv,
+        context_name=config.context.name,
+        concat_context=(config.context.mode == "explicit"),
+    )
+
+    context_name = config.context.name
+    context_default = CARLEnv.get_default_context()[context_name]
+    # bounds for the context distributions
+    lower_bound, upper_bound = (
+        context_default * config.context.lower_bound_coeff,
+        context_default * config.context.upper_bound_coeff,
+    )
+    lower_bound, upper_bound = min(lower_bound, upper_bound), max(
+        lower_bound, upper_bound
+    )
+
+    if args.context_mode == "default_value":
+        # train on default context only
+        train_envs = CARLEnv(
+            context={0: {context_name: context_default}}
+        )  # not sure if even needed
+
+    elif args.context_mode in ["learned_jrpl", "explicit", "hidden"]:
+        # train on a context distribution
+        context_distributions = [
+            UniformFloatContextFeature(context_name, lower_bound, upper_bound)
+        ]
 
         context_sampler = ContextSampler(
             context_distributions=context_distributions,
@@ -74,25 +93,30 @@ def main(config):
             seed=args.seed,
         )
         sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
-        env = CARLEnv(contexts=sampled_contexts,)
+        train_envs = CARLEnv(
+            contexts=sampled_contexts,
+        )
         args.sampled_contexts = sampled_contexts
 
-        eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
-        eval_envs = {}
-        
-        for eval_context_value in eval_context_values:
-            print("eval_context_value : ", eval_context_value)
-            eval_context = CARLEnv.get_default_context()
-            eval_context[context_name] = eval_context_value
-            env = CARLEnv(
-                # You can play with different gravity values here
-                contexts={0: eval_context},
-            )
-            eval_envs[eval_context_value] = env
-        
-    train_sac(env, args, eval_envs=eval_envs)
+    else:
+        raise ValueError(f"Unknown context mode {args.context_mode}")
 
-if __name__ == '__main__':
+    # eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
+    eval_envs = {}
+
+    for eval_context_value in args.eval_context_values:
+        print("eval_context_value : ", eval_context_value)
+        eval_context = CARLEnv.get_default_context()
+        eval_context[context_name] = eval_context_value
+        eval_envs[eval_context_value] = CARLEnv(
+            # You can play with different gravity values here
+            contexts={0: eval_context},
+        )
+
+    train_sac(train_envs, args, eval_envs=eval_envs)
+
+
+if __name__ == "__main__":
     try:
         main()
     except Exception as e:

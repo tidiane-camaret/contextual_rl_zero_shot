@@ -1,5 +1,6 @@
 # docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/sac/#sac_continuous_actionpy
 import os
+import time
 from dataclasses import dataclass
 
 import gymnasium as gym
@@ -7,10 +8,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
-import time
-from collections import deque
 
 
 class RecordEpisodeStatistics(gym.wrappers.RecordEpisodeStatistics):
@@ -69,6 +66,7 @@ class RecordEpisodeStatistics(gym.wrappers.RecordEpisodeStatistics):
             infos,
         )
 
+
 @dataclass
 class Args:
     exp_name: str = os.path.basename(__file__)[: -len(".py")]
@@ -83,7 +81,7 @@ class Args:
     """if toggled, this experiment will be tracked with Weights and Biases"""
     wandb_project_name: str = "cleanRL"
     """the wandb's project name"""
-    wandb_entity: str|None = None
+    wandb_entity: str | None = None
     """the entity (team) of wandb's project"""
     capture_video: bool = False
     """whether to capture videos of the agent performances (check out `videos` folder)"""
@@ -122,11 +120,15 @@ class Args:
 def make_env(env_, seed, idx, capture_video, run_name):
     def thunk():
         if capture_video and idx == 0:
-            #env = gym.make(env_id, render_mode="rgb_array")
+            # env = gym.make(env_id, render_mode="rgb_array")
             env = gym.wrappers.RecordVideo(env_, f"videos/{run_name}")
-        #else:
-            #env = gym.make(env_id)
-        env = RecordEpisodeStatistics(env_) # TODO causes issues with brax, see why
+            env = RecordEpisodeStatistics(env)  # TODO causes issues with brax, see why
+
+            env.action_space.seed(seed)
+            return env
+        # else:
+        # env = gym.make(env_id)
+        env = RecordEpisodeStatistics(env_)  # TODO causes issues with brax, see why
 
         env.action_space.seed(seed)
         return env
@@ -162,7 +164,10 @@ LOG_STD_MIN = -5
 class Actor(nn.Module):
     def __init__(self, env, latent_context_dim=0):
         super().__init__()
-        self.fc1 = nn.Linear(np.array(env.single_observation_space.shape).prod() + latent_context_dim, 256)
+        self.fc1 = nn.Linear(
+            np.array(env.single_observation_space.shape).prod() + latent_context_dim,
+            256,
+        )
         self.fc2 = nn.Linear(256, 256)
         self.fc_mean = nn.Linear(256, np.prod(env.single_action_space.shape))
         self.fc_logstd = nn.Linear(256, np.prod(env.single_action_space.shape))
@@ -209,16 +214,14 @@ class Actor(nn.Module):
         return action, log_prob, mean
 
 
-
 def eval_sac(eval_env, actor, context_encoder, args):
+    # TODO : optimize. env should not be redifined at each eval
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    eval_env = gym.vector.SyncVectorEnv(
-        [make_env(eval_env, args.seed, 0, False, None)]
-    )
+
     obs, info = eval_env.reset()
     steps = 0
     rewards = []
-    
+
     if "learned" not in args.context_mode:
         while True:
             actions, _, _ = actor.get_action(torch.Tensor(obs).to(device))
@@ -231,11 +234,10 @@ def eval_sac(eval_env, actor, context_encoder, args):
     else:
         traj_actions = []
         traj_obs = []
-        context_mu = torch.zeros(1,args.latent_context_dim).to(device)
+        context_mu = torch.zeros(1, args.latent_context_dim).to(device)
 
         while True:
-            obs_np = np.array(obs) # cannot convert jax array to tensor directly
-            print("obs_np", obs_np.shape, "context_mu", context_mu.shape)
+            obs_np = np.array(obs)  # cannot convert jax array to tensor directly
             obs_context = torch.cat(
                 [torch.Tensor(obs_np).to(device), context_mu], dim=-1
             )
@@ -246,7 +248,7 @@ def eval_sac(eval_env, actor, context_encoder, args):
             traj_actions.append(actions)
             traj_obs.append(obs)
 
-            if steps > 0: # if we have transitions, encode the context
+            if steps > 0:  # if we have transitions, encode the context
                 transitions = np.concatenate(
                     [
                         np.asarray(traj_obs)[:-1],
@@ -271,7 +273,7 @@ def eval_sac(eval_env, actor, context_encoder, args):
 
             if done or steps >= args.env_max_episode_steps:
                 break
-    return(np.sum(rewards))
+    return np.sum(rewards)
 
     """
 
