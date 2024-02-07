@@ -97,12 +97,32 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     qf2_target = SoftQNetwork(envs, latent_context_dim).to(device)
     qf1_target.load_state_dict(qf1.state_dict())
     qf2_target.load_state_dict(qf2.state_dict())
-    if "learned" in args.context_mode:
+    if args.context_mode == "learned_jrpl":
         q_optimizer = optim.Adam(
             list(qf1.parameters())
             + list(qf2.parameters())
             + list(context_encoder.parameters()),
             lr=args.q_lr,
+        )
+    elif args.context_mode == "learned_iida":
+        from meta_rl.iida.predictor import FeedForward
+        predictor = FeedForward(
+            d_in=int(
+                latent_context_dim
+                + np.array(envs.single_observation_space.shape).prod()
+                + np.array(envs.single_action_space.shape).prod()
+            ),
+            d_out=int(np.array(envs.single_observation_space.shape).prod()),
+            hidden_sizes=args.encoder_hidden_sizes,
+        ).to(device)
+        q_optimizer = optim.Adam(
+            list(qf1.parameters()) + 
+            list(qf2.parameters()), lr=args.q_lr
+        )
+        predictor_optimizer = optim.Adam(
+            list(predictor.parameters()) +
+            list(context_encoder.parameters()), 
+            lr=args.q_lr
         )
     else:
         q_optimizer = optim.Adam(
@@ -201,8 +221,14 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 contexts = rb.sample_from_context(
                     data.context_ids.detach().cpu().numpy(), nb_input_transitions
                 )
+                if args.context_mode == "learned_jrpl":
                 # encode the contexts
-                context_mu, context_sigma = context_encoder(contexts.to(device))
+                    context_mu, context_sigma = context_encoder(contexts.to(device))
+                elif args.context_mode == "learned_iida":
+                    with torch.no_grad():
+                        context_mu, context_sigma = context_encoder(contexts.to(device))
+                else:
+                    raise ValueError("context mode not recognized")
                 # append the context to the observations
                 # TODO : see if we can regularize the model using the std, vae style
                 # context_mu = torch.normal(context_mu, context_sigma)
@@ -241,6 +267,17 @@ poetry run pip install "stable_baselines3==2.0.0a1"
             q_optimizer.zero_grad()
             qf_loss.backward()
             q_optimizer.step()
+
+            if args.context_mode == "learned_iida":
+                sp_hat = predictor(torch.cat([data.observations, data.actions], dim=-1))
+                next_obs_without_context = data.next_observations[
+                    :, : -context_mu.shape[-1]
+                ]
+                prediction_loss = F.mse_loss(sp_hat, next_obs_without_context)
+                
+                predictor_optimizer.zero_grad()
+                prediction_loss.backward()
+                predictor_optimizer.step()
 
             if global_step % args.policy_frequency == 0:  # TD 3 Delayed update support
                 for _ in range(
@@ -309,6 +346,18 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     envs.close()
 
+    # save the model
+    # create a folder for the model
+    import os
+
+    os.makedirs("results/models", exist_ok=True)
+    torch.save(actor.state_dict(), f"results/models/sac_actor_{run_name}.pt")
+    if "learned" in args.context_mode:
+        torch.save(
+            context_encoder.state_dict(),
+            f"results/models/context_encoder_{run_name}.pt",
+        )
+
     # plot encoder representations
 
     # TODO : put this in a separate function with rb and context encoder as arguments
@@ -323,7 +372,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         for context_id in contexts_in_rb:
             c = rb.sample_from_context([context_id], nb_input_transitions).to(device)
             context_mu, context_sigma = context_encoder(c)
-            context_values.append(args.sampled_contexts[context_id][args.context_name])
+            context_values.append(args.train_context_values[context_id])
             context_embs.append(context_mu.detach().cpu().numpy())
 
         # plot the context embeddings
@@ -351,12 +400,14 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         for eval_context_value, eval_env in eval_envs.items():
             # right now, juste sample a reward
             eval_env = gym.vector.SyncVectorEnv(
-                [make_env(eval_env, args.seed, 0, args.capture_video, "eval_context_"+str(eval_context_value))]
+                [make_env(eval_env, args.seed, 0, False, "eval_context_"+str(eval_context_value))]
             )
-            rewards = [
-                eval_sac(eval_env, actor, context_encoder, args)
-                for _ in range(args.nb_evals_per_seed)
-            ]
+            rewards = []
+            for e in range(args.nb_evals_per_seed):
+                print(f"evaluating context {eval_context_value} - {e}/{args.nb_evals_per_seed}")
+                rewards.append(
+                    eval_sac(eval_env, actor, context_encoder, args)
+                )
 
             rewards_dict[eval_context_value] = np.mean(rewards)
 

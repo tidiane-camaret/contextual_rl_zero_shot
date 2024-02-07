@@ -1,5 +1,6 @@
 context:
   name: length
+  eval_values: [1, 10, 40]
 
 env:
   id: CARLCartPoleContinuous

@@ -1,6 +1,5 @@
 defaults:
-  #- env: carl_mountain_car
-  - brax_ant.yaml
+  - cartpole_continuous_tau.yaml #cartpole_continuous_length.yaml #
   - override hydra/launcher: slurm
   - _self_ # this indicates that the current config overrides the configs placed above it
            # however, this is already the default behavior, so this line is not necessary
@@ -15,8 +14,8 @@ hydra:
 
   sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
     params:
-      context.mode: explicit, hidden, default_value, learned_jrpl 
-      seed: range(10)
+      context.mode: default_value, explicit, hidden, learned_iida, learned_jrpl 
+      #seed: range(3)
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
@@ -33,10 +32,10 @@ capture_video: True
 seed: 0
 
 context:
-  mode:  explicit #, hidden, learned_iida, default_value, learned_jrpl
+  mode:  learned_iida #, explicit, hidden, learned_iida, default_value, learned_jrpl
   lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
   upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
-  nb_evals_per_seed: 1
+  nb_evals_per_seed: 20
   
   
 context_encoder:

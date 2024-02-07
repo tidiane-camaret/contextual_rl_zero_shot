@@ -229,6 +229,8 @@ def eval_sac(eval_env, actor, context_encoder, args):
             obs, r, done, truncated, info = eval_env.step(actions)
             steps += 1
             rewards.append(r)
+
+            print(f"Step {steps} out of {args.env_max_episode_steps}")
             if done or steps >= args.env_max_episode_steps:
                 break
     else:
@@ -271,6 +273,7 @@ def eval_sac(eval_env, actor, context_encoder, args):
             steps += 1
             rewards.append(r)
 
+            print(f"Step {steps} out of {args.env_max_episode_steps}")
             if done or steps >= args.env_max_episode_steps:
                 break
     return np.sum(rewards)

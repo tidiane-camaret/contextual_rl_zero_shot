@@ -23,6 +23,7 @@ def main(config):
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
     args.autotune = config.sac_params.autotune_entropy
+    args.train_context_values = config.context.train_values
 
     # evaluation arguments
     args.eval_context_values = config.context.eval_values
@@ -44,9 +45,6 @@ def main(config):
         "CARL" in args.env_id
     ), "Only CARL environments are supported for context-based training"
 
-    from carl.context.context_space import UniformFloatContextFeature
-    from carl.context.sampler import ContextSampler
-
     from meta_rl.jrpl.carl_wrapper import context_wrapper
 
     if args.env_id == "CARLCartPoleContinuous":
@@ -63,51 +61,36 @@ def main(config):
         context_name=config.context.name,
         concat_context=(config.context.mode == "explicit"),
     )
-
-    context_name = config.context.name
-    context_default = CARLEnv.get_default_context()[context_name]
-    # bounds for the context distributions
-    lower_bound, upper_bound = (
-        context_default * config.context.lower_bound_coeff,
-        context_default * config.context.upper_bound_coeff,
-    )
-    lower_bound, upper_bound = min(lower_bound, upper_bound), max(
-        lower_bound, upper_bound
-    )
+    context_default = CARLEnv.get_default_context()[args.context_name]
 
     if args.context_mode == "default_value":
         # train on default context only
         train_envs = CARLEnv(
-            context={0: {context_name: context_default}}
+            context={0: {args.context_name: context_default}}
         )  # not sure if even needed
 
-    elif args.context_mode in ["learned_jrpl", "explicit", "hidden"]:
-        # train on a context distribution
-        context_distributions = [
-            UniformFloatContextFeature(context_name, lower_bound, upper_bound)
-        ]
+    elif args.context_mode in ["learned_jrpl", "explicit", "hidden", "learned_iida"]:
+        train_contexts = dict()
+        for i, train_context_value in enumerate(args.train_context_values):
+            print("train_context_value : ", train_context_value)
+            c = CARLEnv.get_default_context()
+            c[args.context_name] = train_context_value
+            train_contexts[i] = c
 
-        context_sampler = ContextSampler(
-            context_distributions=context_distributions,
-            context_space=CARLEnv.get_context_space(),
-            seed=args.seed,
-        )
-        sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
         train_envs = CARLEnv(
-            contexts=sampled_contexts,
+            # You can play with different gravity values here
+            contexts=train_contexts,
         )
-        args.sampled_contexts = sampled_contexts
 
     else:
         raise ValueError(f"Unknown context mode {args.context_mode}")
 
-    # eval_context_values = np.linspace(lower_bound / 2, upper_bound * 2, 10)
     eval_envs = {}
 
     for eval_context_value in args.eval_context_values:
         print("eval_context_value : ", eval_context_value)
         eval_context = CARLEnv.get_default_context()
-        eval_context[context_name] = eval_context_value
+        eval_context[args.context_name] = eval_context_value
         eval_envs[eval_context_value] = CARLEnv(
             # You can play with different gravity values here
             contexts={0: eval_context},
@@ -122,3 +105,33 @@ if __name__ == "__main__":
     except Exception as e:
         main()  # data processing might error out due to multiple jobs doing the same thing
         print(e)
+
+    """
+    context_name = config.context.name
+    
+    # bounds for the context distributions
+    lower_bound, upper_bound = (
+        context_default * config.context.lower_bound_coeff,
+        context_default * config.context.upper_bound_coeff,
+    )
+    lower_bound, upper_bound = min(lower_bound, upper_bound), max(
+        lower_bound, upper_bound
+    )
+
+    # train on a context distribution
+    context_distributions = [
+        UniformFloatContextFeature(context_name, lower_bound, upper_bound)
+    ]
+
+    context_sampler = ContextSampler(
+        context_distributions=context_distributions,
+        context_space=CARLEnv.get_context_space(),
+        seed=args.seed,
+    )
+    sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
+    train_envs = CARLEnv(
+        contexts=sampled_contexts,
+    )
+
+    args.sampled_contexts = sampled_contexts
+    """

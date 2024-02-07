@@ -4,6 +4,7 @@
 wandb/
 results/
 lightning_logs/
+videos/
 
 *.pkl
 *.zip
