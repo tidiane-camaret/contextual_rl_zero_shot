@@ -32,8 +32,6 @@ def main(config):
     # Additional context-related arguments
     # added for logging purposes
     args.context_name = config.context.name
-    args.context_lower_bound_coeff = config.context.lower_bound_coeff
-    args.context_upper_bound_coeff = config.context.upper_bound_coeff
     args.context_mode = config.context.mode
 
     # context encoder arguments

@@ -409,7 +409,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                     eval_sac(eval_env, actor, context_encoder, args)
                 )
 
-            rewards_dict[eval_context_value] = np.mean(rewards)
+            rewards_dict[eval_context_value] = rewards
 
         # write the rewards to a file
         with open(
