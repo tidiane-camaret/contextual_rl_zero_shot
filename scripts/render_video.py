@@ -15,11 +15,11 @@ from meta_rl.algorithms.sac.sac_utils import (
 from meta_rl.jrpl.carl_wrapper import context_wrapper
 
 args = Args()
-model_path = "/home/ndirt/dev/automl/meta_rl/results/hydra/multirun/2024-02-06/14-24-37/CARLBraxAnt/default_value/0/0/results/models/sac_actor_CARLBraxAnt__sac_utils__0__1707225934.pt"
+model_path = "/home/ndirt/dev/automl/meta_rl/results/hydra/multirun/2024-02-07/20-31-42/CARLBraxAnt/explicit/0/10/results/models/sac_actor_CARLBraxAnt__sac_utils__0__1707337326.pt"
 args.context_name = "mass_torso"
 args.env_id = "CARLBraxAnt"
-args.context_mode = "default_value"
-eval_context_value = 1
+args.context_mode = "explicit"
+eval_context_value = 70
 args.env_max_episode_steps = 1000
 
 run_name = f"{args.env_id}__{args.exp_name}__{args.seed}__{int(time.time())}"

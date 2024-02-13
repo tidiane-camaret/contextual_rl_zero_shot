@@ -1,5 +1,5 @@
 defaults:
-  - cartpole_continuous_force_mag.yaml #cartpole_continuous_length.yaml #
+  - mountain_car.yaml #cartpole_continuous_length.yaml #
   - override hydra/launcher: slurm
   - _self_ # this indicates that the current config overrides the configs placed above it
            # however, this is already the default behavior, so this line is not necessary
