@@ -20,7 +20,7 @@ hydra:
       max_budget: ${algorithm.total_timesteps}
       min_budget: 1e5
       wandb_project: dehb_for_cartpole_dqn_jrpl
-      wandb_entity: tidiane
+      wandb_entity: # your wandb entity
       deepcave: false
     search_space: ${search_space}
     total_brackets: 5

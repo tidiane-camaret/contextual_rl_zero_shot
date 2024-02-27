@@ -15,7 +15,7 @@ from meta_rl.algorithms.sac.sac_utils import (
 from meta_rl.jrpl.carl_wrapper import context_wrapper
 
 args = Args()
-model_path = "/home/ndirt/dev/automl/meta_rl/results/hydra/multirun/2024-02-07/20-31-42/CARLBraxAnt/explicit/0/10/results/models/sac_actor_CARLBraxAnt__sac_utils__0__1707337326.pt"
+model_path = "../results/hydra/multirun/2024-02-07/20-31-42/CARLBraxAnt/explicit/0/10/results/models/sac_actor_CARLBraxAnt__sac_utils__0__1707337326.pt"
 args.context_name = "mass_torso"
 args.env_id = "CARLBraxAnt"
 args.context_mode = "explicit"
@@ -82,3 +82,5 @@ actor.load_state_dict(torch.load(model_path, map_location=device))
 eval_sac(envs, actor, context_encoder, args)
 
 envs.close()
+
+

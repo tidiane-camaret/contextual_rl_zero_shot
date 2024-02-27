@@ -26,7 +26,6 @@ from carl.context.context_space import NormalFloatContextFeature
 from carl.context.sampler import ContextSampler
 from torch.utils.tensorboard import SummaryWriter
 
-sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
 from meta_rl.jrpl.context_encoder import ContextEncoder
 
 

@@ -34,7 +34,7 @@ showq -u $USER
 msub -l nodes=1:ppn=10,walltime=8:00:00,pmem=6GB -I 
 # dont forget to activate the env
 source miniconda3/etc/profile.d/conda.sh
-conda activate tid_env
+conda activate meta_rl_env
 # run the script
 cd dev/automl/meta_rl/
 bash scripts/jrpl/run_jrpl.bash

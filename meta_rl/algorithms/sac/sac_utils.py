@@ -278,15 +278,57 @@ def eval_sac(eval_env, actor, context_encoder, args):
                 break
     return np.sum(rewards)
 
-    """
+def get_latent_context_sac(eval_env, actor, context_encoder, args):
+    # TODO : optimize. env should not be redifined at each eval
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    latent_list = []
 
-    eval_table = [[x, y] for (x, y) in zip(range(len(rewards_list)), rewards_list)]
-    eval_table_wandb = wandb.Table(data=eval_table, columns=["context_value", "reward"])
-    writer.log(
-        {
-            "eval_table": wandb.plot.line(
-                eval_table_wandb, "context_value", "reward", title="Custom Y vs X Line Plot"
+    obs, info = eval_env.reset()
+    steps = 0
+
+    if "learned" not in args.context_mode:
+        raise ValueError("This function is only for learned context")
+    else:
+        traj_actions = []
+        traj_obs = []
+        context_mu = torch.zeros(1, args.latent_context_dim).to(device)
+
+        while True:
+            obs_np = np.array(obs)  # cannot convert jax array to tensor directly
+            obs_context = torch.cat(
+                [torch.Tensor(obs_np).to(device), context_mu], dim=-1
             )
-        }
-    )
-    """
+            actions, _, _ = actor.get_action(torch.Tensor(obs_context).to(device))
+            actions = actions.detach().cpu().numpy()
+
+            # add the current transition to the trajectory history
+            traj_actions.append(actions)
+            traj_obs.append(obs)
+
+            if steps > 0:  # if we have transitions, encode the context
+                transitions = np.concatenate(
+                    [
+                        np.asarray(traj_obs)[:-1],
+                        np.asarray(traj_actions)[:-1],
+                        np.asarray(traj_obs)[1:],
+                    ],
+                    axis=-1,
+                )
+                # if transitions is bigger than context_length, sample a random subset of size context_length
+                if transitions.shape[0] > args.nb_input_transitions:
+                    idxs = np.random.randint(
+                        0, transitions.shape[0], size=args.nb_input_transitions
+                    )
+                    transitions = transitions[idxs]
+                # add a dimension for the batch
+                transitions = torch.Tensor(transitions).to(device).unsqueeze(0)
+                context_mu, context_sigma = context_encoder(transitions)
+
+            obs, r, done, truncated, info = eval_env.step(actions)
+            steps += 1
+            latent_list.append(context_mu.squeeze().detach().cpu().numpy())
+
+            print(f"Step {steps} out of {args.env_max_episode_steps}")
+            if done or steps >= args.env_max_episode_steps:
+                break
+    return latent_list

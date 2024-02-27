@@ -9,7 +9,6 @@ adapted from https://docs.cleanrl.dev/rl-algorithms/dqn/#dqnpy
 import argparse
 import os
 import random
-import sys
 import time
 from distutils.util import strtobool
 
@@ -26,7 +25,6 @@ from carl.context.context_space import UniformFloatContextFeature
 from carl.context.sampler import ContextSampler
 from torch.utils.tensorboard import SummaryWriter
 
-sys.path.append(os.path.abspath("/home/ndirt/dev/automl/meta_rl"))
 from meta_rl.jrpl.context_encoder import ContextEncoder
 
 
@@ -315,7 +313,6 @@ def train_agent(args, CARLEnv):
             else:
                 q_values = q_network(torch.Tensor(obs).to(device))
 
-
             actions = torch.argmax(q_values, dim=1).cpu().numpy()
 
         # TRY NOT TO MODIFY: execute the game and log data.
@@ -386,11 +383,15 @@ def train_agent(args, CARLEnv):
                     data = rb.sample(args.batch_size)
 
                 with torch.no_grad():
-                    
-                    online_selected_actions = q_network(data.next_observations).argmax(dim=1)
-                    target_max = target_network(data.next_observations).gather(
-                        1, online_selected_actions.unsqueeze(1)
-                    ).squeeze()
+
+                    online_selected_actions = q_network(data.next_observations).argmax(
+                        dim=1
+                    )
+                    target_max = (
+                        target_network(data.next_observations)
+                        .gather(1, online_selected_actions.unsqueeze(1))
+                        .squeeze()
+                    )
 
                     td_target = data.rewards.flatten() + args.gamma * target_max * (
                         1 - data.dones.flatten()

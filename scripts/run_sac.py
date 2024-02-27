@@ -104,32 +104,3 @@ if __name__ == "__main__":
         main()  # data processing might error out due to multiple jobs doing the same thing
         print(e)
 
-    """
-    context_name = config.context.name
-    
-    # bounds for the context distributions
-    lower_bound, upper_bound = (
-        context_default * config.context.lower_bound_coeff,
-        context_default * config.context.upper_bound_coeff,
-    )
-    lower_bound, upper_bound = min(lower_bound, upper_bound), max(
-        lower_bound, upper_bound
-    )
-
-    # train on a context distribution
-    context_distributions = [
-        UniformFloatContextFeature(context_name, lower_bound, upper_bound)
-    ]
-
-    context_sampler = ContextSampler(
-        context_distributions=context_distributions,
-        context_space=CARLEnv.get_context_space(),
-        seed=args.seed,
-    )
-    sampled_contexts = context_sampler.sample_contexts(n_contexts=100)
-    train_envs = CARLEnv(
-        contexts=sampled_contexts,
-    )
-
-    args.sampled_contexts = sampled_contexts
-    """

@@ -14,7 +14,7 @@ export CPATH=$CONDA_PREFIX/include
 # ACTIVATE ENVIRONMENT
 
 source miniconda3/etc/profile.d/conda.sh
-conda activate tid_env
+conda activate meta_rl_env
 
 
 # run the scripts
