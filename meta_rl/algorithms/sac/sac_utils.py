@@ -328,7 +328,7 @@ def get_latent_context_sac(eval_env, actor, context_encoder, args):
             steps += 1
             latent_list.append(context_mu.squeeze().detach().cpu().numpy())
 
-            print(f"Step {steps} out of {args.env_max_episode_steps}")
+            #print(f"Step {steps} out of {args.env_max_episode_steps}")
             if done or steps >= args.env_max_episode_steps:
                 break
     return latent_list
