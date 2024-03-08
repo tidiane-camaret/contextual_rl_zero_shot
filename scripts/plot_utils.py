@@ -3,6 +3,7 @@ import os
 import importlib
 import pandas as pd
 import numpy as np
+from rliable import plot_utils
 def extract_rewards_from_run_dir(
     run_dir: str,
     environment_name: str,
@@ -14,7 +15,8 @@ def extract_rewards_from_run_dir(
     given a run directory, plots the rewards for each context value for each context mode
     """
     # run_dir = parent of current dir + run_dir
-    run_dir = os.path.join(os.path.dirname(os.getcwd()), run_dir)
+    run_dir = os.path.join(os.getcwd(), run_dir)
+
     reward_df = pd.DataFrame(
         columns=["context_mode", "seed", "context_value", "reward"]
     )
