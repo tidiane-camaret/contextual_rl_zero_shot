@@ -9,7 +9,7 @@ srun -p testbosch_cpu-cascadelake --time=3:00:00 --pty bash
 srun -p ml_gpu-rtx2080 --time=3:00:00 --pty bash 
 srun -p ml_gpu-rtx2080 -c 20 --mem 24000 --time=3:00:00 --pty bash 
 
-
+srun -p aisdlc_gpu-rtx2080 --time=3:00:00 --pty bash 
 conda activate meta_rl_env
 # tmux
 tmux new-session -s <name>
