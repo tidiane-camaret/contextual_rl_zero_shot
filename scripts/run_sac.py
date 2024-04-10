@@ -14,7 +14,7 @@ def main(config):
     args = Args()
     # we keep the Args class because it keeps all default values and descriptions
     # but we could migrate those to hydra config files in the future
-    args.total_timesteps = config.train.total_timesteps
+    args.total_timesteps = config.env.total_train_timesteps
     args.env_id = config.env.id
     args.env_max_episode_steps = config.env.max_episode_steps
     args.seed = config.seed
@@ -23,16 +23,16 @@ def main(config):
     args.wandb_project_name = config.wandb.project_name
     args.wandb_entity = config.wandb.entity
     args.autotune = config.sac_params.autotune_entropy
-    args.train_context_values = config.context.train_values
+    args.train_context_values = config.env.context.train_values
 
     # evaluation arguments
-    args.eval_context_values = config.context.eval_values
-    args.nb_evals_per_seed = config.context.nb_evals_per_seed
+    args.eval_context_values = config.env.context.eval_values
+    args.nb_evals_per_seed = config.nb_evals_per_seed
 
     # Additional context-related arguments
     # added for logging purposes
-    args.context_name = config.context.name
-    args.context_mode = config.context.mode
+    args.context_name = config.env.context.name
+    args.context_mode = config.context_mode
 
     # context encoder arguments
     args.nb_input_transitions = config.context_encoder.nb_input_transitions
@@ -56,8 +56,8 @@ def main(config):
 
     CARLEnv = context_wrapper(
         CARLEnv,
-        context_name=config.context.name,
-        concat_context=(config.context.mode == "explicit"),
+        context_name=args.context_name,
+        concat_context=(args.context_mode == "explicit"),
     )
     context_default = CARLEnv.get_default_context()[args.context_name]
 

@@ -1,15 +1,10 @@
+id: CARLBraxAnt
+max_episode_steps: 1000
+total_train_timesteps: 30000
 context:
   name: mass_torso
   train_values: [25, 35, 45, 55, 65, 75]
   eval_values: [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-
-env:
-  id: CARLBraxAnt
-  max_episode_steps: 1000
-
-train:
-  total_timesteps: 30000
-
 # training time with ml_gpu-rtx2080 , cpus_per_task: 8, mem_gb: 8
 # with context encoder : 2h
 # without context encoder : 1h

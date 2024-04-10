@@ -1,9 +1,8 @@
 defaults:
-  - mountain_car.yaml #cartpole_continuous_length.yaml #
+  - env : brax_ant #cartpole_continuous_length
   - override hydra/launcher: slurm
   - _self_ # this indicates that the current config overrides the configs placed above it
            # however, this is already the default behavior, so this line is not necessary
-
 
 hydra:
   callbacks:
@@ -12,30 +11,21 @@ hydra:
   job:
     chdir: True
 
-  sweeper:    # only invoked if --multirun is used, e.g. `python launchers/train_ae.py --multirun`
+  sweeper:    # only invoked if --multirun is used 
     params:
-      context.mode: default_value, explicit, hidden, learned_iida, learned_jrpl 
-      seed: range(10)
+      #context_mode: default_value, explicit, hidden, learned_iida, learned_jrpl 
+      #seed: range(10)
+      env: brax_ant, pendulum
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
-    dir: results/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/${env.id}/${context.mode}/${seed}
+    dir: results/hydra/multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}/${env.id}/${context_mode}/${seed}
     subdir: ${hydra.job.num}
 
 wandb:
   track: True
   project_name: meta_rl
   entity: 
-
-capture_video: True
-
-seed: 0
-
-context:
-  mode:  learned_iida #, explicit, hidden, learned_iida, default_value, learned_jrpl
-  nb_evals_per_seed: 20
-  #lower_bound_coeff: 0.2 # lower bound = lower_bound_coeff * context_default
-  #upper_bound_coeff: 2.0 # upper bound = upper_bound_coeff * context_default
   
 context_encoder:
   nb_input_transitions: 20
@@ -44,3 +34,8 @@ context_encoder:
 
 sac_params:
   autotune_entropy: True
+
+capture_video: True
+seed: 0
+nb_evals_per_seed: 20
+context_mode: learned_iida #, explicit, hidden, learned_iida, default_value, learned_jrpl

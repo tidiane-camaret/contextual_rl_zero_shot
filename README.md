@@ -73,15 +73,15 @@ python3 scripts/run_sac.py
 * [X] Implement DQN for explicit context, no context and JRPL
 * [X] Implement HPO pipelines ([how-to-autorl](https://github.com/facebookresearch/how-to-autorl))
     * [X] Run the pipeline locally/on an slurm interactive session
-* [ ] Implement evaluation pipelines (hydra, submitit)
+* [X] Implement evaluation pipelines (hydra, submitit)
 * [ ] Standardize and document experiments
 * [X] Implement DDQN for explicit context, no context and JRPL
-* [ ] Implement DDPG for explicit context, no context and JRPL
+* [X] Implement SAC for explicit context, no context and JRPL
 * [ ] Implement PPO for explicit context, no context and JRPL
-* [ ] Implement Context is everyting and EPI baselines
 
 
 
+<!---
 # Previous experiments
 
 ### Train DQN methods
@@ -127,4 +127,4 @@ scripts/iida/genereate_trajectories.py
 scripts/iida/train_predictor.py
 scripts/metarl_striker.py --context latent
 ```
-
+-->

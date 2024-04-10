@@ -1,17 +1,13 @@
-import importlib
 import os
 import pprint
-import hydra
 
-from meta_rl.algorithms.sac.sac import train_sac
-from meta_rl.algorithms.sac.sac_utils import Args
+import hydra
 
 
 @hydra.main(version_base=None, config_path="../configs/", config_name="base_exp")
 def main(config):
     pprint.pprint(config)
     print("Working directory : {}".format(os.getcwd()))
-    
 
 
 if __name__ == "__main__":
@@ -20,4 +16,3 @@ if __name__ == "__main__":
     except Exception as e:
         main()  # data processing might error out due to multiple jobs doing the same thing
         print(e)
-

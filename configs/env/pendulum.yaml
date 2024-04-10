@@ -1,12 +1,8 @@
+id: CARLPendulum
+max_episode_steps: 200
+total_train_timesteps: 30000
 context:
   name: l
   train_values: [0.07320794, 0.15772173, 0.33980118, 0.73207944, 1.57721735]
   eval_values: [ 0.01      ,  0.02154435,  0.04641589,  0.1       ,  0.21544347,
         0.46415888,  1.        ,  2.15443469,  4.64158883, 10.        ]
-
-env:
-  id: CARLPendulum
-  max_episode_steps: 200
-
-train:
-  total_timesteps: 30000
