@@ -30,103 +30,40 @@ pip install .
 ```
 ## Run experiments
 
-### Train SAC methods
+The experiments shown in the paper are based on the SAC algorithm, and can be run using the following script :
 
 ```bash
-python3 scripts/run_sac.py
+python3 scripts/run_sac.py env=brax_ant context_mode=learned_jrpl
 ```
 
-
-## List 
-<!---
-**training environments** : default context value * uniform(lower,upper)
-**evaluation environments** : 40 linearly spaced values between (lower/2,upper*2)
-
-
-* [X] CartPole (DQN)
-    * tau : (lower,upper) = (0.2,2.2) 
-    * length : (lower,upper) = (0.2,2.2)
-    * gravity : (lower,upper) = (0.2,2.2)
-* [X] LunarLander (DQN)
-    * gravity : (lower,upper) = (0.1,2.2)
-* [X] MountainCar (DQN, DDQN)
-    * gravity : (lower,upper) = (0.1,2.2)
-* [X] MountainCar_Continous (SAC)
-    * gravity : (lower,upper) = (0.1,2.2)
-* [X] Pendulum (SAC)
-    * length : (lower,upper) = (0.5,2.2)
-* [ ] Ordinary_differential_equation (https://arxiv.org/abs/2310.16686
-) (SAC)
-* [ ] Mujoco_Ant (SAC)
-* [ ] Striker (PPO)
-    * gravity : (lower,upper) = (0.1,2.2)
-* [ ] [Meta World](https://arxiv.org/abs/1910.10897) (PPO)
--->
-## Baselines
-
-* [X] Explicit context : the dynamics are given as input to the model as additional state data, both at training and testing time.
-* [X] Hidden context : no dynamics are given as input to the model, neither at training nor testing time.
-* [X] [Context is Everything](https://benevans.zip/iida/) : Using previously generated trajectories, a predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder**, provided as additional state data to the RL agent.
-
-* [X] **Joint Context and Policy learning (JCPL)**: the context encoder is not trained on a prediction task but directly on the trained jointly with the policy network.
-
-
-# Roadmap
-* [X] Implement DQN for explicit context, no context and JRPL
-* [X] Implement HPO pipelines ([how-to-autorl](https://github.com/facebookresearch/how-to-autorl))
-    * [X] Run the pipeline locally/on an slurm interactive session
-* [X] Implement evaluation pipelines (hydra, submitit)
-* [ ] Standardize and document experiments
-* [X] Implement DDQN for explicit context, no context and JRPL
-* [X] Implement SAC for explicit context, no context and JRPL
-* [ ] Implement PPO for explicit context, no context and JRPL
+This script accepts the following parameters : 
+### Environments 
 
 
 
-<!---
-# Previous experiments
+* **brax_ant** : 3D humanoid robot with 8 degrees of freedom.
+* **pendulum** : 2D pendulum with 2 degrees of freedom.
+* **cartpole_continuous_tau** : 2D cartpole with 2 degrees of freedom.
+* **mountain_car** : 1D mountain car with 1 degree of freedom.
 
-### Train DQN methods
+### Context learning methods
+
+* **explicit** : the dynamics are given as input to the model as additional state data, both at training and testing time.
+* **hidden** : no dynamics are given as input to the model, neither at training nor testing time.
+* **learned_iida** : [Context is Everything](https://benevans.zip/iida/) : Using previously generated trajectories, a predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder**, provided as additional state data to the RL agent.
+* **learned_jrpl** :  **Joint Context and Policy learning (JCPL)**: the context encoder is not trained on a prediction task but directly on the trained jointly with the policy network.
+* **default_value** : the agent is only trained on the default value of the context. Used as a baseline.
+
+### Sweep over multiple configurations using Hydra
+
+The script can be run with multiple configurations using Hydra :
 
 ```bash
-python3 -m scripts.jrpl.train_dqn
+python3 scripts/run_sac.py -m context_mode=default_value,explicit,hidden,learned_iida,learned_jrpl
 ```
 
-### Hyperparameter optimization on DQN methods
+It is also possible to run the script with multiple seeds using the seed parameter :
 
 ```bash
-python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun 
+python3 scripts/run_sac.py -m seed=0,1,2
 ```
-
-## Evaluation of baseline models
-
-We evaluate a model using sets of training and testing environments, with non overlapping sets of dynamics.
-
-Environments can be generated with different dynamics, namely mass, inertia and damping. (see meta_rl/envs/striker_avg.py) The range of those values are taken from [Environment Probing Interaction Policies](https://openreview.net/pdf?id=ryl8-3AcFX).
-
-The project currently contains two baseline models :
-
-- "explicit context" : the dynamics are given as input to the model as additional state data, both at training and testing time.
-
-```bash
-scripts/metarl_striker.py --context explicit
-```
-
-- "no context" : no dynamics are given as input to the model, neither at training nor testing time.
-
-```bash
-scripts/metarl_striker.py --context none
-```
-
-# Additional models
-
-- [Context is Everything](https://benevans.zip/iida/)
-
-A previoulsy trained **generator policy** generates trajectories from training environments. A predictor model is then trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder** for the RL agent, which is trained on the training environments. The RL agent is then tested on the testing environments.
-
-```bash
-scripts/iida/genereate_trajectories.py
-scripts/iida/train_predictor.py
-scripts/metarl_striker.py --context latent
-```
--->

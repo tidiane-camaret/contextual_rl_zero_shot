@@ -37,6 +37,7 @@ dependencies:
       - fonttools==4.51.0
       - gym==0.26.2
       - hydra-core==1.3.2
+      - hydra-submitit-launcher==1.2.0
       - idna==3.7
       - jax==0.4.23
       - jaxlib==0.4.23+cuda11.cudnn86
@@ -82,6 +83,7 @@ dependencies:
       - requests==2.31.0
       - scipy==1.13.0
       - six==1.16.0
+      - submitit==1.5.1
       - sympy==1.12
       - torch==2.2.2
       - triton==2.2.0
