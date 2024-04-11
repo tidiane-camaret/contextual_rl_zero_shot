@@ -1,4 +1,4 @@
-# Meta RL : Learning Context in a Zero-Shot setting
+# Meta RL : Learning Context for a Zero-Shot setting
 
 
 
