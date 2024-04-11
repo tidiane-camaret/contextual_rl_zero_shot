@@ -214,7 +214,6 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         if global_step > args.learning_starts:
             # JRPL : add context latent vector to the observation
             if "learned" in args.context_mode:
-                print("step {}/{}".format(global_step, args.total_timesteps))
                 # sample contexts from each element of the batch
                 data = rb.sample(args.batch_size)
 

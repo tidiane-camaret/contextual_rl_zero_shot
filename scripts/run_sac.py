@@ -65,7 +65,7 @@ def main(config):
         # train on default context only
         train_envs = CARLEnv(
             context={0: {args.context_name: context_default}}
-        )  # not sure if even needed
+        )  
 
     elif args.context_mode in ["learned_jrpl", "explicit", "hidden", "learned_iida"]:
         train_contexts = dict()
@@ -90,7 +90,6 @@ def main(config):
         eval_context = CARLEnv.get_default_context()
         eval_context[args.context_name] = eval_context_value
         eval_envs[eval_context_value] = CARLEnv(
-            # You can play with different gravity values here
             contexts={0: eval_context},
         )
 
