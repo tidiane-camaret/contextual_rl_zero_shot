@@ -1,8 +1,9 @@
-# Meta RL : Learning Context for a Zero-Shot setting
+# Inferring Behavior-Specific Context Improves Zero-Shot Generalization in Reinforcement Learning
 
 
+This repository contains the code for the paper "Inferring Behavior-Specific Context Improves Zero-Shot Generalization in Reinforcement Learning"
 
-The current setup uses a range of RL environments, mostly from from the [OpenAI Gym](https://gym.openai.com/) library, with different dynamics. The environments are generated with different dynamics using [CARL](https://github.com/automl/CARL) and the agent is trained/evaluated on subsets of those environments.
+The environments are generated with different dynamics using [CARL](https://github.com/automl/CARL) and the agent is trained/evaluated on subsets of those environments.
 
 ## Base algorithms
 

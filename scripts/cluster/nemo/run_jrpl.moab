@@ -1,0 +1,24 @@
+# #MSUB -o /home/fr/fr_fr/fr_tn110/dev/automl/meta_rl/scripts/cluster/%j.out
+# job script for nemo
+
+#!/bin/bash -x
+
+
+# modules to load when using nemo cluster
+module load devel/python/3.9.7
+module load devel/conda
+# module load mpi/openmpi/4.1-gnu-9.2
+
+export CPATH=$CONDA_PREFIX/include
+
+# ACTIVATE ENVIRONMENT
+
+source miniconda3/etc/profile.d/conda.sh
+conda activate meta_rl_env
+
+
+# run the scripts
+cd dev/automl/meta_rl
+time bash scripts/jrpl/run_jrpl.bash
+
+# to check the job status : checkjob + jobid
