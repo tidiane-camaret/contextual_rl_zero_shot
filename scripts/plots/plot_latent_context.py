@@ -13,7 +13,7 @@ from meta_rl.algorithms.sac.sac_utils import (
     get_latent_context_sac,
     make_env,
 )
-from meta_rl.jrpl.carl_wrapper import context_wrapper
+from meta_rl.jcpl.carl_wrapper import context_wrapper
 
 args = Args()
 
@@ -61,7 +61,7 @@ for emes, cn, ei, ecv, dd in zip([999],
     args.context_name = cn
     args.env_id = ei
     args.eval_context_values = ecv
-    for cm in ["learned_jrpl"]:
+    for cm in ["learned_jcpl"]:
             args.context_mode = cm
             eval_context_value = 70
             args.latent_context_dim = 2
@@ -118,10 +118,10 @@ for emes, cn, ei, ecv, dd in zip([999],
                 ), "only continuous action space is supported"
 
 
-                # JRPL : if context is learned from transitions, use custom replay buffer
+                # jcpl : if context is learned from transitions, use custom replay buffer
                 # and create context encoder
 
-                from meta_rl.jrpl.context_encoder import ContextEncoder
+                from meta_rl.jcpl.context_encoder import ContextEncoder
 
                 latent_context_dim = args.latent_context_dim
                 nb_input_transitions = args.nb_input_transitions

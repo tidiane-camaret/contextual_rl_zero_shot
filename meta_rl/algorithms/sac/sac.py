@@ -68,11 +68,11 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
     max_action = float(envs.single_action_space.high[0])
 
-    # JRPL : if context is learned from transitions, use custom replay buffer
+    # jcpl : if context is learned from transitions, use custom replay buffer
     # and create context encoder
     if "learned" in args.context_mode:
-        from meta_rl.jrpl.buffer import ReplayBuffer
-        from meta_rl.jrpl.context_encoder import ContextEncoder
+        from meta_rl.jcpl.buffer import ReplayBuffer
+        from meta_rl.jcpl.context_encoder import ContextEncoder
 
         latent_context_dim = args.latent_context_dim
         nb_input_transitions = args.nb_input_transitions
@@ -97,7 +97,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
     qf2_target = SoftQNetwork(envs, latent_context_dim).to(device)
     qf1_target.load_state_dict(qf1.state_dict())
     qf2_target.load_state_dict(qf2.state_dict())
-    if args.context_mode == "learned_jrpl":
+    if args.context_mode == "learned_jcpl":
         q_optimizer = optim.Adam(
             list(qf1.parameters())
             + list(qf2.parameters())
@@ -128,7 +128,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
         q_optimizer = optim.Adam(
             list(qf1.parameters()) + list(qf2.parameters()), lr=args.q_lr
         )
-    # JRPL : context encoder should be trained with the same optimrun_nameizer as the actor
+    # jcpl : context encoder should be trained with the same optimrun_nameizer as the actor
     # TODO : see what happens if we train the context encoder with the same optimizer as the critic
 
     actor_optimizer = optim.Adam(list(actor.parameters()), lr=args.policy_lr)
@@ -163,7 +163,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 [envs.single_action_space.sample() for _ in range(envs.num_envs)]
             )
         else:
-            # JRPL: to take an action, we first need to encode the context
+            # jcpl: to take an action, we first need to encode the context
             if "learned" in args.context_mode:
                 context_ids = infos["context_id"]
                 # context_id needs to be an int for now. Throw an error if it is not
@@ -212,7 +212,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
 
         # ALGO LOGIC: training.
         if global_step > args.learning_starts:
-            # JRPL : add context latent vector to the observation
+            # jcpl : add context latent vector to the observation
             if "learned" in args.context_mode:
                 # sample contexts from each element of the batch
                 data = rb.sample(args.batch_size)
@@ -220,7 +220,7 @@ poetry run pip install "stable_baselines3==2.0.0a1"
                 contexts = rb.sample_from_context(
                     data.context_ids.detach().cpu().numpy(), nb_input_transitions
                 )
-                if args.context_mode == "learned_jrpl":
+                if args.context_mode == "learned_jcpl":
                 # encode the contexts
                     context_mu, context_sigma = context_encoder(contexts.to(device))
                 elif args.context_mode == "learned_iida":

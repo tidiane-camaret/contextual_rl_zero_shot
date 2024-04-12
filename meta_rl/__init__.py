@@ -8,8 +8,3 @@ register(
 )
 
 
-register(
-     id="GridWorld-v0",
-     entry_point="meta_rl.envs:GridWorldEnv",
-     max_episode_steps=300,
-)

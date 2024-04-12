@@ -43,7 +43,7 @@ def main(config):
         "CARL" in args.env_id
     ), "Only CARL environments are supported for context-based training"
 
-    from meta_rl.jrpl.carl_wrapper import context_wrapper
+    from meta_rl.jcpl.carl_wrapper import context_wrapper
 
     if args.env_id == "CARLCartPoleContinuous":
         # custom environment, we need to import it directly
@@ -67,7 +67,7 @@ def main(config):
             context={0: {args.context_name: context_default}}
         )  
 
-    elif args.context_mode in ["learned_jrpl", "explicit", "hidden", "learned_iida"]:
+    elif args.context_mode in ["learned_jcpl", "explicit", "hidden", "learned_iida"]:
         train_contexts = dict()
         for i, train_context_value in enumerate(args.train_context_values):
             print("train_context_value : ", train_context_value)

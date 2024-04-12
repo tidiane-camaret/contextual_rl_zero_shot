@@ -6,7 +6,6 @@ import numpy as np
 from rliable import plot_utils
 def extract_rewards_from_run_dir(
     run_dir: str,
-    environment_name: str,
     context_modes="all",
     train_values=[],
     eval_values=[],

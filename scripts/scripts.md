@@ -20,21 +20,21 @@ tmux attach -t <name>
 
 # run scripts
 
-python3 scripts/jrpl/train_dqn.py 
-python3 scripts/jrpl/train_ddqn.py --env-id CARLMountainCar
+python3 scripts/jcpl/train_dqn.py 
+python3 scripts/jcpl/train_ddqn.py --env-id CARLMountainCar
 
 # run HPO using how-to-autorl
 conda deactivate
 conda activate autorl-sweepers
 
-python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jrpl --multirun
+python3 -m scripts.hpo.how_to_autorl.dehb_for_cartpole_dqn_jcpl --multirun
 # OR : 
 cd automl/how-to-autorl/
 python3 -m examples.dehb_for_pendulum_ppo.py --multirun
 automl/how-to-autorl/examples/
 
 # start a job
-sbatch scripts/cluster/kislurm/run_jrpl_array.sh
+sbatch scripts/cluster/kislurm/run_jcpl_array.sh
 
 # see all jobs
 sacct --user=$USER

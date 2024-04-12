@@ -12,7 +12,7 @@ from meta_rl.algorithms.sac.sac_utils import (
     eval_sac,
     make_env,
 )
-from meta_rl.jrpl.carl_wrapper import context_wrapper
+from meta_rl.jcpl.carl_wrapper import context_wrapper
 
 args = Args()
 model_path = "../results/hydra/multirun/2024-02-07/20-31-42/CARLBraxAnt/explicit/0/10/results/models/sac_actor_CARLBraxAnt__sac_utils__0__1707337326.pt"
@@ -54,11 +54,11 @@ assert isinstance(
 ), "only continuous action space is supported"
 
 
-# JRPL : if context is learned from transitions, use custom replay buffer
+# jcpl : if context is learned from transitions, use custom replay buffer
 # and create context encoder
 if "learned" in args.context_mode:
 
-    from meta_rl.jrpl.context_encoder import ContextEncoder
+    from meta_rl.jcpl.context_encoder import ContextEncoder
 
     latent_context_dim = args.latent_context_dim
     nb_input_transitions = args.nb_input_transitions

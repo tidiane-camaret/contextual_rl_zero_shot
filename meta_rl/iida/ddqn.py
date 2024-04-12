@@ -28,13 +28,13 @@ from carl.context.sampler import ContextSampler
 from torch.utils.tensorboard import SummaryWriter
 
 from meta_rl.iida.predictor import FeedForward
-from meta_rl.jrpl.context_encoder import ContextEncoder
+from meta_rl.jcpl.context_encoder import ContextEncoder
 
 
 def parse_args():
     # fmt: off
     parser = argparse.ArgumentParser()
-    # JRPL arguments
+    # jcpl arguments
     parser.add_argument("--context-mode", type=str, default="learned_iida",
         help="how the context is provided to the agent: hidden, explicit, learned")
     parser.add_argument("--context-encoder", type=str, default="mlp_avg",
@@ -62,7 +62,7 @@ def parse_args():
         help="if toggled, cuda will be enabled by default")
     parser.add_argument("--track", type=lambda x: bool(strtobool(x)), default=False, nargs="?", const=True,
         help="if toggled, this experiment will be tracked with Weights and Biases")
-    parser.add_argument("--wandb-project-name", type=str, default="JRPL",
+    parser.add_argument("--wandb-project-name", type=str, default="jcpl",
         help="the wandb's project name")
     parser.add_argument("--wandb-entity", type=str, default=None,
         help="the entity (team) of wandb's project")
@@ -221,7 +221,7 @@ def train_agent(args, CARLEnv):
         envs.single_action_space, gym.spaces.Discrete
     ), "only discrete action space is supported"
 
-    from meta_rl.jrpl.buffer import ReplayBuffer
+    from meta_rl.jcpl.buffer import ReplayBuffer
 
     context_length = args.context_length
     transitions_dim = (

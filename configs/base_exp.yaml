@@ -13,9 +13,9 @@ hydra:
 
   sweeper:    # only invoked if --multirun is used 
     params:
-      #context_mode: default_value, explicit, hidden, learned_iida, learned_jrpl 
-      #seed: range(10)
-      env: brax_ant, pendulum
+      context_mode: default_value, explicit, hidden, learned_iida, learned_jcpl 
+      seed: range(5)
+      env: cartpole_continuous_tau
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
   sweep:
@@ -38,4 +38,4 @@ sac_params:
 capture_video: True
 seed: 0
 nb_evals_per_seed: 20
-context_mode: learned_iida #, explicit, hidden, learned_iida, default_value, learned_jrpl
+context_mode: learned_iida #, explicit, hidden, learned_iida, default_value, learned_jcpl

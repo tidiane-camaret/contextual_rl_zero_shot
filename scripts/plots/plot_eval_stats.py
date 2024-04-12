@@ -1,0 +1,1 @@
+results_folder_path = "results/hydra/multirun/2024-04-12/11-31-34"

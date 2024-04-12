@@ -33,7 +33,7 @@ pip install .
 The experiments shown in the paper are based on the SAC algorithm, and can be run using the following script :
 
 ```bash
-python3 scripts/run_sac.py env=brax_ant context_mode=learned_jrpl
+python3 scripts/run_sac.py env=brax_ant context_mode=learned_jcpl
 ```
 
 This script accepts the following parameters : 
@@ -51,7 +51,7 @@ This script accepts the following parameters :
 * **explicit** : the dynamics are given as input to the model as additional state data, both at training and testing time.
 * **hidden** : no dynamics are given as input to the model, neither at training nor testing time.
 * **learned_iida** : [Context is Everything](https://benevans.zip/iida/) : Using previously generated trajectories, a predictor model is trained to predict next states from the current state and the action taken. The predictor model is then used as a **context encoder**, provided as additional state data to the RL agent.
-* **learned_jrpl** :  **Joint Context and Policy learning (JCPL)**: the context encoder is not trained on a prediction task but directly on the trained jointly with the policy network.
+* **learned_jcpl** :  **Joint Context and Policy learning (JCPL)**: the context encoder is not trained on a prediction task but directly on the trained jointly with the policy network.
 * **default_value** : the agent is only trained on the default value of the context. Used as a baseline.
 
 ### Sweep over multiple configurations using Hydra
@@ -59,7 +59,7 @@ This script accepts the following parameters :
 The script can be run with multiple configurations using Hydra :
 
 ```bash
-python3 scripts/run_sac.py -m context_mode=default_value,explicit,hidden,learned_iida,learned_jrpl
+python3 scripts/run_sac.py -m context_mode=default_value,explicit,hidden,learned_iida,learned_jcpl
 ```
 
 It is also possible to run the script with multiple seeds using the seed parameter :

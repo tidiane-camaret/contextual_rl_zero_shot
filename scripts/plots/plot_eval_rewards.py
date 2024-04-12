@@ -1,4 +1,4 @@
-from plot_utils import extract_rewards_from_run_dir, eval_random_agent
+from scripts.plots.plot_utils import extract_rewards_from_run_dir, eval_random_agent
 import pandas as pd
 import os
 
@@ -29,7 +29,7 @@ df_list = []
 for env, (dir, _, _, _)  in result_dirs.items():
     print(f"Environment: {env}")
     
-    reward_df = extract_rewards_from_run_dir(dir, environment_name=env)
+    reward_df = extract_rewards_from_run_dir(dir,)
     print(reward_df)
     # normalize the rewards
     # loop over context_mode and context_values
@@ -67,7 +67,7 @@ def get_intra_extra_label(row):
 reward_df["intra_extra"] = reward_df.apply(get_intra_extra_label, axis=1)
         
 # change the context_mode values : learned_jrpc -> jcpl, learned_iida -> predictive_id
-reward_df["context_mode"] = reward_df["context_mode"].replace({"learned_jrpl": "jcpl", "learned_iida": "predictive_id"})
+reward_df["context_mode"] = reward_df["context_mode"].replace({"learned_jcpl": "jcpl", "learned_iida": "predictive_id"})
 reward_df = reward_df[reward_df["context_mode"].isin(["explicit", "hidden", "jcpl", "predictive_id"])]
 
 
