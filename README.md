@@ -56,7 +56,7 @@ This script accepts the following parameters :
 
 ### Sweep over multiple configurations using Hydra
 
-The script can be run with multiple configurations using Hydra :
+The script can be run with multiple configurations using Hydra's [submitit](https://hydra.cc/docs/plugins/submitit_launcher/) plugin :
 
 ```bash
 python3 scripts/run_sac.py -m context_mode=default_value,explicit,hidden,learned_iida,learned_jcpl
