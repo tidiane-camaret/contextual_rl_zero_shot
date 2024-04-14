@@ -67,3 +67,23 @@ It is also possible to run the script with multiple seeds using the seed paramet
 ```bash
 python3 scripts/run_sac.py -m seed=0,1,2
 ```
+
+## Generate plots
+
+### Learning curves
+The learning curves are logged using the [wandb](https://wandb.ai/) library. They can be accessed and downloaded from the wandb dashboard
+
+### Violin plots
+
+The violin plots can be generated using the **plot_eval_violins.py** script, by specifying the path to the hydra results folder :
+
+```bash
+python3 scripts/plots/plot_eval_violins.py --results_folder_path results/hydra/multirun/2024-04-12/11-31-34
+```
+
+### Interquartile Means and performance profiles
+The Interquartile Means (IQM) and performance profiles (PP) can be plotted via the **plot_eval_results.py** script, by specifying the path to the hydra results folder :
+
+```bash
+python3 scripts/plots/plot_eval_results.py --results_folder_path results/hydra/multirun/2024-04-12/11-31-34
+```

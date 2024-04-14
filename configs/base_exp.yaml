@@ -14,7 +14,7 @@ hydra:
   sweeper:    # only invoked if --multirun is used 
     params:
       context_mode: default_value, explicit, hidden, learned_iida, learned_jcpl 
-      seed: range(5)
+      seed: range(10)
       env: cartpole_continuous_tau
   run:
     dir: results/hydra/single_run/${now:%Y-%m-%d}/${now:%H-%M-%S}
