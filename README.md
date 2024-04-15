@@ -62,10 +62,10 @@ The script can be run with multiple configurations using Hydra's [submitit](http
 python3 scripts/run_sac.py -m context_mode=default_value,explicit,hidden,learned_iida,learned_jcpl
 ```
 
-It is also possible to run the script with multiple seeds using the seed parameter :
+It is also possible to run the script with multiple seeds using the **seed** parameter. The results of the paper are obtained by running the seeds 0 to 9 :
 
 ```bash
-python3 scripts/run_sac.py -m seed=0,1,2
+python3 scripts/run_sac.py -m seed=0,1,2,3,4,5,6,7,8,9
 ```
 
 ## Generate plots
@@ -82,8 +82,8 @@ python3 scripts/plots/plot_eval_violins.py --results_folder_path results/hydra/m
 ```
 
 ### Interquartile Means and performance profiles
-The Interquartile Means (IQM) and performance profiles (PP) can be plotted via the **plot_eval_results.py** script, by specifying the path to the hydra results folder :
+The Interquartile Means (IQM) and performance profiles (PP) can be plotted via the **plot_eval_stats.py** script, by specifying the path to the hydra results folder :
 
 ```bash
-python3 scripts/plots/plot_eval_results.py --results_folder_path results/hydra/multirun/2024-04-12/11-31-34
+python3 scripts/plots/plot_eval_stats.py --results_folder_path results/hydra/multirun/2024-04-12/11-31-34
 ```
